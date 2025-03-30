@@ -21,3 +21,6 @@ export const avatarUrl = (Profile) => {
     }
 };
   
+export function isMaybePublicKey(pk) {
+  return pk.startsWith('BC') && pk.length === 55;
+}

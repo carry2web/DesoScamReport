@@ -73,12 +73,40 @@ export function useDeSoApi() {
       },
     });
   }, [apiRequest]);
+
+  const getPostsForPublicKey = useCallback((params) => {
+    const {
+      LastPostHashHex = '',
+      MediaRequired = false,
+      NumToFetch = 10,
+      PublicKeyBase58Check = '',
+      ReaderPublicKeyBase58Check = '',
+      Username = ''
+    } = params;
+  
+    const payload = {
+      LastPostHashHex,
+      MediaRequired,
+      NumToFetch,
+      PublicKeyBase58Check,
+      ReaderPublicKeyBase58Check,
+      Username
+    };
+
+    return apiRequest({
+      endpoint: "get-posts-for-public-key",
+      options: { 
+        body: JSON.stringify(payload), 
+      },
+    });
+  }, [apiRequest]);     
   
   return {
     getSingleProfile,
     getUsersStateless,
     getTotalSupply,
     getExchangeRate,
-    submitPost
+    submitPost,
+    getPostsForPublicKey
   };
 }

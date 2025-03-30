@@ -1,9 +1,7 @@
 import '@/styles/global.css'
 
-import { AuthProvider } from "@/context/AuthContext";
-import { UserProvider } from "@/context/UserContext";
-
-import { MainLayout } from "@/layouts/MainLayout";
+import { Providers } from '@/context/Providers';
+import { MainLayout } from '@/layouts/MainLayout';
 
 export const metadata = {
   title: "DeSo NextJS Starter App",
@@ -12,13 +10,11 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" style={{colorScheme: 'dark'}}>
+    <html lang="en" style={{ colorScheme: 'dark' }}>
       <body>
-        <AuthProvider>
-          <UserProvider>
-            <MainLayout>{children}</MainLayout>
-          </UserProvider>
-        </AuthProvider>
+        <Providers>
+          <MainLayout>{children}</MainLayout>
+        </Providers>
       </body>
     </html>
   );
