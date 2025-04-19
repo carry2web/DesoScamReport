@@ -94,34 +94,6 @@ export const SearchProfiles = () => {
                 </div>
             )}
 
-
-            {/* {debouncedQuery && (
-                <div className={styles.dropdown}>
-                    {isLoading && (
-                        <div className={styles.loading}>Loading...</div>
-                    )}
-
-                    {!isLoading && data?.length > 0 && data.map((profile) => (
-                        <Link
-                            key={profile.PublicKeyBase58Check}
-                            href={`/${profile.Username}`}
-                            className={styles.item}
-                            onClick={() => {
-                                setQuery('');
-                                setDebouncedQuery('');
-                            }}                            
-                        >
-                            <div className={styles.username}>@{profile.Username}</div>
-                            {profile.Description && (
-                                <div className={styles.description}>
-                                    {profile.Description.slice(0, 80)}
-                                </div>
-                            )}
-                        </Link>
-                    ))}
-                </div>
-            )} */}
-
         </div>
     );
 };
