@@ -5,6 +5,9 @@ import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
 import { useUser } from "@/context/UserContext";
 
+// import { SearchProfiles } from "@components/SearchProfiles";
+import { SearchProfiles } from "../SearchProfiles";
+
 export const Navbar = () => {
 
   const { userPublicKey, login, logout, setActiveUser, isUserPublicKeyLoading } = useAuth();
@@ -22,7 +25,9 @@ export const Navbar = () => {
         <Link href="/brootlef/posts" className={styles.logo}>brootlef posts</Link>
       </div>
 
-      <div></div>
+      <div>
+        <SearchProfiles />
+      </div>
 
       <div className={styles.auth}>
         <div>

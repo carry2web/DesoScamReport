@@ -128,6 +128,13 @@ export function useDeSoApi() {
     });
   }, [apiRequest]);
   
+
+  const getProfiles = useCallback((params) => {
+    return apiRequest({
+      endpoint: "get-profiles",
+      options: { body: JSON.stringify(params) },
+    });
+  }, [apiRequest]);  
   
   return {
     getSingleProfile,
@@ -136,6 +143,7 @@ export function useDeSoApi() {
     getExchangeRate,
     submitPost,
     getPostsForPublicKey,
-    getSinglePost
+    getSinglePost,
+    getProfiles
   };
 }

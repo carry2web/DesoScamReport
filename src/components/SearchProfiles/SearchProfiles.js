@@ -1,0 +1,127 @@
+import { useRef, useState, useEffect } from 'react';
+import { useDeSoApi } from '@/api/useDeSoApi';
+import { useQuery } from '@tanstack/react-query';
+import Link from "next/link";
+import styles from './SearchProfiles.module.css';
+
+export const SearchProfiles = () => {
+    const [query, setQuery] = useState('');
+    const [debouncedQuery, setDebouncedQuery] = useState('');
+    const { getProfiles } = useDeSoApi();
+
+    const containerRef = useRef(null);
+
+    useEffect(() => {
+        const delay = setTimeout(() => {
+            setDebouncedQuery(query.trim());
+        }, 300);
+        return () => clearTimeout(delay);
+    }, [query]);
+
+    const { data, isLoading } = useQuery({
+        queryKey: ['search-profiles', debouncedQuery],
+        queryFn: async () => {
+            const payload = {
+                PublicKeyBase58Check: '',
+                Username: '',
+                UsernamePrefix: debouncedQuery,
+                Description: '',
+                OrderBy: '',
+                NumToFetch: 10,
+                ReaderPublicKeyBase58Check: '',
+                ModerationType: '',
+                FetchUsersThatHODL: false,
+                AddGlobalFeedBool: false,
+            };
+            const response = await getProfiles(payload);
+            if (!response.success) throw new Error(response.error);
+            return response.data?.ProfilesFound || [];
+        },
+        enabled: !!debouncedQuery,
+        staleTime: 30 * 1000,
+        cacheTime: 5 * 60 * 1000,
+    });
+
+    // Close dropdown on outside click
+    useEffect(() => {
+        const handleClickOutside = (e) => {
+            if (containerRef.current && !containerRef.current.contains(e.target)) {
+                setQuery('');
+                setDebouncedQuery('');
+            }
+        };
+    
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);    
+
+    return (
+        <div className={styles.container} ref={containerRef}>
+            <input
+                type="text"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Search profiles..."
+                className={styles.input}
+            />
+
+            {debouncedQuery && (
+                <div className={styles.dropdown}>
+                    {isLoading ? (
+                        <div className={styles.message}>Loading...</div>
+                    ) : data?.length > 0 ? (
+                        data.map((profile) => (
+                            <Link
+                                key={profile.PublicKeyBase58Check}
+                                href={`/${profile.Username}`}
+                                className={styles.item}
+                                onClick={() => {
+                                    setQuery('');
+                                    setDebouncedQuery('');
+                                }}
+                            >
+                                <div className={styles.username}>@{profile.Username}</div>
+                                {profile.Description && (
+                                    <div className={styles.description}>
+                                    {profile.Description.slice(0, 80)}
+                                    </div>
+                                )}
+                            </Link>
+                        ))
+                    ) : (
+                        <div className={styles.message}>No profiles found</div>
+                    )}
+                </div>
+            )}
+
+
+            {/* {debouncedQuery && (
+                <div className={styles.dropdown}>
+                    {isLoading && (
+                        <div className={styles.loading}>Loading...</div>
+                    )}
+
+                    {!isLoading && data?.length > 0 && data.map((profile) => (
+                        <Link
+                            key={profile.PublicKeyBase58Check}
+                            href={`/${profile.Username}`}
+                            className={styles.item}
+                            onClick={() => {
+                                setQuery('');
+                                setDebouncedQuery('');
+                            }}                            
+                        >
+                            <div className={styles.username}>@{profile.Username}</div>
+                            {profile.Description && (
+                                <div className={styles.description}>
+                                    {profile.Description.slice(0, 80)}
+                                </div>
+                            )}
+                        </Link>
+                    ))}
+                </div>
+            )} */}
+
+        </div>
+    );
+};
