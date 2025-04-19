@@ -31,34 +31,7 @@ export const Post = ({ post, username, isQuote, isComment }) => {
     
     const [commentOffset, setCommentOffset] = useState(0);
     const [hasMoreComments, setHasMoreComments] = useState(true);
-
-    // const handleLoadReplies = async () => {
-    //     if (showReplies || comments.length > 0) {
-    //       setShowReplies((prev) => !prev); // toggle visibility
-    //       return;
-    //     }
-      
-    //     try {
-    //       setLoadingReplies(true);
-      
-    //       const response = await getSinglePost({
-    //         PostHashHex: post.PostHashHex,
-    //         FetchParents: false,
-    //         CommentOffset: 0,
-    //         CommentLimit: 10,
-    //       });
-      
-    //       if (response.success) {
-    //         setComments(response.data.PostFound.Comments || []);
-    //         setShowReplies(true);
-    //       }
-    //     } catch (error) {
-    //       console.error('Failed to load replies', error);
-    //     } finally {
-    //       setLoadingReplies(false);
-    //     }
-    // };
-      
+ 
     const loadComments = async (offset = 0, append = false) => {
         try {
           setLoadingReplies(true);
