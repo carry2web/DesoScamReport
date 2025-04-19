@@ -1,0 +1,53 @@
+.post {
+    background-color: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    transition: background 0.2s ease;
+  }
+  
+  .post:hover {
+    background-color: #222;
+  }
+  
+  .header {
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+    color: #e2e8f0;
+  }
+  
+  .username {
+    color: #60a5fa;
+    font-weight: 600;
+  }
+  
+  .repost {
+    background-color: #111827;
+    padding: 0.5rem;
+    border-left: 4px solid #4b5563;
+    margin-bottom: 0.75rem;
+    font-size: 0.95rem;
+    color: #9ca3af;
+  }
+  
+  .repostLabel {
+    font-size: 0.85rem;
+    font-style: italic;
+    margin-bottom: 0.25rem;
+  }
+  
+  .body {
+    margin-bottom: 0.75rem;
+    color: #f3f4f6;
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+  
+  .footer {
+    display: flex;
+    gap: 1.25rem;
+    color: #9ca3af;
+    font-size: 0.9rem;
+  }
+  

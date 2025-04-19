@@ -2,10 +2,11 @@
 
 import { useParams } from 'next/navigation';
 import { useDeSoApi } from '@/api/useDeSoApi';
-//import { useAuth } from '@/context/AuthContext';
 import { isMaybePublicKey } from '@/utils/profileUtils';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useRef, useEffect } from 'react';
+
+import { Post } from '@/components/Post';
 
 const POSTS_PER_PAGE = 10;
 
@@ -19,7 +20,6 @@ const PostsPage = () => {
     : rawParam;
 
   const { getPostsForPublicKey } = useDeSoApi();
-  //const { userPublicKey } = useAuth();
 
   const {
     data,
@@ -94,20 +94,16 @@ const PostsPage = () => {
 
       {posts.length === 0 && <p>No posts found.</p>}
 
-      <ul>
+      <div>
         {posts.map((post) => (
-          <li key={post.PostHashHex} style={{ marginBottom: '1rem' }}>
-            <h3>{post.Body?.slice(0, 100) || 'No content'}</h3>
-            <p>Likes: {post.LikeCount}, Comments: {post.CommentCount}</p>
-          </li>
+          <div key={post.PostHashHex} style={{ marginBottom: '1rem' }}>
+            <Post
+              post={post}
+              username={!isPublicKey ? lookupKey : undefined}
+            />            
+          </div>
         ))}
-      </ul>
-
-      {/* {hasNextPage && (
-        <button onClick={() => fetchNextPage()} disabled={isFetchingNextPage}>
-          {isFetchingNextPage ? 'Loading more...' : 'Load more'}
-        </button>
-      )} */}
+      </div>      
 
       {/* This div triggers loading more when visible */}
       <div ref={loadMoreRef} style={{ height: '1px' }} />
