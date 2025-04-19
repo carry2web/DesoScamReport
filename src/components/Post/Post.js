@@ -74,7 +74,7 @@ export const Post = ({ post, username, isQuote, isComment }) => {
   return (
     <div className={`${styles.post} ${isQuote ? styles.quote : ''} ${isComment ? styles.comment : ''}`}>
       <div className={styles.header}>
-        <Link href={`/${displayName}`} className={styles.username}>{displayName}</Link>        
+        <Link href={`/${displayName}`} className={styles.username} prefetch={false}>{displayName}</Link>        
       </div>
 
       {Body && <div>{Body}</div>}
