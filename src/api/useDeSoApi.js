@@ -100,6 +100,34 @@ export function useDeSoApi() {
       },
     });
   }, [apiRequest]);     
+
+  const getSinglePost = useCallback((params) => {
+    const {
+      PostHashHex,
+      ReaderPublicKeyBase58Check = '',
+      FetchParents = false,
+      CommentOffset = 0,
+      CommentLimit = 20,
+      AddGlobalFeedBool = false,
+    } = params;
+  
+    const payload = {
+      PostHashHex,
+      ReaderPublicKeyBase58Check,
+      FetchParents,
+      CommentOffset,
+      CommentLimit,
+      AddGlobalFeedBool,
+    };
+  
+    return apiRequest({
+      endpoint: "get-single-post",
+      options: {
+        body: JSON.stringify(payload),
+      },
+    });
+  }, [apiRequest]);
+  
   
   return {
     getSingleProfile,
@@ -107,6 +135,7 @@ export function useDeSoApi() {
     getTotalSupply,
     getExchangeRate,
     submitPost,
-    getPostsForPublicKey
+    getPostsForPublicKey,
+    getSinglePost
   };
 }
