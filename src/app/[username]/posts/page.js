@@ -5,6 +5,7 @@ import { useDeSoApi } from '@/api/useDeSoApi';
 //import { useAuth } from '@/context/AuthContext';
 import { isMaybePublicKey } from '@/utils/profileUtils';
 import { useInfiniteQuery } from '@tanstack/react-query';
+import { useRef, useEffect } from 'react';
 
 const POSTS_PER_PAGE = 10;
 
@@ -55,6 +56,33 @@ const PostsPage = () => {
     refetchOnWindowFocus: false,    // don't refetch just because the window/tab is focused
   });
 
+
+  const loadMoreRef = useRef(null);
+
+  // Infinite scroll using IntersectionObserver
+  useEffect(() => {
+    if (!hasNextPage || isFetchingNextPage) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          fetchNextPage();
+        }
+      },
+      {
+        rootMargin: '200px 0px', // Load earlier when within 200px from the bottom
+        threshold: 0,
+      }
+    );
+
+    const el = loadMoreRef.current;
+    if (el) observer.observe(el);
+
+    return () => {
+      if (el) observer.unobserve(el);
+    };
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);  
+
   if (isLoading) return <p>Loading posts...</p>;
   if (error) return <p style={{ color: 'red' }}>{error.message}</p>;
 
@@ -75,11 +103,17 @@ const PostsPage = () => {
         ))}
       </ul>
 
-      {hasNextPage && (
+      {/* {hasNextPage && (
         <button onClick={() => fetchNextPage()} disabled={isFetchingNextPage}>
           {isFetchingNextPage ? 'Loading more...' : 'Load more'}
         </button>
-      )}
+      )} */}
+
+      {/* This div triggers loading more when visible */}
+      <div ref={loadMoreRef} style={{ height: '1px' }} />
+
+      {isFetchingNextPage && <p>Loading more...</p>}
+
     </div>
   );
 };
