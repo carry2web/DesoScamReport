@@ -5,8 +5,7 @@ import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
 import { useUser } from "@/context/UserContext";
 
-// import { SearchProfiles } from "@components/SearchProfiles";
-import { SearchProfiles } from "../SearchProfiles";
+import { SearchProfiles } from "@/components/SearchProfiles";
 
 export const Navbar = () => {
 
@@ -17,12 +16,13 @@ export const Navbar = () => {
   return (
     <nav className={styles.container}>
       <div>
-        <Link href="/" className={styles.logo}>Home</Link>-|-
+        <Link href="/" className={styles.logo}>Home</Link>
+        {/* -|-
         <Link href="/brootle" className={styles.logo}>brootle</Link>-|-
         <Link href="/brootlef" className={styles.logo}>brootlef</Link>-|-
         <Link href="/nader" className={styles.logo}>nader</Link>-|-
         <Link href="/nader/posts" className={styles.logo}>nader posts</Link>-|-
-        <Link href="/brootlef/posts" className={styles.logo}>brootlef posts</Link>
+        <Link href="/brootlef/posts" className={styles.logo}>brootlef posts</Link> */}
       </div>
 
       <div>

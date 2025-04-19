@@ -3,6 +3,8 @@
 import { useDeSoApi } from '@/api/useDeSoApi';
 import { useState } from 'react';
 import { useQueryClient, useInfiniteQuery } from '@tanstack/react-query';
+import Link from 'next/link';
+
 import styles from './Post.module.css';
 
 const COMMENT_LIMIT = 10;
@@ -72,7 +74,7 @@ export const Post = ({ post, username, isQuote, isComment }) => {
   return (
     <div className={`${styles.post} ${isQuote ? styles.quote : ''} ${isComment ? styles.comment : ''}`}>
       <div className={styles.header}>
-        <span className={styles.username}>@{displayName}</span>
+        <Link href={`/${displayName}`} className={styles.username}>{displayName}</Link>        
       </div>
 
       {Body && <div>{Body}</div>}
@@ -85,7 +87,7 @@ export const Post = ({ post, username, isQuote, isComment }) => {
       )}
 
       <div className={styles.footer}>
-        <span>❤️ {LikeCount}</span>
+        {/* <span>❤️ {LikeCount}</span> */}
         <span>💬 {CommentCount}</span>
       </div>
 
@@ -95,7 +97,7 @@ export const Post = ({ post, username, isQuote, isComment }) => {
             ? 'Loading replies...'
             : showReplies
             ? 'Hide replies'
-            : `See replies (${CommentCount})`}
+            : `See replies...`}
         </button>
       )}
 
@@ -110,7 +112,7 @@ export const Post = ({ post, username, isQuote, isComment }) => {
               disabled={isFetchingNextPage}
               className={styles.loadMoreButton}
             >
-              {isFetchingNextPage ? 'Loading more...' : 'Load more replies'}
+              {isFetchingNextPage ? 'Loading more...' : 'Load more replies...'}
             </button>
           )}
         </div>

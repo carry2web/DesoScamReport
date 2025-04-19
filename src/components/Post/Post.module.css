@@ -3,8 +3,15 @@
     border: 1px solid #333;
     border-radius: 8px;
     padding: 1rem;
-    margin-bottom: 1rem;
     transition: background 0.2s ease;
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+
+    width: 100%;
+    box-sizing: border-box;    
   }
   
   .post:hover {
@@ -12,7 +19,6 @@
   }
   
   .header {
-    margin-bottom: 0.5rem;
     font-weight: bold;
     color: #e2e8f0;
   }
@@ -23,9 +29,7 @@
   }
   
   .repost {
-    background-color: #111827;
     padding: 0.5rem;
-    border-left: 4px solid #4b5563;
     margin-bottom: 0.75rem;
     font-size: 0.95rem;
     color: #9ca3af;
@@ -34,11 +38,9 @@
   .repostLabel {
     font-size: 0.85rem;
     font-style: italic;
-    margin-bottom: 0.25rem;
   }
   
   .body {
-    margin-bottom: 0.75rem;
     color: #f3f4f6;
     font-size: 1rem;
     line-height: 1.5;
@@ -52,17 +54,41 @@
   }
   
   .replies {
-    margin-top: 1rem;
-    padding-left: 1rem;
+    margin-top: 0.5rem;
+    padding-left: 0.5rem;
     border-left: 2px solid var(--border-color);
+
+    display: flex;
+    flex-direction: column;
+    align-items: baseline;
+    gap: 0.5rem;    
+
+    width: 100%;
+    box-sizing: border-box;
   }
   
   .repliesButton {
-    margin-top: 0.5rem;
     background: none;
     border: none;
     color: var(--primary);
     cursor: pointer;
     font-weight: 500;
+    padding: 0;
   }
   
+  .quote{
+
+  }
+
+  .comment{
+
+  }
+
+  .loadMoreButton{
+    background: none;
+    border: none;
+    color: var(--primary);
+    cursor: pointer;
+    font-weight: 500;
+    padding: 0;    
+  }
