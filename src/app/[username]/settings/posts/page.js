@@ -8,7 +8,7 @@ import { useAuth } from '@/context/AuthContext';
 import { useUser } from "@/context/UserContext";
 import styles from './page.module.css';
 
-const BATCH_SIZE = 10;
+const BATCH_SIZE = 100;
 
 const Page = () => {
   const { userPublicKey, signAndSubmitTransaction } = useAuth();
