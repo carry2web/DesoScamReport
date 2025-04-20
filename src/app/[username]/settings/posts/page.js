@@ -154,6 +154,10 @@ const Page = () => {
         </span>
       </label>   
 
+      <br />
+      <br />
+      <span>PS Make sure you have some DESO balance on your accout to cover transaction fees</span>
+
     </div>
   );
 };
