@@ -15,6 +15,7 @@ const Page = () => {
 
   const [deleting, setDeleting] = useState(false);
   const [deletedCount, setDeletedCount] = useState(0);
+  const [hardDelete, setHardDelete] = useState(false);
   const cancelRef = useRef(false);
 
 
@@ -42,17 +43,32 @@ const Page = () => {
             for (const post of response.data.Posts) {
                 if (cancelRef.current) break;
         
+                // const settings = {
+                //     UpdaterPublicKeyBase58Check: userPublicKey,
+                //     Body: post?.Body || "",
+                //     VideoURLs: post?.VideoURLs || null,
+                //     ImageURLs: post?.ImageURLs || null,
+                //     RepostedPostHashHex: post?.RepostedPostEntryResponse?.PostHashHex || "",
+                //     PostHashHexToModify: post.PostHashHex,
+                //     PostExtraData: post.PostExtraData ? { ...post.PostExtraData } : undefined,
+                //     IsHidden: true,
+                //     MinFeeRateNanosPerKB: 1500,
+                // };
+
+                // support had delete
                 const settings = {
-                    UpdaterPublicKeyBase58Check: userPublicKey,
-                    Body: post?.Body || "",
-                    VideoURLs: post?.VideoURLs || null,
-                    ImageURLs: post?.ImageURLs || null,
-                    RepostedPostHashHex: post?.RepostedPostEntryResponse?.PostHashHex || "",
-                    PostHashHexToModify: post.PostHashHex,
-                    PostExtraData: post.PostExtraData ? { ...post.PostExtraData } : undefined,
-                    IsHidden: true,
-                    MinFeeRateNanosPerKB: 1500,
-                };
+                  UpdaterPublicKeyBase58Check: userPublicKey,
+                  //Body: hardDelete ? "deleted" : post?.Body || "",
+                  Body: hardDelete && post?.Body ? "deleted" : post?.Body || "", // no need to put 'deleted' if post body is empty
+                  VideoURLs: hardDelete ? [] : post?.VideoURLs || null,
+                  ImageURLs: hardDelete ? [] : post?.ImageURLs || null,
+                  //RepostedPostHashHex: hardDelete ? "" : post?.RepostedPostEntryResponse?.PostHashHex || "",
+                  RepostedPostHashHex: post?.RepostedPostEntryResponse?.PostHashHex || "",
+                  PostHashHexToModify: post.PostHashHex,
+                  PostExtraData: hardDelete ? {} : post.PostExtraData ? { ...post.PostExtraData } : undefined,
+                  IsHidden: true,
+                  MinFeeRateNanosPerKB: 1500,
+                };                
         
                 try {
                     const result = await submitPost(settings);
@@ -98,7 +114,7 @@ const Page = () => {
           <div><strong>Public Key:</strong> {userPublicKey}</div>
         </div>
 
-      <p>Click the button below to hide all your posts in bulk.</p>
+      <p>Click the button below to hide all your posts in bulk.</p>   
 
       <div className={styles.controls}>
         <button
@@ -119,6 +135,25 @@ const Page = () => {
       <div className={styles.status}>
         {deleting ? `Deleting... ${deletedCount} posts so far.` : `Deleted: ${deletedCount} posts`}
       </div>
+
+
+      <label className={styles.hardDeleteOption}>
+        <input
+          type="checkbox"
+          checked={hardDelete}
+          onChange={() => setHardDelete(!hardDelete)}
+          disabled={deleting}
+        />
+        <span>
+          <strong style={{ color: 'red' }}>WARNING!</strong> This is <strong>OPTIONAL!</strong> If you check this, your posts
+          will be not just hidden but also overwritten with the word <strong>"deleted"</strong>, all attached media will also be removed.
+          <br />
+          If you do this, it will be <strong>extremely hard</strong> to restore the original content of your post.
+          <br />
+          <em>I am not responsible to restore your posts.</em>
+        </span>
+      </label>   
+
     </div>
   );
 };
