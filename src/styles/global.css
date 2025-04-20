@@ -1,2 +1,17 @@
 @import "normalize.css";
-@import "./variables.css"
+@import "./variables.css";
+
+body {
+    margin: 0;
+    font-family: 'Basis Grotesque Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+      'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+      sans-serif;
+    font-weight: normal;
+    font-style: normal;
+  
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+
+    color: var(--color-text);
+    background-color: var(--color-bg);
+}

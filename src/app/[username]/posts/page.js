@@ -97,7 +97,7 @@ const PostsPage = () => {
 
       <div>
         {posts.map((post) => (
-          <div key={post.PostHashHex} style={{ marginBottom: '1rem' }}>
+          <div key={post.PostHashHex}>
             <Post
               post={post}
               username={!isPublicKey ? lookupKey : undefined}

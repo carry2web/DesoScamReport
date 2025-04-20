@@ -36,12 +36,13 @@
   }
   
   .deleteButton {
-    background-color: #c0392b;
-    color: #fff;
+    background-color: var(--color-danger-bg);
+    color: var(--color-danger-text);
   }
+
   
   .deleteButton:hover {
-    background-color: #e74c3c;
+    background-color: var(--color-danger-hover-bg);
   }
   
   .cancelButton {
@@ -50,7 +51,7 @@
   }
   
   .cancelButton:hover {
-    background-color: #666;
+    /* background-color: #666; */
   }
   
   .status {
