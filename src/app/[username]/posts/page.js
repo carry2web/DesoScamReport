@@ -86,7 +86,8 @@ const PostsPage = () => {
   if (isLoading) return <p>Loading posts...</p>;
   if (error) return <p style={{ color: 'red' }}>{error.message}</p>;
 
-  const posts = data?.pages.flatMap((page) => page.Posts) || [];
+  // make sure posts is [] in case user has no posts and we get null as response
+  const posts = data?.pages.flatMap((page) => page.Posts || []) || [];
 
   return (
     <div>
