@@ -38,13 +38,14 @@ export function useDeSoApi() {
   const submitPost = useCallback((params) => {
     const {
       UpdaterPublicKeyBase58Check,
-      ParentStakeID = "",
-      RepostedPostHashHex = "",
-      PostHashHexToModify = "",
-      Body = "",
-      ImageURLs = null,
-      VideoURLs = null,
-      PostExtraData = null,
+      PostHashHexToModify,
+      ParentStakeID,
+      RepostedPostHashHex,
+      Body,
+      ImageURLs,
+      VideoURLs,
+      PostExtraData,
+      IsHidden = false,
       MinFeeRateNanosPerKB,
     } = params;
   
@@ -52,18 +53,15 @@ export function useDeSoApi() {
       UpdaterPublicKeyBase58Check,
       PostHashHexToModify,
       ParentStakeID,
-      Title: "",
+      RepostedPostHashHex,
       BodyObj: {
         Body,
         ImageURLs,
         VideoURLs,
       },
-      RepostedPostHashHex,
       PostExtraData,
-      Sub: "",
-      IsHidden: false,
+      IsHidden,
       MinFeeRateNanosPerKB,
-      InTutorial: false,
     };
   
     return apiRequest({
