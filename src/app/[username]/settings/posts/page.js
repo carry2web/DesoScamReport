@@ -1,5 +1,3 @@
-// app/settings/posts/page.js
-
 'use client';
 
 import { useState, useRef } from 'react';
