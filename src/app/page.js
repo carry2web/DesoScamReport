@@ -9,6 +9,8 @@ import { useDeSoApi } from "@/api/useDeSoApi";
 
 import { avatarUrl } from "@/utils/profileUtils";
 
+import Link from 'next/link';
+
 import styles from "./page.module.css";
 
 export default function Home() {
@@ -130,6 +132,15 @@ export default function Home() {
         )}
         </>
       }
+
+
+      {
+        userPublicKey && 
+        <Link href={`/${userProfile?.Username || userPublicKey}/settings/posts`}>
+          Settings
+        </Link>           
+      }
+   
 
 
     </div>
