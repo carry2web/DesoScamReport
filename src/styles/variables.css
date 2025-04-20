@@ -2,5 +2,13 @@
     --navbar-height: 60px;
     --footer-height: 40px;
     --container-sides-padding: 20px;
+
+    --bg: #fff;
+    --text: #000;    
+}
+  
+[data-theme='dark'] {
+    --bg: #000;
+    --text: #fff;
 }
   

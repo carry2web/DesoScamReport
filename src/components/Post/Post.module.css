@@ -1,6 +1,6 @@
 .post {
-    background-color: #1a1a1a;
-    border: 1px solid #333;
+    /* background-color: #1a1a1a;
+    border: 1px solid #333; */
     border-radius: 8px;
     padding: 1rem;
     transition: background 0.2s ease;
@@ -15,23 +15,23 @@
   }
   
   .post:hover {
-    background-color: #222;
+    /* background-color: #222; */
   }
   
   .header {
     font-weight: bold;
-    color: #e2e8f0;
+    /* color: #e2e8f0; */
   }
   
   .username {
-    color: #60a5fa;
+    /* color: #60a5fa; */
     font-weight: 600;
   }
   
   .repost {
     padding: 0.5rem;
     font-size: 0.95rem;
-    color: #9ca3af;
+    /* color: #9ca3af; */
 
     width: 100%;
     box-sizing: border-box;    
@@ -43,7 +43,7 @@
   }
   
   .body {
-    color: #f3f4f6;
+    /* color: #f3f4f6; */
     font-size: 1rem;
     line-height: 1.5;
   }
@@ -51,7 +51,7 @@
   .footer {
     display: flex;
     gap: 1.25rem;
-    color: #9ca3af;
+    /* color: #9ca3af; */
     font-size: 0.9rem;
   }
   
@@ -72,7 +72,6 @@
   .repliesButton {
     background: none;
     border: none;
-    color: var(--primary);
     cursor: pointer;
     font-weight: 500;
     padding: 0;
@@ -89,7 +88,6 @@
   .loadMoreButton{
     background: none;
     border: none;
-    color: var(--primary);
     cursor: pointer;
     font-weight: 500;
     padding: 0;    
