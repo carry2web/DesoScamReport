@@ -8,6 +8,8 @@ import { useRef, useEffect } from 'react';
 
 import { Post } from '@/components/Post';
 
+import styles from './page.module.css';
+
 const POSTS_PER_PAGE = 10;
 
 const PostsPage = () => {
@@ -95,7 +97,7 @@ const PostsPage = () => {
 
       {posts.length === 0 && <p>No posts found.</p>}
 
-      <div>
+      <div className={styles.postsContainer}>
         {posts.map((post) => (
           <div key={post.PostHashHex}>
             <Post

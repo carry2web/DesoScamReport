@@ -18,7 +18,7 @@
     max-height: 320px;
     overflow-y: auto;
     background-color: var(--color-bg);
-    border: 1px solid ;
+    border: var(--search-border);
     border-radius: 6px;
     z-index: 1000;
     /* box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5); */
@@ -29,7 +29,7 @@
     padding: 10px 12px;
     text-decoration: none;
     color: var(--color-text);
-    border-bottom: 1px solid;
+    border-bottom: var(--search-border);
     background-color: transparent;
     transition: background-color 0.2s ease;
   }

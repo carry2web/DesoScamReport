@@ -10,7 +10,7 @@ export const Footer = () => {
           Designed by <a href="https://focus.xyz/brootle" target="_blank" rel="noreferrer">brootle</a>
         </div>
         <div>
-          Extra Info
+          2025
         </div>
     </footer>
   );

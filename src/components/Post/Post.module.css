@@ -1,6 +1,7 @@
 .post {
-    /* background-color: #1a1a1a;
-    border: 1px solid #333; */
+    border: var(--post-border);
+    background-color: var(--post-bg);
+
     border-radius: 8px;
     padding: 1rem;
     transition: background 0.2s ease;
