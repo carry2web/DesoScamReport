@@ -8,7 +8,7 @@ const AuthContext = createContext(null);
 export function AuthProvider({ children }) {
   const [userPublicKey, setUserPublicKey] = useState(null);
   const [altUsers, setAltUsers] = useState({});
-  const [isUserPublicKeyLoading, setIsUserPublicKeyLoading] = useState(false);
+  const [isUserPublicKeyLoading, setIsUserPublicKeyLoading] = useState(true);
 
   const isRunned = useRef(false); // Prevents multiple initializations
 

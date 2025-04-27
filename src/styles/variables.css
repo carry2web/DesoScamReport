@@ -3,9 +3,9 @@
     --footer-height: 40px;
     --container-sides-padding: 20px;
 
-    /* Base Colors (Light Theme) */
+    /* Default colors - matching light theme */
     --color-bg: #eaeaea;
-    --bar-bg: #ffffffd4;
+    --bar-bg: #dcdcdcd4;
     --post-bg: #f2f2f2;
     --post-border: 1px solid #d0d0d0;
     --search-border: 1px solid #d0d0d0;
@@ -33,6 +33,39 @@
     --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
     --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
     --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.2);    
+}
+
+[data-theme='light'] {
+    /* Base Colors (Light Theme) */
+    --color-bg: #eaeaea;
+    --bar-bg: #dcdcdcd4;
+    --post-bg: #f2f2f2;
+    --post-border: 1px solid #d0d0d0;
+    --search-border: 1px solid #d0d0d0;
+
+    --color-surface: #f1f1f1;
+    --color-text: #111827;
+    --color-muted: #6b7280;
+    --color-border: #d1d5db;
+
+    /* Primary Accent */
+    --color-primary: #3b82f6;
+    --color-primary-hover: #2563eb;
+
+    /* Danger / Delete */
+    --color-danger-bg: #ef4444;
+    --color-danger-text: #ffffff;
+    --color-danger-hover-bg: #dc2626;
+
+    /* Success / Confirmation */
+    --color-success-bg: #10b981;
+    --color-success-text: #ffffff;
+    --color-success-hover-bg: #059669;
+
+    /* Shadows */
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.2); 
 }
   
 [data-theme='dark'] {

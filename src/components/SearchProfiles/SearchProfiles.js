@@ -2,6 +2,9 @@ import { useRef, useState, useEffect } from 'react';
 import { useDeSoApi } from '@/api/useDeSoApi';
 import { useQuery } from '@tanstack/react-query';
 import Link from "next/link";
+
+import { useClickOutside } from '@/hooks/useClickOutside';
+
 import styles from './SearchProfiles.module.css';
 
 export const SearchProfiles = () => {
@@ -42,18 +45,10 @@ export const SearchProfiles = () => {
         cacheTime: 5 * 60 * 1000,
     });
 
-    // Close dropdown on outside click
-    useEffect(() => {
-        const handleClickOutside = (e) => {
-            if (containerRef.current && !containerRef.current.contains(e.target)) {
-                setQuery('');
-                setDebouncedQuery('');
-            }
-        };
-    
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => document.removeEventListener('mousedown', handleClickOutside);
-    }, []);    
+    useClickOutside(containerRef, () => {
+        setQuery('');
+        setDebouncedQuery('');
+    });    
 
     return (
         <div className={styles.container} ref={containerRef}>
