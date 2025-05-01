@@ -74,7 +74,10 @@ export const Post = ({ post, username, isQuote, isComment }) => {
   return (
     <div className={`${styles.post} ${isQuote ? styles.quote : ''} ${isComment ? styles.comment : ''}`}>
       <div className={styles.header}>
-        <Link href={`/${displayName}`} className={styles.username} prefetch={false}>{displayName}</Link>        
+        <Link href={`/${displayName}`} className={styles.username} prefetch={false}>{displayName}</Link>       
+        <div>
+          <Link href={`/${displayName}/posts/${PostHashHex}`} className={styles.postLink} prefetch={false}>{PostHashHex}</Link>   
+        </div> 
       </div>
 
       {Body && <div>{Body}</div>}
