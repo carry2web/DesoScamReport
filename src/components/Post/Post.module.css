@@ -1,6 +1,6 @@
 .post {
-    border: var(--post-border);
-    background-color: var(--post-bg);
+    border: 1px solid var(--color-border);
+    background-color: var(--color-surface);
 
     border-radius: 8px;
     padding: 1rem;
@@ -59,7 +59,7 @@
   .replies {
     margin-top: 0.5rem;
     padding-left: 0.5rem;
-    border-left: 2px solid var(--border-color);
+    /* border-left: 2px solid var(--color-border); */
 
     display: flex;
     flex-direction: column;
@@ -76,6 +76,15 @@
     cursor: pointer;
     font-weight: 500;
     padding: 0;
+    color: var(--color-btn-secondary-text);
+  }
+
+  .repliesButton:hover{
+    background-color: transparent;
+  }
+
+  .repliesButton:focus{
+    box-shadow: none;
   }
   
   .quote{
@@ -92,6 +101,15 @@
     cursor: pointer;
     font-weight: 500;
     padding: 0;    
+    color: var(--color-btn-secondary-text);
+  }
+
+  .loadMoreButton:hover{
+    background-color: transparent;
+  }
+
+  .loadMoreButton:focus{
+    box-shadow: none;
   }
 
   .postLink{

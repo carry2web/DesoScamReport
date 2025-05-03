@@ -7,6 +7,8 @@ import { useQuery } from '@tanstack/react-query';
 
 import { Post } from '@/components/Post';
 
+import styles from './page.module.css';
+
 const SinglePostPage = () => {
   const params = useParams();
   const rawParam = decodeURIComponent(params.username);
@@ -46,7 +48,7 @@ const SinglePostPage = () => {
   if (!data) return <p>Post not found.</p>;
 
   return (
-    <div>
+    <div className={styles.pageContainer}>
       <h1>Post by {rawParam}</h1>
       <Post post={data} username={!isPublicKey ? lookupKey : undefined} />
     </div>

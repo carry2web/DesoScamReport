@@ -92,7 +92,7 @@ const PostsPage = () => {
   const posts = data?.pages.flatMap((page) => page.Posts || []) || [];
 
   return (
-    <div>
+    <div className={styles.pageContainer}>
       <h1>Posts by {rawParam}</h1>
 
       {posts.length === 0 && <p>No posts found.</p>}

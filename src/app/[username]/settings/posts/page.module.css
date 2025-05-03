@@ -35,15 +35,21 @@
     transition: background 0.2s ease-in-out;
   }
   
-  .deleteButton {
-    background-color: var(--color-danger-bg);
-    color: var(--color-danger-text);
-  }
 
+  .deleteButton {
+    background-color: var(--color-btn-danger-bg);
+    color: var(--color-btn-danger-text);
+  }
   
   .deleteButton:hover {
-    background-color: var(--color-danger-hover-bg);
+    background-color: var(--color-btn-danger-hover-bg);
   }
+  
+  .deleteButton:disabled {
+    background-color: var(--color-btn-danger-disabled-bg);
+    color: var(--color-btn-danger-disabled-text);
+    cursor: not-allowed;
+  }  
   
   .cancelButton {
     /* background-color: #444;

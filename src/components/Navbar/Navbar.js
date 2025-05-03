@@ -6,6 +6,10 @@ import Link from "next/link";
 import { SearchProfiles } from "@/components/SearchProfiles";
 import { ThemeSelector } from "@/components/ThemeSelector";
 
+import { 
+  Home as HomeIcon
+} from '@/assets/icons';
+
 import { UserMenu } from "@/components/UserMenu";
 
 export const Navbar = () => {
@@ -13,7 +17,7 @@ export const Navbar = () => {
   return (
     <nav className={styles.container}>
       <div className={styles.start}>
-        <Link href="/" className={styles.logo}>Home</Link>
+        <Link href="/" className={styles.logo}><HomeIcon label="Home" /></Link>
       </div>
 
       <div className={styles.middle}>

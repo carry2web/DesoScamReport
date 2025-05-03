@@ -44,7 +44,7 @@ export const UserMenu = () => {
         {isUserPublicKeyLoading 
             ?<div>Loading...</div>
             :
-            <div onClick={toggleDropdown}>
+            <div className={styles.start} onClick={toggleDropdown}>
                 START
             </div>
         }
@@ -78,7 +78,7 @@ export const UserMenu = () => {
                             onChange={(e) => handleUserSelect(e.target.value)}
                             defaultValue=""
                         >
-                        <option value="" disabled>Select alternate user</option>
+                        <option value="" disabled hidden>Select alternate user</option>
                         {altUserProfiles && altUserProfiles.length > 0 ? (
                             altUserProfiles.map((user) => (
                             <option key={user.PublicKeyBase58Check} value={user.PublicKeyBase58Check}>
@@ -91,7 +91,7 @@ export const UserMenu = () => {
                         </select>         
                     }       
                     </div>
-                    <div><button onClick={handleLogin}>Add User</button></div> 
+                    <div><button className={styles.addUser} onClick={handleLogin}>Add User</button></div> 
                 </div>            
 
                 
