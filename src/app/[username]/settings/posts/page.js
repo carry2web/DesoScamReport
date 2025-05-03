@@ -4,6 +4,9 @@ import { useState, useRef } from 'react';
 import { useDeSoApi } from '@/api/useDeSoApi';
 import { useAuth } from '@/context/AuthContext';
 import { useUser } from "@/context/UserContext";
+
+import { Button } from '@/components/Button';
+
 import styles from './page.module.css';
 
 const BATCH_SIZE = 100;
@@ -117,19 +120,11 @@ const Page = () => {
       <p>Click the button below to hide all your posts in bulk.</p>   
 
       <div className={styles.controls}>
-        <button
-          className={styles.deleteButton}
-          onClick={deleteAllPosts}
-          disabled={deleting || !userPublicKey}
-        >
-          Delete All Posts
-        </button>
 
-        {deleting && (
-          <button className={styles.cancelButton} onClick={cancelDelete}>
-            Cancel
-          </button>
-        )}
+        <Button onClick={deleteAllPosts} variant='danger' isLoading={deleting} disabled={!userPublicKey}>Delete All Posts</Button>
+
+        <Button onClick={cancelDelete} variant='secondary' disabled={!deleting}>Cancel</Button>
+       
       </div>
 
       <div className={styles.status}>

@@ -4,6 +4,8 @@ import { useState, useRef } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { useUser } from "@/context/UserContext";
 
+import { Button } from "@/components/Button";
+
 import { useClickOutside } from '@/hooks/useClickOutside';
 
 import styles from "./UserMenu.module.css";
@@ -91,19 +93,15 @@ export const UserMenu = () => {
                         </select>         
                     }       
                     </div>
-                    <div><button className={styles.addUser} onClick={handleLogin}>Add User</button></div> 
+                    <div><Button onClick={handleLogin} variant="secondary">Add User</Button></div>                
                 </div>            
 
                 
                 <div className={styles.authButtons}>
                     {userPublicKey ? (
-                    <button onClick={handleLogout} className={styles.actionButton}>
-                        Log out
-                    </button>
+                        <Button onClick={handleLogout}>Log out</Button>
                     ) : (
-                    <button onClick={handleLogin} className={styles.actionButton}>
-                        Log in
-                    </button>
+                        <Button onClick={handleLogin}>Log in</Button>
                     )}
                 </div>
 

@@ -31,7 +31,8 @@ const SinglePostPage = () => {
     queryKey: ['single-post', postHash],
     queryFn: async () => {
       const response = await getSinglePost({
-        PostHashHex: postHash
+        PostHashHex: postHash,
+        FetchParents: true
       });
 
       if (!response.success) throw new Error(response.error || 'Failed to fetch post');

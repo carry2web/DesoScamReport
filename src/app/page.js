@@ -9,6 +9,8 @@ import { useDeSoApi } from "@/api/useDeSoApi";
 
 import { avatarUrl } from "@/utils/profileUtils";
 
+import { Button } from "@/components/Button";
+
 import Link from 'next/link';
 
 import styles from "./page.module.css";
@@ -102,7 +104,9 @@ export default function Home() {
             placeholder={`Write some epic post to DeSo as ${userProfile?.Username || userPublicKey}`} 
           /> 
 
-          <button disabled={loading || !postText || isUserPublicKeyLoading} onClick={handleSubmitPost}>Post to DeSo</button>  
+          {/* <button disabled={loading || !postText || isUserPublicKeyLoading} onClick={handleSubmitPost}>Post to DeSo</button>   */}
+
+          <Button disabled={!postText || isUserPublicKeyLoading} isLoading={loading} onClick={handleSubmitPost}>Post to DeSo</Button>
 
           {lastPostTransaction && lastPostTransaction?.TxnHashHex &&
             <div>

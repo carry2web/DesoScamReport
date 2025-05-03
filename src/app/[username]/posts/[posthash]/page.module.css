@@ -1,9 +1,3 @@
 .pageContainer{
     padding-bottom: 30px;
 }
-
-.postsContainer{
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
