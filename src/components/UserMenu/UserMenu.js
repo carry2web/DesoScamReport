@@ -8,14 +8,21 @@ import { Button } from "@/components/Button";
 
 import { useClickOutside } from '@/hooks/useClickOutside';
 
+import { avatarUrl } from "@/utils/profileUtils";
+
+import { DefaultAvatar } from '@/assets/icons';
+
 import styles from "./UserMenu.module.css";
 
 export const UserMenu = () => {
-    const { userPublicKey, login, logout, setActiveUser, isUserPublicKeyLoading } = useAuth();
+    const { userPublicKey, login, logout, setActiveUser } = useAuth();
     const { altUserProfiles, isAltUserProfileSLoading, userProfile, isUserProfileLoading } = useUser();
 
     const [isOpen, setIsOpen] = useState(false);
     const containerRef = useRef(null);
+
+    const [imageError, setImageError] = useState(false);
+    const avatar = avatarUrl(userProfile);
 
     const toggleDropdown = () => setIsOpen((prev) => !prev);
     const closeDropdown = () => setIsOpen(false);
@@ -43,13 +50,23 @@ export const UserMenu = () => {
   return (
     <div className={styles.container} ref={containerRef}>
 
-        {isUserPublicKeyLoading 
-            ?<div>Loading...</div>
-            :
-            <div className={styles.start} onClick={toggleDropdown}>
-                START
+        <div className={styles.start} onClick={toggleDropdown}>
+            <div className={styles.avatarFrame}>
+            {!avatar || imageError ? (
+                <div className={styles.fallbackAvatar}>
+                    <DefaultAvatar />
+                </div>
+            ) : (
+                <img
+                    src={avatar}
+                    alt="User avatar"
+                    className={styles.avatarImage}
+                    onError={() => setImageError(true)}
+                />
+            )}
             </div>
-        }
+
+        </div>  
 
         {isOpen && (
             <div className={styles.dropdown}>

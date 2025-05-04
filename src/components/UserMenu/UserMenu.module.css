@@ -118,3 +118,33 @@
   button.addUser:hover{
     background-color: var(--color-btn-secondary-hover-bg);
   }
+
+.avatarFrame {
+    height: 38px;
+    width: 38px;
+    min-width: 38px;
+    padding: 1px;
+    border-radius: 10%;
+    background-color: var(--color-surface);
+    border: 2px solid var(--color-border);
+    box-sizing: border-box;
+    pointer-events: none;
+}
+
+.avatarImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10%;
+  box-sizing: border-box;
+  pointer-events: none;
+}
+
+.fallbackAvatar {
+  width: 100%;
+  height: 100%;
+  color: var(--color-text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;  
+}
