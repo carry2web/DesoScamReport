@@ -17,6 +17,7 @@
 
     transition: color 0.2s ease;
     color: var(--color-text);
+    box-shadow: none;
   }
 
   .button:hover{
