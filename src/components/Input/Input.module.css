@@ -1,0 +1,69 @@
+.container {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background-color: var(--color-surface);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  .container:hover {
+    border-color: var(--color-accent);
+    /* background-color: var(--color-input-hover-bg); */
+  }
+  
+  .container:focus-within {
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 2px var(--color-accent-subtle);
+  }
+  
+  .input {
+    flex: 1;
+    width: 100%;
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: var(--font-size-base);
+    font-family: inherit;
+    background-color: transparent;
+    border: none;
+    outline: none;
+    color: var(--color-text);
+    line-height: var(--line-height-base);
+    border-radius: var(--radius-md);
+  }
+  
+  .icon,
+  .trailingIcon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 var(--spacing-sm);
+    color: var(--color-text-muted);
+  }
+  
+  .small {
+    height: 32px;
+    font-size: var(--font-size-sm);
+  }
+  
+  .medium {
+    height: 40px;
+    font-size: var(--font-size-base);
+  }
+  
+  .large {
+    height: 48px;
+    font-size: var(--font-size-lg);
+  }
+  
+  .error {
+    border-color: var(--color-error);
+  }
+  
+  .disabled {
+    background-color: var(--color-bg-muted);
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+  
+  

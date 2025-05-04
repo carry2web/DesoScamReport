@@ -5,6 +5,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useUser } from "@/context/UserContext";
 
 import { Button } from "@/components/Button";
+import { Select } from "@/components/Select";
 
 import { useClickOutside } from '@/hooks/useClickOutside';
 
@@ -93,21 +94,19 @@ export const UserMenu = () => {
                     {isAltUserProfileSLoading
                         ?<span>Loading...</span>
                         :
-                        <select
+                        <Select
+                            value=""
                             onChange={(e) => handleUserSelect(e.target.value)}
-                            defaultValue=""
-                        >
-                        <option value="" disabled hidden>Select alternate user</option>
-                        {altUserProfiles && altUserProfiles.length > 0 ? (
-                            altUserProfiles.map((user) => (
-                            <option key={user.PublicKeyBase58Check} value={user.PublicKeyBase58Check}>
-                                {user.ProfileEntryResponse?.Username || user.PublicKeyBase58Check}
-                            </option>
-                            ))
-                        ) : (
-                            <option disabled>No alt users</option>
-                        )}
-                        </select>         
+                            placeholder="Select alternate user"
+                            options={
+                                altUserProfiles && altUserProfiles.length > 0
+                                ? altUserProfiles.map((user) => ({
+                                    value: user.PublicKeyBase58Check,
+                                    label: user.ProfileEntryResponse?.Username || user.PublicKeyBase58Check,
+                                    }))
+                                : [{ value: "", label: "No alt users", disabled: true }]
+                            }
+                        />                        
                     }       
                     </div>
                     <div><Button onClick={handleLogin} variant="secondary">Add User</Button></div>                

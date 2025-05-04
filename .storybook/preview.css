@@ -1,11 +1,11 @@
 /* preview.css - Storybook-only overrides to neutralize global app styles */
 
-input:hover,
-textarea:hover,
-select:hover,
-input:focus,
-textarea:focus,
-select:focus {
+.docblock-argstable input:hover,
+.docblock-argstable textarea:hover,
+.docblock-argstable select:hover,
+.docblock-argstable input:focus,
+.docblock-argstable textarea:focus,
+.docblock-argstable select:focus {
   background-color: initial !important;
   border-color: initial !important;
 }

@@ -30,38 +30,8 @@ a:hover {
   text-decoration: underline;
 }
 
-button {
-  font-family: inherit;
-  font-size: var(--font-size-base);
-  padding: var(--spacing-sm) var(--spacing-md);
-  border: none;
-  border-radius: var(--radius-sm);
-  background-color: var(--color-btn-bg);
-  color: var(--color-btn-text);
-  cursor: pointer;
-  box-shadow: var(--shadow-sm);
-  transition: background-color 0.2s ease;
-}
 
-button:hover {
-  background-color: var(--color-btn-hover-bg);
-}
-
-button:disabled {
-  background-color: var(--color-btn-disabled-bg);
-  color: var(--color-btn-disabled-text);
-  cursor: not-allowed;
-}
-
-button:focus {
-  outline: none;
-  box-shadow: 0 0 0 2px var(--color-accent-subtle);
-  border-color: var(--color-accent);  
-}
-
-input,
-textarea,
-select {
+textarea {
   font-family: inherit;
   font-size: var(--font-size-base);
   padding: var(--spacing-sm) var(--spacing-md);
@@ -72,29 +42,20 @@ select {
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-input::placeholder,
 textarea::placeholder {
   color: var(--color-text-muted);
 }
 
-input:hover,
-textarea:hover,
-select:hover {
+textarea:hover{
   border-color: var(--color-accent);
   background-color: var(--color-input-hover-bg)
 }
 
-input:focus,
-textarea:focus,
-select:focus {
+textarea:focus{
   background-color: var(--color-input-focus-bg);
   outline: none;
   box-shadow: 0 0 0 2px var(--color-accent-subtle);
   border-color: var(--color-accent);
-}
-
-select option:disabled {
-  color: var(--color-text-muted);
 }
 
 hr {

@@ -3,6 +3,8 @@ import { useDeSoApi } from '@/api/useDeSoApi';
 import { useQuery } from '@tanstack/react-query';
 import Link from "next/link";
 
+import { Input } from '@/components/Input';
+
 import { useClickOutside } from '@/hooks/useClickOutside';
 
 import styles from './SearchProfiles.module.css';
@@ -52,12 +54,11 @@ export const SearchProfiles = () => {
 
     return (
         <div className={styles.container} ref={containerRef}>
-            <input
-                type="text"
+
+            <Input 
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search profiles..."
-                className={styles.input}
+                placeholder="Search profiles..."       
             />
 
             {debouncedQuery && (
