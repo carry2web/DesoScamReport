@@ -75,7 +75,7 @@ export default function Home() {
 
     } catch (error) {
       console.log("Error: ", error)
-      setPostError(error)
+      setPostError(error.message || 'Error sumbitting a post')
       setLoading(false)
     }   
   }  
