@@ -16,6 +16,10 @@ export default {
       control: { type: 'select' },
       options: ['small', 'medium', 'large'],
     },
+    variant: {
+        control: { type: 'select' },
+        options: ['default', 'danger'],
+    },    
     checked: { control: 'boolean' },
     disabled: { control: 'boolean' },
   },
@@ -93,8 +97,22 @@ export const DisabledLight = {
   decorators: [themeDecorator('light')],
 };
 
-// export const Basic = {
-//   args: {
-//     children: 'Menu Item',
-//   },
-// }; 
+export const DangerDark = {
+    name: 'Danger (Dark Theme)',
+    args: {
+      children: 'Delete item',
+      variant: 'danger',
+    //   trailingIcon: <Trash />,
+    },
+    decorators: [themeDecorator('dark')],
+ };
+  
+export const DangerLight = {
+    name: 'Danger (Light Theme)',
+    args: {
+        children: 'Delete item',
+        variant: 'danger',
+    //   trailingIcon: <Trash />,
+    },
+    decorators: [themeDecorator('light')],
+};

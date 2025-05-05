@@ -11,6 +11,7 @@ export const MenuItem = ({
   trailingIcon = null,
   checked = false,
   disabled = false,
+  variant = "default",
   onClick
 }) => {
   return (
@@ -18,6 +19,7 @@ export const MenuItem = ({
       className={classNames(
         styles.menuItem,
         styles[size],
+        styles[variant],
         {
           [styles.disabled]: disabled,
           [styles.checked]: checked,
@@ -42,6 +44,7 @@ MenuItem.propTypes = {
   trailingIcon: PropTypes.node,
   checked: PropTypes.bool,
   disabled: PropTypes.bool,
+  variant: PropTypes.oneOf(['default', 'danger']),
   onClick: PropTypes.func,
 };
 
@@ -51,5 +54,6 @@ MenuItem.defaultProps = {
   trailingIcon: null,
   checked: false,
   disabled: false,
+  variant: "default",
   onClick: undefined,
 };

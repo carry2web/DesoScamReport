@@ -31,6 +31,14 @@
   .menuItem.checked {
     background-color: var(--color-accent-subtle);
   }
+
+  .menuItem.danger {
+    color: var(--color-danger);
+  }
+  
+  .menuItem.danger:hover {
+    background-color: var(--color-danger-hover-bg);
+  }
   
   .menuItem.small {
     padding: var(--spacing-xs) var(--spacing-sm);
