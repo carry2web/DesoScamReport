@@ -75,7 +75,7 @@ export default function Home() {
 
     } catch (error) {
       console.log("Error: ", error)
-      setPostError(error.message || 'Error sumbitting a post')
+      setPostError(error?.message || 'Error submitting a post');
       setLoading(false)
     }   
   }  
