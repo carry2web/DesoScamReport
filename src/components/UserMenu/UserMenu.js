@@ -6,6 +6,7 @@ import { useUser } from "@/context/UserContext";
 
 import { Button } from "@/components/Button";
 import { Select } from "@/components/Select";
+import { MenuItem } from "@/components/MenuItem";
 
 import { useClickOutside } from '@/hooks/useClickOutside';
 
@@ -74,7 +75,7 @@ export const UserMenu = () => {
 
                 <div className={styles.loggedUserData}>
                     Logged as:
-                    {userPublicKey &&<div>{userPublicKey}</div>}
+                    {userPublicKey &&<div><MenuItem>{userPublicKey}</MenuItem></div>}
                     <div>
                         { isUserProfileLoading 
                             ?<>Loading...</>

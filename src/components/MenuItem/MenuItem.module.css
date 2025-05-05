@@ -1,0 +1,64 @@
+.menuItem {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-base);
+    font-family: inherit;
+    color: var(--color-text);
+    background-color: transparent;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  .menuItem:hover {
+    background-color: var(--color-surface-hover);
+  }
+  
+  .menuItem:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--color-accent-subtle);
+    background-color: var(--color-surface-hover);
+  }
+  
+  .menuItem.disabled {
+    color: var(--color-text-muted);
+    cursor: not-allowed;
+    background-color: transparent;
+  }
+  
+  .menuItem.checked {
+    background-color: var(--color-accent-subtle);
+  }
+  
+  .menuItem.small {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: var(--font-size-sm);
+  }
+  
+  .menuItem.large {
+    padding: var(--spacing-md) var(--spacing-lg);
+    font-size: var(--font-size-lg);
+  }
+  
+  .icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .trailingIcon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto;
+  }
+  
+  .label {
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
