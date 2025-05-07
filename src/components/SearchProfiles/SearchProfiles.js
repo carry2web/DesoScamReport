@@ -7,6 +7,10 @@ import { Input } from '@/components/Input';
 
 import { useClickOutside } from '@/hooks/useClickOutside';
 
+import { avatarUrl } from "@/utils/profileUtils";
+
+import { DefaultAvatar } from '@/assets/icons';
+
 import styles from './SearchProfiles.module.css';
 
 export const SearchProfiles = () => {
@@ -66,30 +70,46 @@ export const SearchProfiles = () => {
                     {isLoading ? (
                         <div className={styles.message}>Loading...</div>
                     ) : data?.length > 0 ? (
-                        data.map((profile) => (
-                            <Link
-                                key={profile.PublicKeyBase58Check}
-                                href={`/${profile.Username}`}
-                                className={styles.item}
-                                onClick={() => {
-                                    setQuery('');
-                                    setDebouncedQuery('');
-                                }}
-                            >
-                                <div className={styles.username}>@{profile.Username}</div>
-                                {profile.Description && (
-                                    <div className={styles.description}>
-                                    {profile.Description.slice(0, 80)}
+                        data.map((profile) => {
+                            const avatar = avatarUrl(profile);
+                            return (
+                                <Link
+                                    key={profile.PublicKeyBase58Check}
+                                    href={`/${profile.Username}`}
+                                    className={styles.item}
+                                    onClick={() => {
+                                        setQuery('');
+                                        setDebouncedQuery('');
+                                    }}
+                                >
+                                    <div className={styles.avatarFrame}>
+                                        {avatar ? (
+                                            <img
+                                                src={avatar}
+                                                alt="User avatar"
+                                                className={styles.avatarImage}
+                                            />
+                                        ) : (
+                                            <div className={styles.fallbackAvatar}>
+                                                <DefaultAvatar />
+                                            </div>
+                                        )}
                                     </div>
-                                )}
-                            </Link>
-                        ))
+
+                                    <div className={styles.username}>@{profile.Username}</div>
+                                    {profile.Description && (
+                                        <div className={styles.description}>
+                                            {profile.Description.slice(0, 80)}
+                                        </div>
+                                    )}
+                                </Link>
+                            );
+                        })
                     ) : (
                         <div className={styles.message}>No profiles found</div>
                     )}
                 </div>
             )}
-
         </div>
     );
 };

@@ -1,4 +1,6 @@
-import { DESO_API_BASE } from "@/config/desoConfig";
+import { DESO_API_BASE, DESO_WEB_BASE } from "@/config/desoConfig";
+
+const DEFAULT_AVATAR_FALLBACK = `${DESO_WEB_BASE}/assets/img/default_profile_pic.png`
 
 export const avatarUrl = (Profile) => {
   if (!Profile?.PublicKeyBase58Check) return null;
@@ -11,7 +13,8 @@ export const avatarUrl = (Profile) => {
     return Profile.ExtraData.NFTProfilePictureUrl;
   }
 
-  return `${DESO_API_BASE}/get-single-profile-picture/${Profile.PublicKeyBase58Check}`;
+  // include fallback url for profile image
+  return `${DESO_API_BASE}/get-single-profile-picture/${Profile.PublicKeyBase58Check}?fallback=${DEFAULT_AVATAR_FALLBACK}`;
 };
   
 export function isMaybePublicKey(pk) {

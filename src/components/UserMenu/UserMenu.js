@@ -23,7 +23,6 @@ export const UserMenu = () => {
     const [isOpen, setIsOpen] = useState(false);
     const containerRef = useRef(null);
 
-    const [imageError, setImageError] = useState(false);
     const avatar = avatarUrl(userProfile);
 
     const toggleDropdown = () => setIsOpen((prev) => !prev);
@@ -54,18 +53,17 @@ export const UserMenu = () => {
 
         <div className={styles.start} onClick={toggleDropdown}>
             <div className={styles.avatarFrame}>
-            {!avatar || imageError ? (
-                <div className={styles.fallbackAvatar}>
-                    <DefaultAvatar />
-                </div>
-            ) : (
-                <img
-                    src={avatar}
-                    alt="User avatar"
-                    className={styles.avatarImage}
-                    onError={() => setImageError(true)}
-                />
-            )}
+                {avatar ? (
+                    <img
+                        src={avatar}
+                        alt="User avatar"
+                        className={styles.avatarImage}
+                    />
+                ) : (
+                    <div className={styles.fallbackAvatar}>
+                        <DefaultAvatar />
+                    </div>
+                )}
             </div>
 
         </div>  
