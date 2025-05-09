@@ -7,9 +7,7 @@ import { Input } from '@/components/Input';
 
 import { useClickOutside } from '@/hooks/useClickOutside';
 
-import { avatarUrl } from "@/utils/profileUtils";
-
-import { DefaultAvatar } from '@/assets/icons';
+import { Avatar } from "@/components/Avatar";
 
 import styles from './SearchProfiles.module.css';
 
@@ -71,7 +69,6 @@ export const SearchProfiles = () => {
                         <div className={styles.message}>Loading...</div>
                     ) : data?.length > 0 ? (
                         data.map((profile) => {
-                            const avatar = avatarUrl(profile);
                             return (
                                 <Link
                                     key={profile.PublicKeyBase58Check}
@@ -82,19 +79,8 @@ export const SearchProfiles = () => {
                                         setDebouncedQuery('');
                                     }}
                                 >
-                                    <div className={styles.avatarFrame}>
-                                        {avatar ? (
-                                            <img
-                                                src={avatar}
-                                                alt="User avatar"
-                                                className={styles.avatarImage}
-                                            />
-                                        ) : (
-                                            <div className={styles.fallbackAvatar}>
-                                                <DefaultAvatar />
-                                            </div>
-                                        )}
-                                    </div>
+
+                                    <Avatar profile={profile} size={50} />
 
                                     <div className={styles.username}>@{profile.Username}</div>
                                     {profile.Description && (

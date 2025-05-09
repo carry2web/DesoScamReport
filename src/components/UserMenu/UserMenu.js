@@ -10,9 +10,7 @@ import { MenuItem } from "@/components/MenuItem";
 
 import { useClickOutside } from '@/hooks/useClickOutside';
 
-import { avatarUrl } from "@/utils/profileUtils";
-
-import { DefaultAvatar } from '@/assets/icons';
+import { Avatar } from "@/components/Avatar";
 
 import styles from "./UserMenu.module.css";
 
@@ -22,8 +20,6 @@ export const UserMenu = () => {
 
     const [isOpen, setIsOpen] = useState(false);
     const containerRef = useRef(null);
-
-    const avatar = avatarUrl(userProfile);
 
     const toggleDropdown = () => setIsOpen((prev) => !prev);
     const closeDropdown = () => setIsOpen(false);
@@ -52,20 +48,7 @@ export const UserMenu = () => {
     <div className={styles.container} ref={containerRef}>
 
         <div className={styles.start} onClick={toggleDropdown}>
-            <div className={styles.avatarFrame}>
-                {avatar ? (
-                    <img
-                        src={avatar}
-                        alt="User avatar"
-                        className={styles.avatarImage}
-                    />
-                ) : (
-                    <div className={styles.fallbackAvatar}>
-                        <DefaultAvatar />
-                    </div>
-                )}
-            </div>
-
+            <Avatar profile={userProfile} size={38} />
         </div>  
 
         {isOpen && (

@@ -7,7 +7,7 @@ import { useUser } from "@/context/UserContext";
 
 import { useDeSoApi } from "@/api/useDeSoApi";
 
-import { avatarUrl } from "@/utils/profileUtils";
+import { Avatar } from "@/components/Avatar";
 
 import { Button } from "@/components/Button";
 
@@ -125,15 +125,13 @@ export default function Home() {
         <p>Loading profile...</p>
         :
         <>
-        {/* Show User Profile Info */}
-        {userProfile && (
+          {/* Show User Profile Info */}
           <div className={styles.profileContainer}>
-            {userProfile.ExtraData?.DisplayName && <h2>{userProfile.ExtraData?.DisplayName}</h2>}
-            {userProfile.Username && <div>{userProfile.Username}</div>}
-            <img src={avatarUrl(userProfile)} alt="Profile" width="100" />
-            <p>{userProfile.Description}</p>
+            {userProfile?.ExtraData?.DisplayName && <h2>{userProfile.ExtraData?.DisplayName}</h2>}
+            {userProfile?.Username ? <div>{userProfile?.Username}</div> : <div>No username</div>}
+            <Avatar profile={userProfile} size={100} />
+            {userProfile?.Description && <p>{userProfile.Description}</p> }         
           </div>
-        )}
         </>
       }
 
