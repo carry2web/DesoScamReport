@@ -1,73 +1,107 @@
 "use client";
 
-import PropTypes from "prop-types";
+import { useState, useRef, useEffect } from "react";
+import { useFloating, offset, flip, shift, size as applySize, autoUpdate, FloatingPortal } from "@floating-ui/react";
+import { useClickOutside } from "@/hooks/useClickOutside";
+import { Dropdown } from "@/components/Dropdown";
+import { MenuItem } from "@/components/MenuItem";
 import classNames from "classnames";
 import styles from "./Select.module.css";
 
-export const Select = ({
-  value,
-  onChange,
-  options,
-  placeholder,
-  size = "medium",
-  error = false,
-  disabled = false,
-  name,
-  ...props
-}) => {
+export const Select = ({ options, placeholder = "Select...", value, onChange, size = "medium", floatingRef, maxHeight }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const buttonRef = useRef(null);
+
+  const {
+    refs,
+    floatingStyles,
+  } = useFloating({
+    placement: "bottom-start",
+    middleware: [
+      offset(4),
+      flip(),
+      shift(),
+      applySize({
+        apply: ({ rects, elements }) => {
+          Object.assign(elements.floating.style, {
+            width: `${rects.reference.width}px`,
+          });
+        },
+      }),
+    ],
+    whileElementsMounted: autoUpdate,
+  });
+
+
+  useClickOutside([refs.reference, refs.floating], () => {
+    setIsOpen(false);
+  });
+
+  const selected = options.find((opt) => opt.value === value);
+
+  // assignment to only happen when the dropdown is open and the floating element has mounted
+  useEffect(() => {
+    if (!floatingRef || !isOpen) return;
+  
+    const el = refs.floating.current;
+  
+    if (el) {
+      floatingRef.current = el;
+    } else {
+      // fallback to try next frame
+      const frame = requestAnimationFrame(() => {
+        if (refs.floating.current) {
+          floatingRef.current = refs.floating.current;
+        }
+      });
+  
+      return () => cancelAnimationFrame(frame);
+    }
+  }, [floatingRef, isOpen, refs.floating]);
+  
+  // avoid future leakage, clear the ref on close
+  useEffect(() => {
+    if (!isOpen && floatingRef) {
+      floatingRef.current = null;
+    }
+  }, [isOpen, floatingRef]);    
+
+
   return (
-    <div
-      className={classNames(
-        styles.container,
-        styles[size],
-        { [styles.error]: error, [styles.disabled]: disabled }
-      )}
-    >
-      <select
-        className={styles.select}
-        value={value}
-        onChange={onChange}
-        disabled={disabled}
-        name={name}
-        {...props}
+    <div className={styles.selectWrapper} ref={refs.setReference}>
+      <button
+        ref={buttonRef}
+        className={classNames(styles.selectButton, styles[size])}
+        onClick={() => setIsOpen((prev) => !prev)}
       >
-        {placeholder && (
-          <option value="" disabled hidden>
-            {placeholder}
-          </option>
-        )}
-        {options.map((option) => (
-          <option key={option.value} value={option.value} disabled={option.disabled}>
-            {option.label}
-          </option>
-        ))}
-      </select>
+        {selected?.label || placeholder}
+      </button>
+
+      {isOpen && (
+        <FloatingPortal>
+          <div
+            ref={refs.setFloating}
+            style={floatingStyles}
+            className={styles.dropdownContainer}
+          >
+            <Dropdown maxHeight={maxHeight}>
+              {options.map((option) => (
+                <MenuItem
+                    key={option.value}
+                    onClick={() => {
+                        onChange?.({ target: { value: option.value } });
+                        setIsOpen(false);
+                    }}
+                    checked={option.value === value}
+                    icon={option.icon} // ✅ Pass icon through
+                >
+                    {option.label}
+                </MenuItem>                
+              ))}
+            </Dropdown>
+          </div>
+        </FloatingPortal>
+      )}
     </div>
   );
 };
-
-Select.propTypes = {
-  value: PropTypes.string.isRequired,
-  onChange: PropTypes.func.isRequired,
-  options: PropTypes.arrayOf(
-    PropTypes.shape({
-      value: PropTypes.string.isRequired,
-      label: PropTypes.string.isRequired,
-      disabled: PropTypes.bool,
-    })
-  ).isRequired,
-  placeholder: PropTypes.string,
-  size: PropTypes.oneOf(["small", "medium", "large"]),
-  error: PropTypes.bool,
-  disabled: PropTypes.bool,
-  name: PropTypes.string,
-};
-
-Select.defaultProps = {
-  placeholder: "",
-  size: "medium",
-  error: false,
-  disabled: false,
-  name: undefined,
-};
-

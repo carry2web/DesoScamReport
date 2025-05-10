@@ -5,6 +5,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useUser } from "@/context/UserContext";
 
 import { Button } from "@/components/Button";
+//import { Select } from "@/components/SelectBasic";
 import { Select } from "@/components/Select";
 import { Dropdown, DropdownSection } from "@/components/Dropdown";
 
@@ -20,6 +21,7 @@ export const UserMenu = () => {
 
     const [isOpen, setIsOpen] = useState(false);
     const containerRef = useRef(null);
+    const selectFloatingRef = useRef(null);
 
     const toggleDropdown = () => setIsOpen((prev) => !prev);
     const closeDropdown = () => setIsOpen(false);
@@ -39,10 +41,25 @@ export const UserMenu = () => {
         closeDropdown();
     };
 
-    
-    useClickOutside(containerRef, () => {
+    useClickOutside([containerRef, selectFloatingRef], () => {
         closeDropdown();
-    });    
+    });
+
+    const selectOptions = [
+        {
+          value: userPublicKey,
+          label: userProfile?.Username || userPublicKey,
+          icon: <Avatar profile={userProfile} size={24} />,
+        },
+        ...(altUserProfiles?.length > 0
+          ? altUserProfiles.map((user) => ({
+              value: user.PublicKeyBase58Check,
+              label: user.ProfileEntryResponse?.Username || user.PublicKeyBase58Check,
+              icon: <Avatar profile={user.ProfileEntryResponse} size={24} />,
+            }))
+          : []),
+    ];    
+
 
   return (
     <div className={styles.container} ref={containerRef}>
@@ -75,20 +92,15 @@ export const UserMenu = () => {
                         <div>
                         {isAltUserProfileSLoading
                             ?<span>Loading...</span>
-                            :
+                            :   
                             <Select
-                                value=""
+                                floatingRef={selectFloatingRef}
+                                value={userPublicKey}
                                 onChange={(e) => handleUserSelect(e.target.value)}
                                 placeholder="Select alternate user"
-                                options={
-                                    altUserProfiles && altUserProfiles.length > 0
-                                    ? altUserProfiles.map((user) => ({
-                                        value: user.PublicKeyBase58Check,
-                                        label: user.ProfileEntryResponse?.Username || user.PublicKeyBase58Check,
-                                        }))
-                                    : [{ value: "", label: "No alt users", disabled: true }]
-                                }
-                            />                        
+                                options={selectOptions}
+                                maxHeight="200px"
+                            />                                              
                         }       
                         </div>
                         <div><Button onClick={handleLogin} variant="secondary">Add User</Button></div>          

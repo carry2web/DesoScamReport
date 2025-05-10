@@ -1,99 +1,80 @@
-import { Select } from './Select';
+import { Select } from "./Select";
 
 const themeDecorator = (theme) => (Story) => (
-  <div data-theme={theme} style={{ padding: '1rem', background: theme === 'light' ? '#fff' : '#1d2125' }}>
+  <div
+    data-theme={theme}
+    style={{ padding: "10rem", background: theme === "light" ? "#fff" : "#1d2125" }}
+  >
     <Story />
   </div>
 );
 
 export default {
-  title: 'Components/Select',
+  title: "Components/Select",
   component: Select,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   parameters: {
-    layout: 'centered',
+    layout: "centered",
   },
   argTypes: {
     size: {
-      control: { type: 'select' },
-      options: ['small', 'medium', 'large'],
+      control: { type: "select" },
+      options: ["small", "medium", "large"],
     },
   },
 };
 
 const options = [
-  { value: '', label: 'Select option', disabled: true },
-  { value: 'one', label: 'Option One' },
-  { value: 'two', label: 'Option Two' },
-  { value: 'three', label: 'Option Three' },
+  { label: "Option 1", value: "opt1" },
+  { label: "Option 2", value: "opt2" },
+  { label: "Option 3", value: "opt3" },
 ];
 
-// === DARK THEME ===
 export const DefaultDark = {
-  name: 'Default (Dark Theme)',
+  name: "Default (Dark Theme)",
+  render: (args) => <Select {...args} options={options} />,
   args: {
-    value: '',
-    onChange: () => {},
-    placeholder: 'Select an option',
-    options,
-    size: 'medium',
+    size: "medium",
+    placeholder: "Select an option",
   },
-  decorators: [themeDecorator('dark')],
+  decorators: [themeDecorator("dark")],
 };
 
-export const ErrorDark = {
-  args: {
-    value: '',
-    onChange: () => {},
-    placeholder: 'Select an option',
-    options,
-    error: true,
-  },
-  decorators: [themeDecorator('dark')],
-};
-
-export const DisabledDark = {
-  args: {
-    value: '',
-    onChange: () => {},
-    placeholder: 'Disabled select',
-    options,
-    disabled: true,
-  },
-  decorators: [themeDecorator('dark')],
-};
-
-// === LIGHT THEME ===
 export const DefaultLight = {
-  name: 'Default (Light Theme)',
+  name: "Default (Light Theme)",
+  render: (args) => <Select {...args} options={options} />,
   args: {
-    value: '',
-    onChange: () => {},
-    placeholder: 'Select an option',
-    options,
-    size: 'medium',
+    size: "medium",
+    placeholder: "Select an option",
   },
-  decorators: [themeDecorator('light')],
+  decorators: [themeDecorator("light")],
 };
 
-export const ErrorLight = {
+export const WithSelectedValue = {
+  name: "With Selected Value",
+  render: (args) => <Select {...args} options={options} />,
   args: {
-    value: '',
-    onChange: () => {},
-    placeholder: 'Select an option',
-    options,
-    error: true,
+    size: "medium",
+    placeholder: "Select an option",
+    value: "opt2",
   },
-  decorators: [themeDecorator('light')],
+  decorators: [themeDecorator("dark")],
 };
 
-export const DisabledLight = {
+export const SmallDark = {
+  render: (args) => <Select {...args} options={options} />,
   args: {
-    value: '',
-    onChange: () => {},
-    placeholder: 'Disabled select',
-    options,
-    disabled: true,
+    size: "small",
+    placeholder: "Small select",
   },
-  decorators: [themeDecorator('light')],
+  decorators: [themeDecorator("dark")],
+};
+
+export const LargeLight = {
+  render: (args) => <Select {...args} options={options} />,
+  args: {
+    size: "large",
+    placeholder: "Large select",
+  },
+  decorators: [themeDecorator("light")],
 };
