@@ -126,12 +126,15 @@ export default function Home() {
         :
         <>
           {/* Show User Profile Info */}
-          <div className={styles.profileContainer}>
-            {userProfile?.ExtraData?.DisplayName && <h2>{userProfile.ExtraData?.DisplayName}</h2>}
-            {userProfile?.Username ? <div>{userProfile?.Username}</div> : <div>No username</div>}
-            <Avatar profile={userProfile} size={100} />
-            {userProfile?.Description && <p>{userProfile.Description}</p> }         
-          </div>
+          {
+            userPublicKey && 
+            <div className={styles.profileContainer}>
+              {userProfile?.ExtraData?.DisplayName && <h2>{userProfile.ExtraData?.DisplayName}</h2>}
+              {userProfile?.Username ? <div>{userProfile?.Username}</div> : <div>No username</div>}
+              <Avatar profile={userProfile} size={100} />
+              {userProfile?.Description && <p>{userProfile.Description}</p> }         
+            </div>            
+          }
         </>
       }
 

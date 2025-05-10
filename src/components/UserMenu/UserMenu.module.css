@@ -32,7 +32,7 @@
     gap: 15px;
     cursor: default;
 
-    min-width: 220px;
+    width: 240px;
   }
   
   .loggedUserData{

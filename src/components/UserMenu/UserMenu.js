@@ -5,9 +5,9 @@ import { useAuth } from "@/context/AuthContext";
 import { useUser } from "@/context/UserContext";
 
 import { Button } from "@/components/Button";
-//import { Select } from "@/components/SelectBasic";
 import { Select } from "@/components/Select";
 import { Dropdown, DropdownSection } from "@/components/Dropdown";
+import { PublicKeyDisplay } from "@/components/PublicKeyDisplay";
 
 import { useClickOutside } from '@/hooks/useClickOutside';
 
@@ -73,41 +73,35 @@ export const UserMenu = () => {
         {isOpen && (
             <Dropdown className={styles.dropdown}>
 
-                <DropdownSection label="Logged as">                    
-                    {userPublicKey &&<div>{userPublicKey}</div>}
-                    <div>
-                        { isUserProfileLoading 
-                            ?<>Loading...</>
-                            :
-                            <>
-                                {userProfile?.Username
-                                ?<>{userProfile.Username}</>
-                                :<>No username</>
-                                }
-                            </>
-                        }
-                    </div>
-                </DropdownSection>
+                {
+                    userPublicKey &&
+                    <DropdownSection label="Public Key">                    
+                        <PublicKeyDisplay value={userPublicKey} align="end" />
+                    </DropdownSection>                    
+                }
 
-                <DropdownSection label="Alt users">
-                    <div className={styles.altUserSelector}>
-                        <div>
-                        {isAltUserProfileSLoading
-                            ?<span>Loading...</span>
-                            :   
-                            <Select
-                                floatingRef={selectFloatingRef}
-                                value={userPublicKey}
-                                onChange={(e) => handleUserSelect(e.target.value)}
-                                placeholder="Select alternate user"
-                                options={selectOptions}
-                                maxHeight="200px"
-                            />                                              
-                        }       
-                        </div>
-                        <div><Button onClick={handleLogin} variant="secondary">Add User</Button></div>          
-                    </div>      
-                </DropdownSection>         
+                {
+                    selectOptions && selectOptions.length > 0 &&
+                    <DropdownSection label="Switch user">
+                        <div className={styles.altUserSelector}>
+                            <div>
+                            {isAltUserProfileSLoading
+                                ?<span>Loading...</span>
+                                :   
+                                <Select
+                                    floatingRef={selectFloatingRef}
+                                    value={userPublicKey}
+                                    onChange={(e) => handleUserSelect(e.target.value)}
+                                    placeholder="Select alternate user"
+                                    options={selectOptions}
+                                    maxHeight="200px"
+                                />                                              
+                            }       
+                            </div>
+                            <div><Button onClick={handleLogin} variant="secondary" size="small">Add User</Button></div>          
+                        </div>      
+                    </DropdownSection>                       
+                }      
 
                 <DropdownSection>
                     {userPublicKey ? (

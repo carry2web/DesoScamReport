@@ -1,0 +1,50 @@
+.wrapper {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    font-family: monospace;
+    font-size: var(--font-size-sm);
+    background-color: var(--color-input-bg);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--radius-sm);
+  }
+  
+  .text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 160px;
+  }
+  
+  .copyButton {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    color: var(--color-text-muted);
+    transition: color 0.2s ease;
+  }
+  
+  .copyButton:hover {
+    color: var(--color-text);
+  }
+  
+  .icon {
+    width: 16px;
+    height: 16px;
+  }
+  
+  .start {
+    justify-content: flex-start;
+  }
+  
+  .center {
+    justify-content: center;
+  }
+  
+  .end {
+    justify-content: flex-end;
+  }
