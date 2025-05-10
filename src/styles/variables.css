@@ -2,6 +2,10 @@
     --navbar-height: 60px;
     --footer-height: 40px;
     --container-sides-padding: 20px;
+
+    --control-height-sm: 32px;
+    --control-height-md: 40px;
+    --control-height-lg: 48px;
     
     /* 🌙 Default Dark Theme as Fallback */
     --color-bg: #1d2125;
@@ -32,7 +36,7 @@
     --color-danger-hover-bg: rgba(231, 76, 60, 0.1);
   
     --color-border: #5c636b;
-    --color-divider: #2b2f33;
+    --color-divider: #5c636b;
   
     --color-btn-bg: var(--color-accent);
     --color-btn-text: #ffffff;
@@ -126,7 +130,7 @@
     --color-danger-hover-bg: rgba(231, 76, 60, 0.1);    
   
     --color-border: #5c636b;
-    --color-divider: #2b2f33;
+    --color-divider: #5c636b;
   
     --color-btn-bg: var(--color-accent);
     --color-btn-text: #ffffff;
@@ -184,7 +188,7 @@
     --color-danger-hover-bg: rgba(231, 76, 60, 0.07); /* slightly lighter for light theme */    
   
     --color-border: #dcdcdc;
-    --color-divider: #e4e6eb;
+    --color-divider: #dcdcdc;
   
     --color-btn-bg: var(--color-accent);
     --color-btn-text: #ffffff;

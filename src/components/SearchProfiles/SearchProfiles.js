@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import Link from "next/link";
 
 import { Input } from '@/components/Input';
+import { Dropdown } from "@/components/Dropdown";
 
 import { useClickOutside } from '@/hooks/useClickOutside';
 
@@ -64,7 +65,7 @@ export const SearchProfiles = () => {
             />
 
             {debouncedQuery && (
-                <div className={styles.dropdown}>
+                <Dropdown className={styles.dropdown}>
                     {isLoading ? (
                         <div className={styles.message}>Loading...</div>
                     ) : data?.length > 0 ? (
@@ -94,7 +95,7 @@ export const SearchProfiles = () => {
                     ) : (
                         <div className={styles.message}>No profiles found</div>
                     )}
-                </div>
+                </Dropdown>
             )}
         </div>
     );

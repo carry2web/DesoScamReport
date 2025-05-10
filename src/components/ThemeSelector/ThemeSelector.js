@@ -4,6 +4,8 @@ import { useState, useRef } from 'react';
 import { useTheme } from 'next-themes';
 import { useClickOutside } from '@/hooks/useClickOutside';
 
+import { Dropdown } from "@/components/Dropdown";
+
 import { 
   ThemeSelector as ThemeSelectIcon,
   ThemeLight as ThemeLightIcon, 
@@ -31,7 +33,7 @@ export const ThemeSelector = () => {
       </button>
 
       {open && (
-        <div className={styles.dropdown}>
+        <Dropdown className={styles.dropdown}>
           <button
             className={styles.item}
             onClick={() => handleThemeSelect('dark')}
@@ -44,7 +46,7 @@ export const ThemeSelector = () => {
           >
             <ThemeLightIcon />
           </button>
-        </div>
+        </Dropdown>
       )}
     </div>
   );

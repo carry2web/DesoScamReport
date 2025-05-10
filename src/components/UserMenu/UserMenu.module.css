@@ -14,19 +14,6 @@
     color: var(--color-accent);
   }
   
-  .avatar {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    background-color: var(--color-primary);
-    color: var(--color-bg);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.8rem;
-    font-weight: bold;
-    user-select: none;
-  }
   
   .dropdown {
     position: absolute;
@@ -44,108 +31,18 @@
     flex-direction: column;
     gap: 15px;
     cursor: default;
-    padding: 10px;
-
-    background-color: var(--color-surface);
-    border: 1px solid var(--color-border);
-    box-shadow: var(--shadow-md);
-    border-radius: var(--radius-md);    
 
     min-width: 190px;
   }
   
-  .item {
-    width: 100%;
-    padding: 8px 12px;
-    text-align: left;
-    font-size: 0.9rem;
-    color: var(--color-text);
-    background: none;
-    border: none;
-    outline: none;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-  }
-  
-  .item:hover {
-    background-color: var(--color-border);
-  }
-  
-  .divider {
-    height: 1px;
-    background-color: var(--color-border);
-    margin: 4px 0;
-  }
-  
-  .altUserList {
-    max-height: 200px;
-    overflow-y: auto;
-  }
-  
-  .altUserItem {
-    padding: 8px 12px;
-    font-size: 0.85rem;
-    color: var(--color-text-secondary);
-    cursor: pointer;
-  }
-  
-  .altUserItem:hover {
-    background-color: var(--color-border);
-  }
-  
-
   .loggedUserData{
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: var(--spacing-sm);
   }
 
   .altUserSelector{
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: var(--spacing-sm);
   }
-
-  .authButtons{
-    
-  }
-
-  button.addUser{
-    border: 1px solid var(--color-btn-secondary-border);
-    background-color: var(--color-btn-secondary-bg);
-    color: var(--color-btn-secondary-text);
-  }
-
-  button.addUser:hover{
-    background-color: var(--color-btn-secondary-hover-bg);
-  }
-
-.avatarFrame {
-    height: 38px;
-    width: 38px;
-    min-width: 38px;
-    border-radius: 10%;
-    background-color: var(--color-surface);
-    border: 2px solid var(--color-border);
-    box-sizing: border-box;
-    pointer-events: none;
-}
-
-.avatarImage {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 10%;
-  box-sizing: border-box;
-  pointer-events: none;
-}
-
-.fallbackAvatar {
-  width: 100%;
-  height: 100%;
-  color: var(--color-text-muted);
-  display: flex;
-  align-items: center;
-  justify-content: center;  
-}

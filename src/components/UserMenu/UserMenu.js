@@ -6,7 +6,7 @@ import { useUser } from "@/context/UserContext";
 
 import { Button } from "@/components/Button";
 import { Select } from "@/components/Select";
-import { MenuItem } from "@/components/MenuItem";
+import { Dropdown, DropdownSection } from "@/components/Dropdown";
 
 import { useClickOutside } from '@/hooks/useClickOutside';
 
@@ -52,11 +52,10 @@ export const UserMenu = () => {
         </div>  
 
         {isOpen && (
-            <div className={styles.dropdown}>
+            <Dropdown className={styles.dropdown}>
 
-                <div className={styles.loggedUserData}>
-                    Logged as:
-                    {userPublicKey &&<div><MenuItem>{userPublicKey}</MenuItem></div>}
+                <DropdownSection label="Logged as">                    
+                    {userPublicKey &&<div>{userPublicKey}</div>}
                     <div>
                         { isUserProfileLoading 
                             ?<>Loading...</>
@@ -69,41 +68,41 @@ export const UserMenu = () => {
                             </>
                         }
                     </div>
-                </div>
+                </DropdownSection>
 
-                <div className={styles.altUserSelector}>
-                    <div>
-                    {isAltUserProfileSLoading
-                        ?<span>Loading...</span>
-                        :
-                        <Select
-                            value=""
-                            onChange={(e) => handleUserSelect(e.target.value)}
-                            placeholder="Select alternate user"
-                            options={
-                                altUserProfiles && altUserProfiles.length > 0
-                                ? altUserProfiles.map((user) => ({
-                                    value: user.PublicKeyBase58Check,
-                                    label: user.ProfileEntryResponse?.Username || user.PublicKeyBase58Check,
-                                    }))
-                                : [{ value: "", label: "No alt users", disabled: true }]
-                            }
-                        />                        
-                    }       
-                    </div>
-                    <div><Button onClick={handleLogin} variant="secondary">Add User</Button></div>                
-                </div>            
+                <DropdownSection label="Alt users">
+                    <div className={styles.altUserSelector}>
+                        <div>
+                        {isAltUserProfileSLoading
+                            ?<span>Loading...</span>
+                            :
+                            <Select
+                                value=""
+                                onChange={(e) => handleUserSelect(e.target.value)}
+                                placeholder="Select alternate user"
+                                options={
+                                    altUserProfiles && altUserProfiles.length > 0
+                                    ? altUserProfiles.map((user) => ({
+                                        value: user.PublicKeyBase58Check,
+                                        label: user.ProfileEntryResponse?.Username || user.PublicKeyBase58Check,
+                                        }))
+                                    : [{ value: "", label: "No alt users", disabled: true }]
+                                }
+                            />                        
+                        }       
+                        </div>
+                        <div><Button onClick={handleLogin} variant="secondary">Add User</Button></div>          
+                    </div>      
+                </DropdownSection>         
 
-                
-                <div className={styles.authButtons}>
+                <DropdownSection>
                     {userPublicKey ? (
                         <Button onClick={handleLogout}>Log out</Button>
                     ) : (
                         <Button onClick={handleLogin}>Log in</Button>
                     )}
-                </div>
-
-            </div>
+                </DropdownSection>
+            </Dropdown>
         )}
     </div>
   );

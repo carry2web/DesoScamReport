@@ -4,6 +4,7 @@
     position: relative;
     font-family: inherit;
     width: 100%;
+    box-sizing: border-box;
   }
   
   .select {
