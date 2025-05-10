@@ -43,14 +43,16 @@ export const UserMenu = () => {
 
     useClickOutside([containerRef, selectFloatingRef], () => {
         closeDropdown();
-    });
+    });   
 
     const selectOptions = [
-        {
-          value: userPublicKey,
-          label: userProfile?.Username || userPublicKey,
-          icon: <Avatar profile={userProfile} size={24} />,
-        },
+        ...(userPublicKey
+          ? [{
+              value: userPublicKey,
+              label: userProfile?.Username || userPublicKey,
+              icon: <Avatar profile={userProfile} size={24} />,
+            }]
+          : []),
         ...(altUserProfiles?.length > 0
           ? altUserProfiles.map((user) => ({
               value: user.PublicKeyBase58Check,
@@ -58,7 +60,7 @@ export const UserMenu = () => {
               icon: <Avatar profile={user.ProfileEntryResponse} size={24} />,
             }))
           : []),
-    ];    
+    ];
 
 
   return (
