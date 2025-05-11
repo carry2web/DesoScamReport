@@ -10,7 +10,7 @@ export const Footer = () => {
           Designed by <a href="https://focus.xyz/brootle" target="_blank" rel="noreferrer">brootle</a>
         </div>
         <div>
-          2025
+          Source code at <a href="https://github.com/brootle/deso-starter-nextjs-plus" target="_blank" rel="noreferrer">Github</a>
         </div>
     </footer>
   );
