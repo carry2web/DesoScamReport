@@ -91,6 +91,6 @@
     box-sizing: border-box;
   }
 
-.hidden {
-    display: none;
-}
+  .errorMessage {
+    color: var(--color-error);
+  }  

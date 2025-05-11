@@ -23,11 +23,7 @@ const SinglePostPage = () => {
 
   const { getSinglePost } = useDeSoApi();
 
-  const {
-    data,
-    isLoading,
-    error,
-  } = useQuery({
+  const { data, isLoading, isError, error } = useQuery({
     queryKey: ['single-post', postHash],
     queryFn: async () => {
       const response = await getSinglePost({
@@ -45,7 +41,7 @@ const SinglePostPage = () => {
   });
 
   if (isLoading) return <p>Loading post...</p>;
-  if (error) return <p style={{ color: 'red' }}>{error.message}</p>;
+  if (isError) return <p style={{ color: 'red' }}>{error.message}</p>;
   if (!data) return <p>Post not found.</p>;
 
   return (

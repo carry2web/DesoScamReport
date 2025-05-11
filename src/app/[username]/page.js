@@ -15,14 +15,16 @@ const ProfilePage = () => {
 
   const queryKey = isPublicKey ? ['profile', rawParam] : ['profile-by-username', lookupKey];
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isError, error } = useQuery({
     queryKey,
     queryFn: async () => {
       const response = isPublicKey
         ? await getSingleProfile({ PublicKeyBase58Check: rawParam })
         : await getSingleProfile({ Username: lookupKey });
 
-      if (!response.success || !response.data?.Profile) return null;
+      if (!response.success || !response.data?.Profile) {
+        throw new Error(response.error || 'Failed to load profile');
+      }
 
       return response.data.Profile;
     },
@@ -35,6 +37,15 @@ const ProfilePage = () => {
   if (isLoading) {
     return <p>Loading profile...</p>;
   }
+
+  if (isError) {
+    return (
+      <>
+        <h2>Error loading profile</h2>
+        <p style={{ color: 'red' }}>{error.message}</p>
+      </>
+    );
+  }  
 
   const displayKey = data?.Username || data?.PublicKeyBase58Check || rawParam;
 

@@ -126,13 +126,39 @@ export function useDeSoApi() {
     });
   }, [apiRequest]);
   
-
   const getProfiles = useCallback((params) => {
+    const {
+      PublicKeyBase58Check = '',
+      Username = '',
+      UsernamePrefix = '',
+      Description = '',
+      OrderBy = '',
+      NumToFetch = 10,
+      ReaderPublicKeyBase58Check = '',
+      ModerationType = '',
+      FetchUsersThatHODL = false,
+      AddGlobalFeedBool = false,
+    } = params;
+  
+    const payload = {
+      PublicKeyBase58Check,
+      Username,
+      UsernamePrefix,
+      Description,
+      OrderBy,
+      NumToFetch,
+      ReaderPublicKeyBase58Check,
+      ModerationType,
+      FetchUsersThatHODL,
+      AddGlobalFeedBool,
+    };
+  
     return apiRequest({
       endpoint: "get-profiles",
-      options: { body: JSON.stringify(params) },
+      options: { body: JSON.stringify(payload) },
     });
-  }, [apiRequest]);  
+  }, [apiRequest]);
+  
   
   return {
     getSingleProfile,
