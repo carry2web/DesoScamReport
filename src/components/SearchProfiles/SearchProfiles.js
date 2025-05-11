@@ -81,14 +81,16 @@ export const SearchProfiles = () => {
                                     }}
                                 >
 
-                                    <Avatar profile={profile} size={50} />
+                                    <Avatar profile={profile} size={60} />
 
-                                    <div className={styles.username}>@{profile.Username}</div>
-                                    {profile.Description && (
-                                        <div className={styles.description}>
-                                            {profile.Description.slice(0, 80)}
-                                        </div>
-                                    )}
+                                    <div className={styles.info}>
+                                        <div className={styles.username}>@{profile.Username}</div>
+                                        {profile.Description && (
+                                            <div className={styles.description}>
+                                                {profile.Description}
+                                            </div>
+                                        )}
+                                    </div>
                                 </Link>
                             );
                         })
