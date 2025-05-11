@@ -54,6 +54,7 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     max-width: 100%;
+    font-weight: var(--font-weight-medium);
   }
 
   .info{
@@ -73,7 +74,9 @@
     -webkit-box-orient: vertical;
     display: -webkit-box;
     overflow: hidden;
-    text-overflow: ellipsis;    
+    text-overflow: ellipsis;   
+    
+    line-height: var(--line-height-tight);
   }
   
   .loading {

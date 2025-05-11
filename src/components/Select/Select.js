@@ -17,6 +17,7 @@ export const Select = ({ options, placeholder = "Select...", value, onChange, si
     floatingStyles,
   } = useFloating({
     placement: "bottom-start",
+    strategy: "fixed", // prevent flickering on page scroll when dropdown opened
     middleware: [
       offset(4),
       flip(),
