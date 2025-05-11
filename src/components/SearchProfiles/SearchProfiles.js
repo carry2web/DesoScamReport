@@ -1,6 +1,7 @@
 import { useRef, useState, useEffect } from 'react';
 import { useDeSoApi } from '@/api/useDeSoApi';
 import { useQuery } from '@tanstack/react-query';
+import { isMaybePublicKey } from '@/utils/profileUtils';
 import classNames from 'classnames';
 import Link from "next/link";
 
@@ -16,7 +17,7 @@ import styles from './SearchProfiles.module.css';
 export const SearchProfiles = () => {
     const [query, setQuery] = useState('');
     const [debouncedQuery, setDebouncedQuery] = useState('');
-    const { getProfiles } = useDeSoApi();
+    const { getProfiles, getSingleProfile } = useDeSoApi();
 
     const containerRef = useRef(null);
 
@@ -27,16 +28,33 @@ export const SearchProfiles = () => {
         return () => clearTimeout(delay);
     }, [query]);
 
+    const isPublicKey = isMaybePublicKey(debouncedQuery);
+
     const { data, isLoading, isError, error } = useQuery({
-        queryKey: ['search-profiles', debouncedQuery],
+        queryKey: isPublicKey
+        ? ['search-profile-by-public-key', debouncedQuery]
+        : ['search-profiles-by-username-prefix', debouncedQuery],
+
+        // queryKey: ['search-profiles', debouncedQuery],
+        // supports seach by public key
         queryFn: async () => {
-            const response = await getProfiles({ UsernamePrefix: debouncedQuery });
-            if (!response.success) throw new Error(response.error);
-            return response.data?.ProfilesFound || [];
-        },
+            if (isPublicKey) {
+              const response = await getSingleProfile({ PublicKeyBase58Check: debouncedQuery });
+              if (!response.success || !response.data?.Profile) {
+                throw new Error(response.error || 'Profile not found');
+              }
+              return [response.data.Profile]; // wrap in array to stay consistent with map()
+            } else {
+              const response = await getProfiles({ UsernamePrefix: debouncedQuery });
+              if (!response.success) throw new Error(response.error);
+              return response.data?.ProfilesFound || [];
+            }
+        },        
         enabled: !!debouncedQuery,
         staleTime: 30 * 1000,
         cacheTime: 5 * 60 * 1000,
+        retry: false,
+        refetchOnWindowFocus: false,
     });
 
     useClickOutside(containerRef, () => {

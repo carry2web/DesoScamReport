@@ -13,10 +13,10 @@ const ProfilePage = () => {
 
   const { getSingleProfile } = useDeSoApi();
 
-  const queryKey = isPublicKey ? ['profile', rawParam] : ['profile-by-username', lookupKey];
-
   const { data, isLoading, isError, error } = useQuery({
-    queryKey,
+    queryKey: isPublicKey
+    ? ['profile', rawParam]
+    : ['profile-by-username', lookupKey],    
     queryFn: async () => {
       const response = isPublicKey
         ? await getSingleProfile({ PublicKeyBase58Check: rawParam })
