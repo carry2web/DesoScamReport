@@ -22,17 +22,15 @@
     text-align: right;
     right: 0;
     margin-top: 8px;
-    max-height: 320px;
+    max-height: 340px;
     overflow-y: auto;
-
     z-index: 1000;
-
     display: flex;
     flex-direction: column;
     gap: 15px;
     cursor: default;
-
-    width: 240px;
+    width: 260px;
+    box-sizing: border-box;
   }
   
   .loggedUserData{
@@ -46,3 +44,38 @@
     flex-direction: column;
     gap: var(--spacing-sm);
   }
+
+.userCard{
+  display: flex;
+  gap: var(--spacing-sm);
+  align-items: center;
+  text-align: left;
+}
+
+.profileInfo{
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  flex: 1;
+  overflow: hidden;
+}
+
+.profileDisplayName{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-lg);
+}
+
+.profileUsername{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+.profileUsername:hover{
+  text-decoration: none;
+}

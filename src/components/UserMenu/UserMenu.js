@@ -1,6 +1,9 @@
 "use client";
 
 import { useState, useRef } from "react";
+
+import Link from 'next/link';
+
 import { useAuth } from "@/context/AuthContext";
 import { useUser } from "@/context/UserContext";
 
@@ -75,8 +78,32 @@ export const UserMenu = () => {
 
                 {
                     userPublicKey &&
+                    <DropdownSection>                    
+                        <div className={styles.userCard}>
+                            <Avatar profile={userProfile} size={60} />
+                            <div className={styles.profileInfo}>
+                                <div className={styles.profileDisplayName}>{userProfile?.ExtraData?.DisplayName}</div> 
+                                <Link 
+                                    href={`/${userProfile?.Username || userPublicKey}`} 
+                                    className={styles.profileUsername}
+                                    onClick={closeDropdown}
+                                >
+                                    {
+                                        userProfile?.Username
+                                        ?<>@{userProfile?.Username}</>
+                                        :<>{userPublicKey}</>
+                                    }
+                                </Link>                             
+                            </div>
+                        </div>
+                    </DropdownSection>                    
+                }
+
+
+                {
+                    userPublicKey &&
                     <DropdownSection label="Public Key">                    
-                        <PublicKeyDisplay value={userPublicKey} align="end" />
+                        <PublicKeyDisplay value={userPublicKey} align="end" charsStart={8} charsEnd={8} />
                     </DropdownSection>                    
                 }
 
