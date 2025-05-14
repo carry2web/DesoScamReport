@@ -7,8 +7,6 @@ import { useUser } from "@/context/UserContext";
 
 import { useDeSoApi } from "@/api/useDeSoApi";
 
-import { Avatar } from "@/components/Avatar";
-
 import { Button } from "@/components/Button";
 
 import Link from 'next/link';
@@ -22,7 +20,7 @@ export default function Home() {
     signAndSubmitTransaction
   } = useAuth();
 
-  const { userProfile, isUserProfileLoading, userProfileError } = useUser();
+  const { userProfile } = useUser();
 
   const { submitPost } = useDeSoApi();
 
@@ -84,16 +82,8 @@ export default function Home() {
     <div className={styles.pageContainer}>
 
       {/* Public Key Loading State */}
-      {isUserPublicKeyLoading 
-        ?<p>Checking authentication...</p>
-        :
-        <>
-          {userPublicKey && <p><strong>Public Key:</strong> {userPublicKey}</p>}        
-        </>
-      }
+      {isUserPublicKeyLoading && <p>Checking authentication...</p>}
 
-      {/* Error Handling */}
-      {userProfileError && <p className={styles.error}>Error: {userProfileError}</p>}
 
       {userPublicKey && (
         <div className={styles.postContainer}>
@@ -117,26 +107,6 @@ export default function Home() {
           {postError && <p className={styles.error}>Error: {postError}</p>}
         </div>
       )}      
-
-
-      {/* User Profile Loading State */}
-      {isUserProfileLoading 
-        ?
-        <p>Loading profile...</p>
-        :
-        <>
-          {/* Show User Profile Info */}
-          {
-            userPublicKey && 
-            <div className={styles.profileContainer}>
-              {userProfile?.ExtraData?.DisplayName && <h2>{userProfile.ExtraData?.DisplayName}</h2>}
-              {userProfile?.Username ? <div>{userProfile?.Username}</div> : <div>No username</div>}
-              <Avatar profile={userProfile} size={100} />
-              {userProfile?.Description && <p>{userProfile.Description}</p> }         
-            </div>            
-          }
-        </>
-      }
 
 
       {
