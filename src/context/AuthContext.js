@@ -8,7 +8,7 @@ const AuthContext = createContext(null);
 export function AuthProvider({ children }) {
   const [userPublicKey, setUserPublicKey] = useState(null);
   const [altUsers, setAltUsers] = useState({});
-  const [isUserPublicKeyLoading, setIsUserPublicKeyLoading] = useState(false);
+  const [isAuthChecking, setIsAuthChecking] = useState(true);
 
   const isRunned = useRef(false); // Prevents multiple initializations
 
@@ -31,19 +31,19 @@ export function AuthProvider({ children }) {
 
       switch (event) {
         case 'LOGIN_START':
-          setIsUserPublicKeyLoading(true); 
+          //setIsAuthChecking(true); 
           break; 
         case "SUBSCRIBE":
         case "LOGIN_END":
         case "CHANGE_ACTIVE_USER":
           setUserPublicKey(currentUser?.publicKey || null);
           setAltUsers(alternateUsers || {});
-          setIsUserPublicKeyLoading(false);          
+          setIsAuthChecking(false);    
           break;          
         case "LOGOUT_END": // on logout end we can set 1st available alt user if we want
           setUserPublicKey(currentUser?.publicKey || null);
           setAltUsers(alternateUsers || {});
-          setIsUserPublicKeyLoading(false);
+          setIsAuthChecking(false);
           break;
       }
     });
@@ -55,7 +55,7 @@ export function AuthProvider({ children }) {
     // user may close Identity window before finishing login flow
     await identity.login().catch((err) => {
       console.log("Error: ", err)
-      setIsUserPublicKeyLoading(false)
+      setIsAuthChecking(false)
     })   
 
     // check errors here 
@@ -68,7 +68,7 @@ export function AuthProvider({ children }) {
     // user may close Identity window before finishing logout flow
     await identity.logout().catch((err) => {
       console.log("Error: ", err)
-      setIsUserPublicKeyLoading(false)
+      setIsAuthChecking(false)
     })       
   };
 
@@ -93,8 +93,8 @@ export function AuthProvider({ children }) {
 
   return (
     <AuthContext.Provider value={{ 
-      userPublicKey, login, logout, setActiveUser, altUsers, isUserPublicKeyLoading,
-      signTransaction, submitTransaction, signAndSubmitTransaction 
+      userPublicKey, login, logout, setActiveUser, altUsers, isAuthChecking,
+      signTransaction, submitTransaction, signAndSubmitTransaction
     }}>
       {children}
     </AuthContext.Provider>
