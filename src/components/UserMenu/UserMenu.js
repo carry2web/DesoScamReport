@@ -75,7 +75,7 @@ export const UserMenu = () => {
                 <Button size="small" onClick={handleLogin}>Log in</Button>
             ) : (
                 <div className={styles.start} onClick={toggleDropdown}>
-                <Avatar profile={userProfile} size={38} />
+                    <Avatar profile={userProfile} size={38} />
                 </div>
             )
         )}        
