@@ -20,7 +20,7 @@ import styles from "./UserMenu.module.css";
 
 export const UserMenu = () => {
     const { userPublicKey, login, logout, setActiveUser } = useAuth();
-    const { altUserProfiles, isAltUserProfileSLoading, userProfile, isUserProfileLoading } = useUser();
+    const { altUserProfiles, isAltUserProfileSLoading, userProfile } = useUser();
 
     const [isOpen, setIsOpen] = useState(false);
     const containerRef = useRef(null);
