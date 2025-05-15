@@ -19,7 +19,7 @@ import { Avatar } from "@/components/Avatar";
 import styles from "./UserMenu.module.css";
 
 export const UserMenu = () => {
-    const { userPublicKey, login, logout, setActiveUser } = useAuth();
+    const { userPublicKey, altUsers, login, logout, setActiveUser, isAuthChecking  } = useAuth();
     const { altUserProfiles, isAltUserProfileSLoading, userProfile } = useUser();
 
     const [isOpen, setIsOpen] = useState(false);
@@ -69,9 +69,16 @@ export const UserMenu = () => {
   return (
     <div className={styles.container} ref={containerRef}>
 
-        <div className={styles.start} onClick={toggleDropdown}>
-            <Avatar profile={userProfile} size={38} />
-        </div>  
+        {/* If not loading, and no user + no alts → show login, otherwise → show avatar */}
+        {!isAuthChecking && (
+            Object.keys(altUsers)?.length === 0 && !userPublicKey ? (
+                <Button size="small" onClick={handleLogin}>Log in</Button>
+            ) : (
+                <div className={styles.start} onClick={toggleDropdown}>
+                <Avatar profile={userProfile} size={38} />
+                </div>
+            )
+        )}        
 
         {isOpen && (
             <Dropdown className={styles.dropdown}>

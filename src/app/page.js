@@ -16,7 +16,7 @@ import styles from "./page.module.css";
 export default function Home() {
 
   const { 
-    userPublicKey, isUserPublicKeyLoading, 
+    userPublicKey, isAuthChecking, 
     signAndSubmitTransaction
   } = useAuth();
 
@@ -82,21 +82,21 @@ export default function Home() {
     <div className={styles.pageContainer}>
 
       {/* Public Key Loading State */}
-      {isUserPublicKeyLoading && <p>Checking authentication...</p>}
+      {isAuthChecking && <p>Checking authentication...</p>}
 
 
       {userPublicKey && (
         <div className={styles.postContainer}>
           <textarea 
-            disabled={loading || isUserPublicKeyLoading} 
+            disabled={loading || isAuthChecking} 
             value={postText} 
             onChange={handlePostChange} 
             placeholder={`Write some epic post to DeSo as ${userProfile?.Username || userPublicKey}`} 
           /> 
 
-          {/* <button disabled={loading || !postText || isUserPublicKeyLoading} onClick={handleSubmitPost}>Post to DeSo</button>   */}
+          {/* <button disabled={loading || !postText || isAuthChecking} onClick={handleSubmitPost}>Post to DeSo</button>   */}
 
-          <Button disabled={!postText || isUserPublicKeyLoading} isLoading={loading} onClick={handleSubmitPost}>Post to DeSo</Button>
+          <Button disabled={!postText || isAuthChecking} isLoading={loading} onClick={handleSubmitPost}>Post to DeSo</Button>
 
           {lastPostTransaction && lastPostTransaction?.TxnHashHex &&
             <div>

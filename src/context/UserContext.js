@@ -8,17 +8,17 @@ const UserContext = createContext(null);
 
 export function UserProvider({ children }) {
 
-  const { userPublicKey, altUsers, isUserPublicKeyLoading } = useAuth();
+  const { userPublicKey, altUsers } = useAuth();
   const { getSingleProfile, getUsersStateless } = useDeSoApi();
 
   // single profile
   const [userProfile, setUserProfile] = useState(null);
-  const [isUserProfileLoading, setIsUserProfileLoading] = useState(isUserPublicKeyLoading);
+  const [isUserProfileLoading, setIsUserProfileLoading] = useState(false);
   const [userProfileError, setUserProfileError] = useState(null);
 
   // alt user profiles
   const [altUserProfiles, setAltUserProfiles] = useState(null);
-  const [isAltUserProfileSLoading, setIsAltUserProfilesLoading] = useState(isUserPublicKeyLoading);
+  const [isAltUserProfileSLoading, setIsAltUserProfilesLoading] = useState(false);
   const [altUserProfilesError, setAltUserProfilesError] = useState(null);  
 
   // fetch auth user profile
