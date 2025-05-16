@@ -6,6 +6,8 @@ import { isMaybePublicKey } from '@/utils/profileUtils';
 import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
 
+import { Profile } from '@/components/Profile';
+
 import { queryKeys } from '@/queries';
 
 const ProfilePage = () => {
@@ -36,41 +38,21 @@ const ProfilePage = () => {
     refetchOnWindowFocus: false,
   });
 
-  if (isLoading) {
-    return <p>Loading profile...</p>;
-  }
-
-  if (isError) {
-    return (
-      <>
-        <h2>Error loading profile</h2>
-        <p style={{ color: 'red' }}>{error.message}</p>
-      </>
-    );
-  }  
-
-  const displayKey = data?.Username || data?.PublicKeyBase58Check || rawParam;
-
   return (
     <div>
-      <h1>
-        {data?.Username ? `@${data.Username}` : 'Profile not found'}
-      </h1>
 
-      {data ? (
-        <>
-          <p>Public Key: {data.PublicKeyBase58Check}</p>
-          <p>{data.Description || 'No bio available.'}</p>
-        </>
-      ) : (
-        <>
-          <p style={{ color: 'gray' }}>No profile found for <strong>{rawParam}</strong>.</p>
-        </>
-      )}
+      <Profile
+        profile={data}
+        rawParam={rawParam}
+        isLoading={isLoading}
+        isError={isError}
+        error={error}
+      />
 
       <p style={{ marginTop: '1rem' }}>
-        <Link href={`/${displayKey}/posts`}>→ View Posts</Link>
+        <Link href={`/${rawParam}/posts`}>→ View Posts</Link>
       </p>
+
     </div>
   );
 };
