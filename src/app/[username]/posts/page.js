@@ -8,6 +8,8 @@ import { useRef, useEffect } from 'react';
 
 import { Post } from '@/components/Post';
 
+import { queryKeys } from '@/queries';
+
 import styles from './page.module.css';
 
 const POSTS_PER_PAGE = 10;
@@ -31,7 +33,7 @@ const PostsPage = () => {
     isLoading,
     error,
   } = useInfiniteQuery({
-    queryKey: ['posts', lookupKey],
+    queryKey: queryKeys.userPosts(lookupKey),
     queryFn: async ({ pageParam = '' }) => {
       const response = await getPostsForPublicKey({
         PublicKeyBase58Check: isPublicKey ? lookupKey : undefined,

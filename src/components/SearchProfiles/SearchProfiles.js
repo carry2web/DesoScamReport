@@ -1,3 +1,5 @@
+'use client';
+
 import { useRef, useState, useEffect } from 'react';
 import { useDeSoApi } from '@/api/useDeSoApi';
 import { useQuery } from '@tanstack/react-query';
@@ -11,6 +13,8 @@ import { Dropdown } from "@/components/Dropdown";
 import { useClickOutside } from '@/hooks/useClickOutside';
 
 import { Avatar } from "@/components/Avatar";
+
+import { queryKeys } from '@/queries';
 
 import styles from './SearchProfiles.module.css';
 
@@ -32,10 +36,8 @@ export const SearchProfiles = () => {
 
     const { data, isLoading, isError, error } = useQuery({
         queryKey: isPublicKey
-        ? ['search-profile-by-public-key', debouncedQuery]
-        : ['search-profiles-by-username-prefix', debouncedQuery],
-
-        // queryKey: ['search-profiles', debouncedQuery],
+        ? queryKeys.profileByPublicKey(debouncedQuery)
+        : queryKeys.searchProfilesByUsernamePrefix(debouncedQuery),        
         // supports seach by public key
         queryFn: async () => {
             if (isPublicKey) {
@@ -43,7 +45,7 @@ export const SearchProfiles = () => {
               if (!response.success || !response.data?.Profile) {
                 throw new Error(response.error || 'Profile not found');
               }
-              return [response.data.Profile]; // wrap in array to stay consistent with map()
+              return [response.data.Profile]; // keep format consistent with list
             } else {
               const response = await getProfiles({ UsernamePrefix: debouncedQuery });
               if (!response.success) throw new Error(response.error);

@@ -27,6 +27,25 @@ This starter includes:
 * 📦 **Floating UI**: Precise positioning via `@floating-ui/react`
 * 🧱 **Scalable Structure**: Clean folder structure for extending easily
 
+### 🧠 **State Management with React Query**
+
+This starter uses [**TanStack React Query**](https://tanstack.com/query/latest) for efficient, declarative data fetching and caching.
+
+✅ Benefits:
+* Smart caching and deduplication of network requests
+* Declarative `useQuery` / `useMutation` hooks
+* Built-in error/loading states
+* React Query Devtools support (optional)
+
+Usage examples include:
+- Fetching user profiles by public key or username
+- Fetching posts and comments (infinite loading supported)
+- Managing UI state like comment visibility using cached keys
+
+Query keys are centralized in `/queries/queryKeys.js` and UI keys in `/queries/uiKeys.js` for consistency and maintainability.
+
+> 🔧 Profile editing and mutations are planned and will use `invalidateQueries()` for cache synchronization.
+
 ## 🚀 Getting Started
 
 ### 1. Clone the repository

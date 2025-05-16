@@ -7,6 +7,8 @@ import { useQuery } from '@tanstack/react-query';
 
 import { Post } from '@/components/Post';
 
+import { queryKeys } from '@/queries';
+
 import styles from './page.module.css';
 
 const SinglePostPage = () => {
@@ -24,7 +26,7 @@ const SinglePostPage = () => {
   const { getSinglePost } = useDeSoApi();
 
   const { data, isLoading, isError, error } = useQuery({
-    queryKey: ['single-post', postHash],
+    queryKey: queryKeys.singlePost(postHash),
     queryFn: async () => {
       const response = await getSinglePost({
         PostHashHex: postHash,
