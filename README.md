@@ -87,9 +87,10 @@ Opens at: `http://localhost:6006`
 
 * **Framework**: [Next.js App Router](https://nextjs.org/docs/app)
 * **UI Logic**: React + CSS Modules
+* **Data Fetching & Caching**: [React Query](https://tanstack.com/query/latest)
+* **State Management**: React Context (Auth, User) + React Query
 * **Floating Dropdowns**: [`@floating-ui/react`](https://floating-ui.com/)
-* **DeSo Identity**: Authentication via identity service + public key
-* **Context**: Authentication and User state management
+* **DeSo Identity**: Authentication via DeSo Identity service
 * **Theming**: CSS variable-based dark/light support
 
 ---
@@ -105,6 +106,7 @@ Opens at: `http://localhost:6006`
 /context           → Global state via React Context API (Auth, User)
 /hooks             → Custom React hooks (e.g. useClickOutside)
 /layouts           → Shared layout components (MainLayout, etc.)
+/queries           → React Query key definitions (queryKeys.js, uiKeys.js)
 /styles            → Theme system and shared styles (CSS Modules + variables)
 /utils             → Helper functions (auth, DeSo profiles, tokens)
 ```
