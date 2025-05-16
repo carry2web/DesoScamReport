@@ -15,7 +15,7 @@ const ProfilePage = () => {
 
   const { data, isLoading, isError, error } = useQuery({
     queryKey: isPublicKey
-    ? ['profile', rawParam]
+    ? ['profile-by-publickey', rawParam]
     : ['profile-by-username', lookupKey],    
     queryFn: async () => {
       const response = isPublicKey
