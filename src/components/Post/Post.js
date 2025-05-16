@@ -5,6 +5,8 @@ import { useState } from 'react';
 import { useQueryClient, useInfiniteQuery } from '@tanstack/react-query';
 import Link from 'next/link';
 
+import { queryKeys, uiKeys } from '@/queries';
+
 import styles from './Post.module.css';
 
 const COMMENT_LIMIT = 10;
@@ -29,7 +31,7 @@ export const Post = ({ post, username, isQuote, isComment }) => {
   const queryClient = useQueryClient();
 
   const [showReplies, setShowReplies] = useState(() => {
-    return queryClient.getQueryData(['comments-visible', PostHashHex]) ?? false;
+    return queryClient.getQueryData(uiKeys.commentsVisible(PostHashHex)) ?? false;
   });
 
   const {
@@ -39,7 +41,7 @@ export const Post = ({ post, username, isQuote, isComment }) => {
     isFetchingNextPage,
     isLoading,
   } = useInfiniteQuery({
-    queryKey: ['comments', PostHashHex],
+    queryKey: queryKeys.postComments(PostHashHex),
     queryFn: async ({ pageParam = 0 }) => {
       const response = await getSinglePost({
         PostHashHex,
@@ -67,7 +69,7 @@ export const Post = ({ post, username, isQuote, isComment }) => {
   const comments = data?.pages.flatMap((page) => page.comments) || [];
 
   const toggleReplies = () => {
-    queryClient.setQueryData(['comments-visible', PostHashHex], (prev) => !prev);
+    queryClient.setQueryData(uiKeys.commentsVisible(PostHashHex), (prev) => !prev);
     setShowReplies((prev) => !prev);
   };
 

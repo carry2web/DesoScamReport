@@ -6,6 +6,8 @@ import { isMaybePublicKey } from '@/utils/profileUtils';
 import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
 
+import { queryKeys } from '@/queries';
+
 const ProfilePage = () => {
   const rawParam = decodeURIComponent(useParams().username);
   const isPublicKey = isMaybePublicKey(rawParam);
@@ -15,8 +17,8 @@ const ProfilePage = () => {
 
   const { data, isLoading, isError, error } = useQuery({
     queryKey: isPublicKey
-    ? ['profile-by-publickey', rawParam]
-    : ['profile-by-username', lookupKey],    
+    ? queryKeys.profileByPublicKey(rawParam)
+    : queryKeys.profileByUsername(lookupKey),    
     queryFn: async () => {
       const response = isPublicKey
         ? await getSingleProfile({ PublicKeyBase58Check: rawParam })
