@@ -1,37 +1,66 @@
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import LinkifyIt from 'linkify-it';
+
+const linkify = new LinkifyIt();
+linkify.set({ fuzzyEmail: false }); // ✅ Prevents emails from being matched
+
+export const preprocessMarkdown = (text) => {
+  if (!text) return '';
+
+  let processed = text;
+
+  // 1. Auto-link valid URLs (https://...)
+  const matches = linkify.match(processed);
+  if (matches) {
+    for (let i = matches.length - 1; i >= 0; i--) {
+      const { index, lastIndex, text: match, schema } = matches[i];
+
+      // Skip if already markdown-linked
+      const before = processed.slice(Math.max(0, index - 1), index);
+      const isInsideLink = before === ']';
+      if (isInsideLink) continue;
+
+      const safe = schema ? match : `https://${match}`;
+      const markdownLink = `[${match}](${safe})`;
+
+      processed =
+        processed.slice(0, index) + markdownLink + processed.slice(lastIndex);
+    }
+  }
+
+  // 2. @mentions → [@user](/user)
+  processed = processed.replace(
+    /(^|\s)@([a-zA-Z0-9_]{1,30})(?![.\w])/g,
+    '$1[@$2](/$2)'
+  );
+
+  // 3. $COIN → [$COIN](/COIN)
+  processed = processed.replace(
+    /(^|\s)\$([a-zA-Z0-9_]{1,30})(?![.\w])/g,
+    '$1[$$$2](/$2)'
+  );
+
+  // 4. Preserve line breaks for markdown hard breaks
+  processed = processed.replace(/\n/g, '  \n');
+
+  return processed;
+};
 
 export const MarkdownText = ({ text }) => {
-    if (!text) return null;
-
-    const preprocessMarkdown = (text) => {
-        return text
-            // Convert @username → Markdown link [@username](/username)
-            // - Matches @ followed by 1–30 alphanumeric or underscore characters
-            // - Ignores @ inside emails or domains (e.g. @gmail.com)
-            .replace(/(^|\s)@([a-zA-Z0-9_]{1,30})(?![.\w])/g, '$1[@$2](/$2)')
-
-            // Convert $TOKEN → Markdown link [$TOKEN](/TOKEN)
-            // - Same length rule as mentions
-            // - Links to same /username route
-            .replace(/(^|\s)\$([a-zA-Z0-9_]{1,30})(?![.\w])/g, '$1[$$$2](/$2)')
-
-            // Convert plain newlines to Markdown hard breaks (␣␣\n → <br/>)
-            .replace(/\n/g, '  \n');
-    };
-
+  const processed = preprocessMarkdown(text);
 
   return (
     <ReactMarkdown
-        children={preprocessMarkdown(text)}
-        remarkPlugins={[remarkGfm]}
-        disallowedElements={['script', 'iframe']}
-        skipHtml
-        components={{
-            a: ({ node, ...props }) => (
-                <a {...props} target="_blank" rel="noopener noreferrer" />
-            ),
-        }}
+      children={processed}
+      remarkPlugins={[remarkGfm]}
+      skipHtml
+      disallowedElements={['script', 'iframe']}
+      components={{
+        a: ({ node, ...props }) => (
+          <a {...props} target="_blank" rel="noopener noreferrer" />
+        ),
+      }}
     />
   );
 };
