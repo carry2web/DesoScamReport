@@ -8,8 +8,6 @@ export const metadata = {
   description: "Designed by @brootle",
 };
 
-// style={{ colorScheme: 'dark' }}
-
 export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>

@@ -7,13 +7,16 @@
     background-color: var(--color-input-bg);
     padding: var(--spacing-xs) var(--spacing-sm);
     border-radius: var(--radius-sm);
+    max-width: 100%;
+    box-sizing: border-box;
   }
   
   .text {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 160px;
+    /* max-width: 160px; */
+    display: inline-block; /* Ensure ellipsis works correctly */
   }
   
   .copyButton {

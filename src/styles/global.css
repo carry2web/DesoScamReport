@@ -70,3 +70,7 @@ hr {
   margin: var(--spacing-sm) 0;
   width: 100%;
 }
+
+p{
+  margin: var(--spacing-sm) 0;
+}

@@ -1,5 +1,7 @@
 'use client';
 
+import { Page } from "@/components/Page";
+
 import { useState, useRef } from 'react';
 import { useDeSoApi } from '@/api/useDeSoApi';
 import { useAuth } from '@/context/AuthContext';
@@ -11,7 +13,7 @@ import styles from './page.module.css';
 
 const BATCH_SIZE = 100;
 
-const Page = () => {
+const SettingsPage = () => {
   const { userPublicKey, signAndSubmitTransaction } = useAuth();
   const { userProfile } = useUser();
   const { getPostsForPublicKey, submitPost } = useDeSoApi();
@@ -108,7 +110,7 @@ const Page = () => {
   };
 
   return (
-    <div className={styles.container}>
+    <Page>
       <h1>Post Management</h1>
 
 
@@ -153,8 +155,8 @@ const Page = () => {
       <br />
       <span>PS Make sure you have some DESO balance on your accout to cover transaction fees</span>
 
-    </div>
+    </Page>
   );
 };
 
-export default Page;
+export default SettingsPage;

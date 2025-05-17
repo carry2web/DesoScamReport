@@ -86,6 +86,7 @@ export const SearchProfiles = () => {
                                 <Link
                                     key={profile.PublicKeyBase58Check}
                                     href={`/${profile.Username}`}
+                                    prefetch={false}
                                     className={styles.item}
                                     onClick={() => {
                                         setQuery('');
