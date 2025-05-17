@@ -2,6 +2,8 @@
 
 import { useState } from "react"
 
+import { Page } from "@/components/Page";
+
 import { useAuth } from "@/context/AuthContext";
 import { useUser } from "@/context/UserContext";
 
@@ -79,45 +81,47 @@ export default function Home() {
   }  
 
   return (
-    <div className={styles.pageContainer}>
+    <Page>
+      <div className={styles.pageContainer}>
 
-      {/* Public Key Loading State */}
-      {isAuthChecking && <p>Checking authentication...</p>}
-
-
-      {userPublicKey && (
-        <div className={styles.postContainer}>
-          <textarea 
-            disabled={loading || isAuthChecking} 
-            value={postText} 
-            onChange={handlePostChange} 
-            placeholder={`Write some epic post to DeSo as ${userProfile?.Username || userPublicKey}`} 
-          /> 
-
-          {/* <button disabled={loading || !postText || isAuthChecking} onClick={handleSubmitPost}>Post to DeSo</button>   */}
-
-          <Button disabled={!postText || isAuthChecking} isLoading={loading} onClick={handleSubmitPost}>Post to DeSo</Button>
-
-          {lastPostTransaction && lastPostTransaction?.TxnHashHex &&
-            <div>
-              Check your last post here: <a href={`https://focus.xyz/post/${lastPostTransaction?.TxnHashHex}`} target="_blank" rel="noreferrer">{lastPostTransaction?.TxnHashHex}</a>
-            </div>
-          }
-
-          {postError && <p className={styles.error}>Error: {postError}</p>}
-        </div>
-      )}      
+        {/* Public Key Loading State */}
+        {isAuthChecking && <div>Checking authentication...</div>}
 
 
-      {
-        userPublicKey && 
-        <Link href={`/${userProfile?.Username || userPublicKey}/settings/posts`}>
-          Settings
-        </Link>           
-      }
-   
+        {userPublicKey && (
+          <div className={styles.postContainer}>
+            <textarea 
+              disabled={loading || isAuthChecking} 
+              value={postText} 
+              onChange={handlePostChange} 
+              placeholder={`Write some epic post to DeSo as ${userProfile?.Username || userPublicKey}`} 
+            /> 
+
+            {/* <button disabled={loading || !postText || isAuthChecking} onClick={handleSubmitPost}>Post to DeSo</button>   */}
+
+            <Button disabled={!postText || isAuthChecking} isLoading={loading} onClick={handleSubmitPost}>Post to DeSo</Button>
+
+            {lastPostTransaction && lastPostTransaction?.TxnHashHex &&
+              <div>
+                Check your last post here: <a href={`https://focus.xyz/post/${lastPostTransaction?.TxnHashHex}`} target="_blank" rel="noreferrer">{lastPostTransaction?.TxnHashHex}</a>
+              </div>
+            }
+
+            {postError && <p className={styles.error}>Error: {postError}</p>}
+          </div>
+        )}      
 
 
-    </div>
+        {
+          userPublicKey && 
+          <Link href={`/${userProfile?.Username || userPublicKey}/settings/posts`}>
+            Settings
+          </Link>           
+        }
+    
+
+
+      </div>
+    </Page>
   );
 }

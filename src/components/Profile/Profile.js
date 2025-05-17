@@ -1,31 +1,55 @@
+import { Avatar } from '@/components/Avatar';
+import { PublicKeyDisplay } from '@/components/PublicKeyDisplay';
+
+import { MarkdownText } from '@/components/MarkdownText';
+
+import { LoadingState } from './LoadingState';
+import { ErrorState } from './ErrorState';
+
+import styles from './Profile.module.css';
+
 export const Profile = ({ profile, rawParam, isLoading, isError, error }) => {
-  if (isLoading) return <p>Loading profile...</p>;
+    if (isLoading) return <LoadingState />;
+    if (isError) return <ErrorState message={error?.message || 'Something went wrong'} rawParam={rawParam} />;
+    if (!profile) return <ErrorState message={`Profile not found`} rawParam={rawParam} />;
 
-  if (isError) {
     return (
-      <>
-        <h2>Error loading profile</h2>
-        <p style={{ color: 'red' }}>{error.message}</p>
-      </>
-    );
-  }
+        <div className={styles.container}>
 
-  if (!profile) {
-    return (
-      <>
-        <h1>Profile not found</h1>
-        <p style={{ color: 'gray' }}>
-          No profile found for <strong>{rawParam}</strong>.
-        </p>
-      </>
-    );
-  }
+            {
+                profile?.ExtraData?.FeaturedImageURL &&
+                <div className={styles.coverImageContainer}>
+                    <div 
+                        className={styles.coverImageLayer}
+                        style={{ backgroundImage: `url(${profile?.ExtraData?.FeaturedImageURL})`}}
+                    >
+                    </div>
+                    <img alt="" draggable="true" src={profile?.ExtraData?.FeaturedImageURL} className={styles.coverImage}></img>
+                </div>
+            }
 
-  return (
-    <>
-      <h1>@{profile.Username}</h1>
-      <p>Public Key: {profile.PublicKeyBase58Check}</p>
-      <p>{profile.Description || 'No bio available.'}</p>
-    </>
-  );
+            <div className={styles.profileContainer}>
+
+                <Avatar profile={profile} size={180} />
+
+                <div className={styles.profileDetails}>
+                    {
+                        profile?.ExtraData?.DisplayName && <div className={styles.displayName}>{profile?.ExtraData?.DisplayName}</div>
+                    }
+
+                    <div className={styles.basic}>
+                        <div className={styles.username}>@{profile.Username}</div>
+                        <PublicKeyDisplay value={profile?.PublicKeyBase58Check} mode="full"/>
+                    </div>
+
+                    {
+                        profile?.Description &&
+                        <div className={styles.description}>
+                            <MarkdownText text={profile.Description} />                          
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    );
 };

@@ -1,5 +1,7 @@
 'use client';
 
+import { Page } from "@/components/Page";
+
 import { useParams } from 'next/navigation';
 import { useDeSoApi } from '@/api/useDeSoApi';
 import { isMaybePublicKey } from '@/utils/profileUtils';
@@ -94,8 +96,8 @@ const PostsPage = () => {
   const posts = data?.pages.flatMap((page) => page.Posts || []) || [];
 
   return (
-    <div className={styles.pageContainer}>
-      <h1>Posts by {rawParam}</h1>
+    <Page>
+      {/* <div>Posts by {rawParam}</div> */}
 
       {posts.length === 0 && <p>No posts found.</p>}
 
@@ -115,7 +117,7 @@ const PostsPage = () => {
 
       {isFetchingNextPage && <p>Loading more...</p>}
 
-    </div>
+    </Page>
   );
 };
 

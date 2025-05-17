@@ -1,5 +1,7 @@
 'use client';
 
+import { Page } from "@/components/Page";
+
 import { useParams } from 'next/navigation';
 import { useDeSoApi } from '@/api/useDeSoApi';
 import { isMaybePublicKey } from '@/utils/profileUtils';
@@ -47,10 +49,10 @@ const SinglePostPage = () => {
   if (!data) return <p>Post not found.</p>;
 
   return (
-    <div className={styles.pageContainer}>
-      <h1>Post by {rawParam}</h1>
+    <Page>
+      {/* <h1>Post by {rawParam}</h1> */}
       <Post post={data} username={!isPublicKey ? lookupKey : undefined} />
-    </div>
+    </Page>
   );
 };
 
