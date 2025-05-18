@@ -87,3 +87,12 @@ pre {
   white-space: pre-wrap;
   word-wrap: break-word;
 }
+
+blockquote {
+  background-color: var(--color-input-bg);
+  margin: 0;
+  margin: var(--spacing-sm) 0;
+  padding: var(--spacing-md) var(--spacing-md);
+  border-left: 3px solid var(--color-border);
+  font-size: var(--font-size-sm);
+}
