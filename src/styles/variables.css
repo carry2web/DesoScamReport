@@ -26,13 +26,6 @@
     --line-height-tight: 1.2;
     --line-height-base: 1.5;
     --line-height-loose: 1.75;
-
-    --heading-h1: var(--font-size-4xl);
-    --heading-h2: var(--font-size-3xl);
-    --heading-h3: var(--font-size-2xl);
-    --heading-h4: var(--font-size-xl);
-    --heading-h5: var(--font-size-lg);
-    --heading-h6: var(--font-size-base);
   
     --spacing-xxs: 2px;
     --spacing-xs: 4px;
@@ -41,6 +34,16 @@
     --spacing-lg: 16px;
     --spacing-xl: 24px;
     --spacing-2xl: 32px;
+
+    --heading-spacing-top: var(--spacing-md);
+    --heading-spacing-bottom: var(--spacing-sm);
+
+    --heading-h1: var(--font-size-4xl);
+    --heading-h2: var(--font-size-3xl);
+    --heading-h3: var(--font-size-2xl);
+    --heading-h4: var(--font-size-xl);
+    --heading-h5: var(--font-size-lg);
+    --heading-h6: var(--font-size-base);    
   
     --radius-sm: 4px;
     --radius-md: 8px;

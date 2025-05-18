@@ -15,7 +15,7 @@ export const MarkdownText = ({ text }) => {
 
   const normalized = text
     // Step 0: Escape asterisk at the start of a line to avoid unintended <li> in Markdown
-    .replace(/^\* /gm, '\\* ')
+    //.replace(/^\* /gm, '\\* ')
     // Step 1: removes lone backslashes before real \n, fixing \\\n
     .replace(/\\(?=\n)/g, '')
     // Step 2: turns escaped \n into a proper line break
