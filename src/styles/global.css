@@ -27,7 +27,7 @@ a {
 
 a:hover {
   color: var(--color-accent-hover);
-  text-decoration: underline;
+  text-decoration: none;
 }
 
 
@@ -75,6 +75,15 @@ p{
   margin: var(--spacing-sm) 0;
 }
 
-ul{
+ul, ol{
   margin: var(--spacing-sm) 0;
+}
+
+pre {
+  font-size: var(--font-size-sm);
+  background-color: var(--color-input-bg);
+  padding: var(--spacing-md) var(--spacing-md);
+  border-radius: var(--radius-sm);
+  white-space: pre-wrap;
+  word-wrap: break-word;
 }
