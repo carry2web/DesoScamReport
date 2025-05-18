@@ -1,54 +1,23 @@
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import LinkifyIt from 'linkify-it';
 
-const linkify = new LinkifyIt();
-linkify.set({ fuzzyEmail: false }); // ✅ Prevents emails from being matched
-
-export const preprocessMarkdown = (text) => {
+export const formatMentionsAndCoins = (text) => {
   if (!text) return '';
 
-  let processed = text;
-
-  // 1. Auto-link valid URLs (https://...)
-  const matches = linkify.match(processed);
-  if (matches) {
-    for (let i = matches.length - 1; i >= 0; i--) {
-      const { index, lastIndex, text: match, schema } = matches[i];
-
-      // Skip if already markdown-linked
-      const before = processed.slice(Math.max(0, index - 1), index);
-      const isInsideLink = before === ']';
-      if (isInsideLink) continue;
-
-      const safe = schema ? match : `https://${match}`;
-      const markdownLink = `[${match}](${safe})`;
-
-      processed =
-        processed.slice(0, index) + markdownLink + processed.slice(lastIndex);
-    }
-  }
-
-  // 2. @mentions → [@user](/user)
-  processed = processed.replace(
-    /(^|\s)@([a-zA-Z0-9_]{1,30})(?![.\w])/g,
-    '$1[@$2](/$2)'
-  );
-
-  // 3. $COIN → [$COIN](/COIN)
-  processed = processed.replace(
-    /(^|\s)\$([a-zA-Z0-9_]{1,30})(?![.\w])/g,
-    '$1[$$$2](/$2)'
-  );
-
-  // 4. Preserve line breaks for markdown hard breaks
-  processed = processed.replace(/\n/g, '  \n');
-
-  return processed;
+  return text
+    // @username → [@username](/username)
+    .replace(/(^|\s)@([a-zA-Z0-9_]{1,30})(?![.\w])/g, '$1[@$2](/$2)')
+    // $COIN → [$COIN](/COIN)
+    .replace(/(^|\s)\$([a-zA-Z0-9_]{1,30})(?![.\w])/g, '$1[$$$2](/$2)');
 };
 
 export const MarkdownText = ({ text }) => {
-  const processed = preprocessMarkdown(text);
+
+  const normalized = text
+  .replace(/\\n/g, '  \n')  // replace '\\\n' with '  \n' - see @kitty4D
+  .replace(/\n/g, '  \n')   // replacing '\n\n' with '  \n' so it becomes a line break
+
+  const processed = formatMentionsAndCoins(normalized);
 
   return (
     <ReactMarkdown
