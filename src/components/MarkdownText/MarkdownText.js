@@ -14,8 +14,15 @@ export const formatMentionsAndCoins = (text) => {
 export const MarkdownText = ({ text }) => {
 
   const normalized = text
-  .replace(/\\n/g, '  \n')  // replace '\\\n' with '  \n' - see @kitty4D
-  .replace(/\n/g, '  \n')   // replacing '\n\n' with '  \n' so it becomes a line break
+    // Step 1: removes lone backslashes before real \n, fixing \\\n
+    .replace(/\\(?=\n)/g, '')
+    // Step 2: turns escaped \n into a proper line break
+    .replace(/\\n/g, '  \n')
+    // Step 3: Replace all *single* real newlines (not \n\n) with a line break
+    // matches single newlines, not double ones
+    // (uses negative lookahead and capture group to preserve the preceding char)    
+    .replace(/([^\n])\n(?!\n)/g, '$1  \n');  
+ 
 
   const processed = formatMentionsAndCoins(normalized);
 
