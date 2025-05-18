@@ -5,20 +5,24 @@ import { useState } from 'react';
 import { useQueryClient, useInfiniteQuery } from '@tanstack/react-query';
 import Link from 'next/link';
 
+import { MarkdownText } from '@/components/MarkdownText';
+import { Avatar } from '@/components/Avatar';
+
 import { queryKeys, uiKeys } from '@/queries';
 
 import styles from './Post.module.css';
 
 const COMMENT_LIMIT = 10;
 
-export const Post = ({ post, username, isQuote, isComment }) => {
+export const Post = ({ post, username, userProfile, isQuote, isComment }) => {
   if (!post) return null;
 
   const {
     PostHashHex,
     Body,
-    //LikeCount,
     CommentCount,
+    LikeCount,
+    DiamondCount,
     RepostedPostEntryResponse,
     PosterPublicKeyBase58Check,
     ProfileEntryResponse,
@@ -59,11 +63,11 @@ export const Post = ({ post, username, isQuote, isComment }) => {
     },
     getNextPageParam: (lastPage) =>
       lastPage.hasMore ? lastPage.nextOffset : undefined,
-    enabled: showReplies,
-    staleTime: 1000 * 30,           // 30 seconds: data is considered fresh and won't be refetched
-    cacheTime: 1000 * 60 * 5,       // 5 minutes: keep inactive data in cache before garbage collecting
-    retry: false,
-    refetchOnWindowFocus: false,
+      enabled: showReplies,
+      staleTime: 1000 * 30,           // 30 seconds: data is considered fresh and won't be refetched
+      cacheTime: 1000 * 60 * 5,       // 5 minutes: keep inactive data in cache before garbage collecting
+      retry: false,
+      refetchOnWindowFocus: false,
   });
 
   const comments = data?.pages.flatMap((page) => page.comments) || [];
@@ -75,53 +79,68 @@ export const Post = ({ post, username, isQuote, isComment }) => {
 
   return (
     <div className={`${styles.post} ${isQuote ? styles.quote : ''} ${isComment ? styles.comment : ''}`}>
-      <div className={styles.header}>
-        <Link href={`/${displayName}`} className={styles.username} prefetch={false}>{displayName}</Link>       
-        <div>
-          <Link href={`/${displayName}/posts/${PostHashHex}`} className={styles.postLink} prefetch={false}>{PostHashHex}</Link>   
-        </div> 
-      </div>
 
-      {Body && <div>{Body}</div>}
-
-      {RepostedPostEntryResponse && (
-        <div className={styles.repost}>
-          <p className={styles.repostLabel}>🔁 Repost:</p>
-          <Post post={RepostedPostEntryResponse} isQuote />
+      {
+        !isComment && 
+        <div className={styles.avatarContainer}>
+          <Avatar profile={ProfileEntryResponse || userProfile} size={48} />
         </div>
-      )}
+      }
 
-      <div className={styles.footer}>
-        {/* <span>❤️ {LikeCount}</span> */}
-        <span>💬 {CommentCount}</span>
-      </div>
-
-      {CommentCount > 0 && (
-        <button onClick={toggleReplies} className={styles.repliesButton}>
-          {isLoading
-            ? 'Loading replies...'
-            : showReplies
-            ? 'Hide replies'
-            : `See replies...`}
-        </button>
-      )}
-
-      {showReplies && (
-        <div className={styles.replies}>
-          {comments.map((comment) => (
-            <Post key={comment.PostHashHex} post={comment} isComment />
-          ))}
-          {hasNextPage && (
-            <button
-              onClick={() => fetchNextPage()}
-              disabled={isFetchingNextPage}
-              className={styles.loadMoreButton}
-            >
-              {isFetchingNextPage ? 'Loading more...' : 'Load more replies...'}
-            </button>
-          )}
+      <div className={styles.postContentContainer}>
+        <div className={styles.header}>
+          {isComment && <Avatar profile={ProfileEntryResponse || userProfile} size={40} />}
+          <div className={styles.postSummary}>
+            <Link href={`/${displayName}`} className={styles.username} prefetch={false}>{displayName}</Link>     
+            <div className={styles.postLinkWrapper}>
+                <Link href={`/${displayName}/posts/${PostHashHex}`} className={styles.postLink} prefetch={false}>{PostHashHex}</Link>  
+            </div>   
+          </div>
         </div>
-      )}
+
+        {Body && <div className={styles.postBody}><MarkdownText text={Body} /></div>}
+
+        {RepostedPostEntryResponse && (
+          <div className={styles.repost}>
+            <Post post={RepostedPostEntryResponse} isQuote />
+          </div>
+        )}
+
+        <div className={styles.footer}>
+          <span>💬 {CommentCount}</span>
+          <span>❤️ {LikeCount}</span>
+          <span>💎 {DiamondCount}</span>
+        </div>
+
+        {CommentCount > 0 && (
+          <button onClick={toggleReplies} className={styles.repliesButton}>
+            {isLoading
+              ? 'Loading replies...'
+              : showReplies
+              ? 'Hide replies'
+              : `See replies...`}
+          </button>
+        )}
+
+        {showReplies && (
+          <div className={styles.repliesContainer}>
+            <div className={styles.replies}>
+              {comments.map((comment) => (
+                <Post key={comment.PostHashHex} post={comment} isComment />
+              ))}
+            </div>
+            {hasNextPage && (
+              <button
+                onClick={() => fetchNextPage()}
+                disabled={isFetchingNextPage}
+                className={styles.loadMoreButton}
+              >
+                {isFetchingNextPage ? 'Loading more...' : 'Load more replies'}
+              </button>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 };
