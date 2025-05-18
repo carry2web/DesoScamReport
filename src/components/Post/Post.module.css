@@ -21,7 +21,7 @@
   }
   
   .post:hover {
-    /* background-color: #222; */
+    background-color: var(--color-surface-alt);
   }
 
   .postContentContainer{
