@@ -81,15 +81,16 @@ ul, ol{
 
 pre {
   font-size: var(--font-size-sm);
-  background-color: var(--color-input-bg);
+  background-color: var(--color-bg);
   padding: var(--spacing-md) var(--spacing-md);
   border-radius: var(--radius-sm);
   white-space: pre-wrap;
   word-wrap: break-word;
+  margin: var(--spacing-sm) 0;
 }
 
 blockquote {
-  background-color: var(--color-input-bg);
+  background-color: var(--color-bg);
   margin: 0;
   margin: var(--spacing-sm) 0;
   padding: var(--spacing-md) var(--spacing-md);

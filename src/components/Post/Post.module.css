@@ -18,6 +18,7 @@
   .postBody{
     overflow-wrap: anywhere;
     word-break: normal;
+    width: 100%;
   }
   
   .post:hover {
@@ -46,6 +47,7 @@
     display: flex;
     gap: var(--radius-md);
     max-width: 100%;
+    width: 100%;
   }
   
   .username {
@@ -85,6 +87,7 @@
     flex-direction: column;
     gap: 15px;
     max-width: 100%;
+    width: 100%;
   }
   
   .replies {
@@ -188,14 +191,37 @@
 }
 
 .postSummary{
+  overflow: hidden;
+  max-width: 100%;
+  width: 100%;
+  gap: var(--spacing-sm);
+  display: flex;
+}
+
+.postLinks{
   display: flex;
   flex-direction: column;
   gap: var(--spacing-xs);
   overflow: hidden;
   max-width: 100%;
+  flex: 1;
 }
 
 .avatarContainer{
   position: sticky;
   top: calc(var(--navbar-height) + var(--spacing-md));
+}
+
+
+.toggleRawButton {
+  background: none;
+  border: none;
+  font-size: var(--font-size-sm);
+  color: var(--color-text);
+  cursor: pointer;
+  padding: 0;
+}
+
+.toggleRawButton:hover {
+  text-decoration: none;
 }

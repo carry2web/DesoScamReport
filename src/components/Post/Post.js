@@ -28,6 +28,8 @@ export const Post = ({ post, username, userProfile, isQuote, isComment }) => {
     ProfileEntryResponse,
   } = post;
 
+  const [showRaw, setShowRaw] = useState(false);
+
   const displayName =
     username || ProfileEntryResponse?.Username || PosterPublicKeyBase58Check || 'Unknown';
 
@@ -91,14 +93,41 @@ export const Post = ({ post, username, userProfile, isQuote, isComment }) => {
         <div className={styles.header}>
           {isComment && <Avatar profile={ProfileEntryResponse || userProfile} size={40} />}
           <div className={styles.postSummary}>
-            <Link href={`/${displayName}`} className={styles.username} prefetch={false}>{displayName}</Link>     
-            <div className={styles.postLinkWrapper}>
-                <Link href={`/${displayName}/posts/${PostHashHex}`} className={styles.postLink} prefetch={false}>{PostHashHex}</Link>  
-            </div>   
+
+            <div className={styles.postLinks}>
+              <Link href={`/${displayName}`} className={styles.username} prefetch={false}>{displayName}</Link>     
+              <div className={styles.postLinkWrapper}>
+                  <Link href={`/${displayName}/posts/${PostHashHex}`} className={styles.postLink} prefetch={false}>{PostHashHex}</Link>  
+              </div>   
+            </div>
+
+            <div className={styles.postControls}>
+              {Body &&
+                <button
+                  onClick={() => setShowRaw((prev) => !prev)}
+                  className={styles.toggleRawButton}
+                >
+                  {showRaw ? 'Show Rendered 📄' : 'Show Raw 📝'}
+                </button>
+              }
+            </div>
           </div>
         </div>
 
-        {Body && <div className={styles.postBody}><MarkdownText text={Body} /></div>}
+        {/* {Body && <div className={styles.postBody}><MarkdownText text={Body} /></div>} */}
+
+        {Body && (
+          <div className={styles.postBody}>
+            {showRaw ? (
+              // In raw view, double all backslashes so that original escape sequences (like \\n, \\:) 
+              // are displayed as-is and not interpreted by the browser or lost during rendering
+              <pre>{Body.replace(/\\/g, '\\\\')}</pre>
+            ) : (
+              <MarkdownText text={Body} />
+            )}
+          </div>
+        )}        
+
 
         {RepostedPostEntryResponse && (
           <div className={styles.repost}>

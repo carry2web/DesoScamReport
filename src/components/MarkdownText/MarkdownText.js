@@ -4,12 +4,16 @@ import remarkGfm from 'remark-gfm';
 export const formatMentionsAndCoins = (text) => {
   if (!text) return '';
 
-  return text
+  // Step 0: Normalize escaped underscore
+  const safeText = text.replace(/\\_/g, '_');
+
+  return safeText
     // @username → [@username](/username)
     .replace(/(^|\s)@([a-zA-Z0-9_]{1,30})(?![.\w])/g, '$1[@$2](/$2)')
     // $COIN → [$COIN](/COIN)
     .replace(/(^|\s)\$([a-zA-Z0-9_]{1,30})(?![.\w])/g, '$1[$$$2](/$2)');
 };
+
 
 export const MarkdownText = ({ text }) => {
 
