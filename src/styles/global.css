@@ -105,13 +105,13 @@ h1, h2, h3, h4, h5, h6 {
 
 h1 {
   font-size: var(--heading-h1);
-  font-weight: var(--font-weight-bold);
+  font-weight: var(--font-weight-medium);
   line-height: var(--line-height-tight);
 }
 
 h2 {
   font-size: var(--heading-h2);
-  font-weight: var(--font-weight-bold);
+  font-weight: var(--font-weight-medium);
   line-height: var(--line-height-tight);
 }
 
@@ -137,4 +137,8 @@ h6 {
   font-size: var(--heading-h6);
   font-weight: var(--font-weight-regular);
   line-height: var(--line-height-loose);
+}
+
+b, strong {
+    font-weight: var(--font-weight-medium);
 }
