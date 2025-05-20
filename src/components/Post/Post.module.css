@@ -54,10 +54,34 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    color: var(--color-text-muted);
+    font-size: var(--font-size-sm);
+    white-space: nowrap;
+    flex: 1;
   }
 
   .username:hover{
     text-decoration: none;
+    color: var(--color-text-muted);
+  }
+
+  .displayName{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .publicKey{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: var(--color-text-muted);
+    font-size: var(--font-size-xs);
+  }
+
+  .publicKey:hover{
+    text-decoration: none;
+    color: var(--color-text-muted);
   }
   
   .repost {
@@ -91,21 +115,19 @@
   }
   
   .replies {
-    margin-top: 0.5rem;
-    padding-left: 0.5rem;
+
     /* border-left: 2px solid var(--color-border); */
 
     display: flex;
     flex-direction: column;
-    align-items: baseline;
-    gap: 0.5rem;    
+    align-items: baseline; 
 
     width: 100%;
     box-sizing: border-box;
 
     padding-left: 0;
     gap: 0;
-    margin-top: 10px;
+    margin-top: 0;
   }
   
   .repliesButton {
@@ -147,8 +169,30 @@
     margin: var(--spacing-sm) 0;
   } */
 
-  .comment .postBody{
+  .post.comment .postBody{
     line-height: var(--line-height-tight);
+    font-size: var(--font-size-sm);
+  }
+
+  .post.comment .postBody p{
+    margin: var(--spacing-xs) 0;
+  }
+
+  .post.comment .postBody p:first-of-type {
+      margin-top: 0;
+  }  
+
+  .post.comment .postBody p:last-of-type {
+      margin-bottom: 0;
+  }   
+  
+  .post.comment .postContentContainer .footer{
+    gap: var(--spacing-xs);
+    font-size: var(--font-size-xs);
+  }
+
+  .post.comment .postContentContainer{
+    gap: var(--spacing-sm);
   }
 
   .loadMoreButton{
@@ -205,6 +249,14 @@
   overflow: hidden;
   max-width: 100%;
   flex: 1;
+}
+
+.userLinksWrapper{
+  display: flex;
+  gap: var(--spacing-xs);
+  overflow: hidden;
+  max-width: 100%;
+  align-items: center;
 }
 
 .avatarContainer{

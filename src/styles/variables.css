@@ -9,7 +9,7 @@
 
     --font-family: 'Inter', system-ui, sans-serif;
   
-    --font-size-xs: 12px;
+    --font-size-xs: 13px;
     --font-size-sm: 14px;
     --font-size-base: 16px;
     --font-size-lg: 18px;
@@ -60,7 +60,7 @@
     --color-surface-alt: #282C30; /* darker gray for raised surfaces in dark mode */
   
     --color-text: #b6c2cf;
-    --color-text-muted: #8f9bada1;
+    --color-text-muted: #8f9badbd;
     --color-text-inverted: #ffffff;
   
     --color-accent: #4dabf7;
@@ -125,7 +125,7 @@
     --color-surface-alt: #282C30; /* darker gray for raised surfaces in dark mode */
   
     --color-text: #b6c2cf;
-    --color-text-muted: #8f9bada1;
+    --color-text-muted: #8f9badbd;
     --color-text-inverted: #ffffff;
   
     --color-accent: #4dabf7;

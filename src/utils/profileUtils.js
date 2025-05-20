@@ -18,5 +18,6 @@ export const avatarUrl = (Profile) => {
 };
   
 export function isMaybePublicKey(pk) {
+  if (typeof pk !== 'string') return false;
   return pk.startsWith('BC') && pk.length === 55;
 }

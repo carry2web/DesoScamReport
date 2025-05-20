@@ -124,7 +124,8 @@ export const PostsPageClient = ({ rawParam }) => {
           <div key={post.PostHashHex}>
             <Post
               post={post}
-              username={!isPublicKey ? lookupKey : undefined}
+              //username={!isPublicKey ? lookupKey : undefined}
+              username={rawParam}
               userProfile={userProfile}
             />
           </div>

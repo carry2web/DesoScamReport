@@ -1,59 +1,61 @@
-'use client';
-
-import { Page } from "@/components/Page";
-
-import { useParams } from 'next/navigation';
-import { useDeSoApi } from '@/api/useDeSoApi';
-import { isMaybePublicKey } from '@/utils/profileUtils';
-import { useQuery } from '@tanstack/react-query';
-
-import { Post } from '@/components/Post';
-
+import { Page } from '@/components/Page';
+import { HydrationBoundary, QueryClient, dehydrate } from '@tanstack/react-query';
+import { SinglePostPageClient } from './SinglePostPageClient';
 import { queryKeys } from '@/queries';
+import { getSinglePost } from '@/api/server/getSinglePost';
+import { avatarUrl } from '@/utils/profileUtils';
 
-import styles from './page.module.css';
+export async function generateMetadata({ params }) {
+  const { posthash } = await params
+  const PostHashHex = decodeURIComponent(posthash);
+  const response = await getSinglePost({ PostHashHex: PostHashHex, FetchParents: true });
+  const post = response?.data?.PostFound;
 
-const SinglePostPage = () => {
-  const params = useParams();
-  const rawParam = decodeURIComponent(params.username);
-  const postHash = decodeURIComponent(params.posthash);
+  const displayName = post?.ProfileEntryResponse?.ExtraData?.DisplayName || post?.PosterPublicKeyBase58Check || 'Unknown';
+  const description = post?.Body?.slice(0, 160) || 'No description available.';
+  const image = avatarUrl(post?.ProfileEntryResponse);
 
-  const isPublicKey = isMaybePublicKey(rawParam);
-  const lookupKey = isPublicKey
-    ? rawParam
-    : rawParam.startsWith('@')
-    ? rawParam.slice(1)
-    : rawParam;
+  if (!post) {
+    return { title: 'Post not found' };
+  }
 
-  const { getSinglePost } = useDeSoApi();
-
-  const { data, isLoading, isError, error } = useQuery({
-    queryKey: queryKeys.singlePost(postHash),
-    queryFn: async () => {
-      const response = await getSinglePost({
-        PostHashHex: postHash,
-        FetchParents: true
-      });
-
-      if (!response.success) throw new Error(response.error || 'Failed to fetch post');
-      return response.data?.PostFound || null;
+  return {
+    title: `Post by ${displayName}`,
+    description: description,
+    openGraph: {
+      title: `Post by ${displayName}`,
+      description: description,
+      images: image ? [{ url: image, width: 600, height: 600 }] : undefined,
     },
-    staleTime: 1000 * 30,
-    cacheTime: 1000 * 60 * 5,
-    retry: false,
-    refetchOnWindowFocus: false,
+    twitter: {
+      title: `Post by ${displayName}`,
+      description: description,
+      images: image ? [image] : undefined,
+    },
+  };
+}
+
+export default async function SinglePostPage({ params }) {
+  const { username, posthash } = await params
+  const rawParam = decodeURIComponent(username);
+  const PostHashHex = decodeURIComponent(posthash);
+
+  const queryClient = new QueryClient();
+  const queryKey = queryKeys.singlePost(PostHashHex);
+
+  await queryClient.prefetchQuery({
+    queryKey,
+    queryFn: async () => {
+      const result = await getSinglePost({ PostHashHex: PostHashHex, FetchParents: true });
+      return result?.success && result.data?.PostFound ? result.data.PostFound : null;
+    },
   });
 
-  if (isLoading) return <p>Loading post...</p>;
-  if (isError) return <p style={{ color: 'red' }}>{error.message}</p>;
-  if (!data) return <p>Post not found.</p>;
-
   return (
-    <Page>
-      {/* <h1>Post by {rawParam}</h1> */}
-      <Post post={data} username={!isPublicKey ? lookupKey : undefined} />
-    </Page>
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <Page>
+        <SinglePostPageClient postHash={PostHashHex} rawParam={rawParam} />
+      </Page>
+    </HydrationBoundary>
   );
-};
-
-export default SinglePostPage;
+}
