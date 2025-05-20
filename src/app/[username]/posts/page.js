@@ -17,26 +17,30 @@ export async function generateMetadata({ params }) {
 
   if (!response.success || !response.data?.Profile) {
     return {
-      title: `${lookupKey} • Posts`,
-      description: `All posts made by ${lookupKey}`,
+      title: `Posts by ${lookupKey}`,
+      description: `Posts made by ${lookupKey} on DeSo blockchain`,
+      openGraph: {
+        title: `Posts by ${lookupKey}`,
+        description: `Posts made by ${lookupKey} on DeSo blockchain`,
+      },
     };
   }
 
   const profile = response.data.Profile;
   const displayName = profile?.ExtraData?.DisplayName || profile?.Username || lookupKey;
   const avatar = avatarUrl(profile);
-  const description = `All posts made by ${displayName}`;
+  const description = `Posts made by ${displayName} on DeSo blockchain`;
 
   return {
-    title: `${displayName} • Posts`,
+    title: `Posts by ${displayName}`,
     description,
     openGraph: {
-      title: `${displayName} • Posts`,
+      title: `Posts by ${displayName}`,
       description,
       images: avatar ? [{ url: avatar, width: 600, height: 600 }] : undefined,
     },
     twitter: {
-      title: `${displayName} • Posts`,
+      title: `Posts by ${displayName}`,
       description,
       images: avatar ? [avatar] : undefined,
     },

@@ -7,6 +7,7 @@ import Link from 'next/link';
 
 import { MarkdownText } from '@/components/MarkdownText';
 import { Avatar } from '@/components/Avatar';
+import { isMaybePublicKey } from '@/utils/profileUtils';
 
 import { queryKeys, uiKeys } from '@/queries';
 
@@ -30,8 +31,12 @@ export const Post = ({ post, username, userProfile, isQuote, isComment }) => {
 
   const [showRaw, setShowRaw] = useState(false);
 
-  const displayName =
+  const rawUsername =
     username || ProfileEntryResponse?.Username || PosterPublicKeyBase58Check || 'Unknown';
+
+  const isPublicKey = isMaybePublicKey(rawUsername);
+  const lookupKey = !isPublicKey && rawUsername.startsWith('@') ? rawUsername.slice(1) : rawUsername;
+  const displayName = ProfileEntryResponse?.ExtraData?.DisplayName || userProfile?.ExtraData?.DisplayName;
 
   const { getSinglePost } = useDeSoApi();
   const queryClient = useQueryClient();
@@ -95,9 +100,30 @@ export const Post = ({ post, username, userProfile, isQuote, isComment }) => {
           <div className={styles.postSummary}>
 
             <div className={styles.postLinks}>
-              <Link href={`/${displayName}`} className={styles.username} prefetch={false}>{displayName}</Link>     
+              <div className={styles.userLinksWrapper}>
+                {displayName && 
+                  <Link href={`/${lookupKey}`} className={styles.displayName} prefetch={false}>{displayName}</Link>                  
+                }
+                {isPublicKey ? (
+                  <Link
+                    href={`/${lookupKey}`}
+                    className={styles.publicKey}
+                    prefetch={false}
+                  >
+                    {lookupKey}
+                  </Link>
+                ) : (
+                  <Link
+                    href={`/${lookupKey}`}
+                    className={styles.username}
+                    prefetch={false}
+                  >
+                    @{lookupKey}
+                  </Link>
+                )}
+              </div>    
               <div className={styles.postLinkWrapper}>
-                  <Link href={`/${displayName}/posts/${PostHashHex}`} className={styles.postLink} prefetch={false}>{PostHashHex}</Link>  
+                  <Link href={`/${lookupKey}/posts/${PostHashHex}`} className={styles.postLink} prefetch={false}>{PostHashHex}</Link>  
               </div>   
             </div>
 
@@ -114,20 +140,15 @@ export const Post = ({ post, username, userProfile, isQuote, isComment }) => {
           </div>
         </div>
 
-        {/* {Body && <div className={styles.postBody}><MarkdownText text={Body} /></div>} */}
-
         {Body && (
           <div className={styles.postBody}>
             {showRaw ? (
-              // In raw view, double all backslashes so that original escape sequences (like \\n, \\:) 
-              // are displayed as-is and not interpreted by the browser or lost during rendering
               <pre>{Body.replace(/\\/g, '\\\\')}</pre>
             ) : (
               <MarkdownText text={Body} />
             )}
           </div>
         )}        
-
 
         {RepostedPostEntryResponse && (
           <div className={styles.repost}>

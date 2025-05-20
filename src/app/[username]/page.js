@@ -22,14 +22,14 @@ export async function generateMetadata({ params }) {
 
   if (!response.success || !response.data?.Profile) {
     return {
-      title: `${rawParam} • Profile`,
+      title: `${rawParam} profile`,
       description: `Profile not found on DeSo`,
       openGraph: {
-        title: `${rawParam} • Profile`,
+        title: `${rawParam} profile`,
         description: 'Profile not found on DeSo',
       },
       twitter: {
-        title: `${rawParam} • Profile`,
+        title: `${rawParam} profile`,
         description: 'Profile not found on DeSo',
       },      
     };    
@@ -41,16 +41,16 @@ export async function generateMetadata({ params }) {
   const image = avatarUrl(profile);
 
   return {
-    title: `${displayName} • Profile`,
+    title: `${displayName} profile`,
     description,
     openGraph: {
-      title: `${displayName} • Profile`,
+      title: `${displayName} profile`,
       description,
       images: image ? [{ url: image, width: 600, height: 600 }] : undefined,
     },
     twitter: {
       card: 'summary',
-      title: `${displayName} • Profile`,
+      title: `${displayName} profile`,
       description,
       images: image ? [image] : undefined,
     },
