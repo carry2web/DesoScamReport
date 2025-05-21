@@ -48,7 +48,9 @@ export default function Home() {
 
       let settings = {
         UpdaterPublicKeyBase58Check: userPublicKey,
-        Body: postText,
+        BodyObj: {
+          Body: postText,
+        },        
         MinFeeRateNanosPerKB: 1500
       }    
           
