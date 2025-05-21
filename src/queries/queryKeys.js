@@ -10,6 +10,9 @@ export const queryKeys = {
     userPosts: (lookupKey) => ['user-posts', lookupKey],       // By username or public key
     singlePost: (postHash) => ['single-post', postHash],       // One post by hash
     postComments: (postHash) => ['comments', postHash],        // Comments for a post
+
+    // Follow feed (posts from followed users)
+    followFeedPosts: (publicKey) => ['follow-feed-posts', publicKey], // Feed for a user
   
     // Profile search
     searchProfilesByUsernamePrefix: (query) => ['search-profiles-by-username-prefix', query],

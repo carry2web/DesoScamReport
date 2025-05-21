@@ -62,7 +62,7 @@ export const ProfilePageClient = () => {
       />
 
       <p style={{ marginTop: '1rem' }}>
-        <Link href={`/${rawParam}/posts`}>→ View Posts</Link>
+        <Link href={`/${rawParam}/posts`}>→ View Posts</Link> <Link href={`/${rawParam}/feed`}>→ Follow Feed</Link>
       </p>
 
     </>

@@ -56,7 +56,6 @@ export const Post = ({ post, username, userProfile, isQuote, isComment }) => {
     queryFn: async ({ pageParam = 0 }) => {
       const response = await getSinglePost({
         PostHashHex,
-        FetchParents: false,
         CommentOffset: pageParam,
         CommentLimit: COMMENT_LIMIT,
       });

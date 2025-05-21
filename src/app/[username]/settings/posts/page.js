@@ -64,9 +64,11 @@ const SettingsPage = () => {
                 const settings = {
                   UpdaterPublicKeyBase58Check: userPublicKey,
                   //Body: hardDelete ? "deleted" : post?.Body || "",
-                  Body: hardDelete && post?.Body ? "deleted" : post?.Body || "", // no need to put 'deleted' if post body is empty
-                  VideoURLs: hardDelete ? [] : post?.VideoURLs || null,
-                  ImageURLs: hardDelete ? [] : post?.ImageURLs || null,
+                  BodyObj: {
+                    Body: hardDelete && post?.Body ? "deleted" : post?.Body || "", // no need to put 'deleted' if post body is empty
+                    VideoURLs: hardDelete ? [] : post?.VideoURLs || null,
+                    ImageURLs: hardDelete ? [] : post?.ImageURLs || null,
+                  },                    
                   //RepostedPostHashHex: hardDelete ? "" : post?.RepostedPostEntryResponse?.PostHashHex || "",
                   RepostedPostHashHex: post?.RepostedPostEntryResponse?.PostHashHex || "",
                   PostHashHexToModify: post.PostHashHex,

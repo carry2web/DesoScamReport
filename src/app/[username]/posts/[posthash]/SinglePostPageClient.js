@@ -30,8 +30,6 @@ export const SinglePostPageClient = ({ postHash, rawParam }) => {
   if (!data) return <Page><p>Post not found.</p></Page>;
 
   return (
-    <Page>
-      <Post post={data} username={rawParam} />
-    </Page>
+    <Post post={data} username={rawParam} />
   );
 }

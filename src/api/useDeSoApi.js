@@ -35,130 +35,53 @@ export function useDeSoApi() {
     });
   }, [apiRequest]);    
 
+  // this is used to submit a post
   const submitPost = useCallback((params) => {
-    const {
-      UpdaterPublicKeyBase58Check,
-      PostHashHexToModify,
-      ParentStakeID,
-      RepostedPostHashHex,
-      Body,
-      ImageURLs,
-      VideoURLs,
-      PostExtraData,
-      IsHidden = false,
-      MinFeeRateNanosPerKB,
-    } = params;
-  
-    const payload = {
-      UpdaterPublicKeyBase58Check,
-      PostHashHexToModify,
-      ParentStakeID,
-      RepostedPostHashHex,
-      BodyObj: {
-        Body,
-        ImageURLs,
-        VideoURLs,
-      },
-      PostExtraData,
-      IsHidden,
-      MinFeeRateNanosPerKB,
-    };
-  
     return apiRequest({
       endpoint: "submit-post",
       options: {
-        body: JSON.stringify(payload),
+        body: JSON.stringify(params),
       },
     });
-  }, [apiRequest]);
+  }, [apiRequest]);  
 
+  // this is used to load posts for a specific user
   const getPostsForPublicKey = useCallback((params) => {
-    const {
-      LastPostHashHex = '',
-      MediaRequired = false,
-      NumToFetch = 10,
-      PublicKeyBase58Check = '',
-      ReaderPublicKeyBase58Check = '',
-      Username = ''
-    } = params;
-  
-    const payload = {
-      LastPostHashHex,
-      MediaRequired,
-      NumToFetch,
-      PublicKeyBase58Check,
-      ReaderPublicKeyBase58Check,
-      Username
-    };
-
     return apiRequest({
       endpoint: "get-posts-for-public-key",
       options: { 
-        body: JSON.stringify(payload), 
+        body: JSON.stringify(params), 
       },
     });
-  }, [apiRequest]);     
+  }, [apiRequest]);   
 
+  // this is used to load a single post
   const getSinglePost = useCallback((params) => {
-    const {
-      PostHashHex,
-      ReaderPublicKeyBase58Check = '',
-      FetchParents = false,
-      CommentOffset = 0,
-      CommentLimit = 20,
-      AddGlobalFeedBool = false,
-    } = params;
-  
-    const payload = {
-      PostHashHex,
-      ReaderPublicKeyBase58Check,
-      FetchParents,
-      CommentOffset,
-      CommentLimit,
-      AddGlobalFeedBool,
-    };
-  
     return apiRequest({
       endpoint: "get-single-post",
       options: {
-        body: JSON.stringify(payload),
+        body: JSON.stringify(params),
       },
     });
-  }, [apiRequest]);
+  }, [apiRequest]);  
   
+  // this is used to search for profiles by username prefix
   const getProfiles = useCallback((params) => {
-    const {
-      PublicKeyBase58Check = '',
-      Username = '',
-      UsernamePrefix = '',
-      Description = '',
-      OrderBy = '',
-      NumToFetch = 10,
-      ReaderPublicKeyBase58Check = '',
-      ModerationType = '',
-      FetchUsersThatHODL = false,
-      AddGlobalFeedBool = false,
-    } = params;
-  
-    const payload = {
-      PublicKeyBase58Check,
-      Username,
-      UsernamePrefix,
-      Description,
-      OrderBy,
-      NumToFetch,
-      ReaderPublicKeyBase58Check,
-      ModerationType,
-      FetchUsersThatHODL,
-      AddGlobalFeedBool,
-    };
-  
     return apiRequest({
       endpoint: "get-profiles",
-      options: { body: JSON.stringify(payload) },
+      options: { body: JSON.stringify(params) },
     });
-  }, [apiRequest]);
-  
+  }, [apiRequest]);  
+
+  // can be used to get follow feed posts
+  const getPostsStateless = useCallback((params) => {
+    return apiRequest({
+      endpoint: "get-posts-stateless",
+      options: { 
+        body: JSON.stringify(params), 
+      },
+    });
+  }, [apiRequest]);    
   
   return {
     getSingleProfile,
@@ -168,6 +91,7 @@ export function useDeSoApi() {
     submitPost,
     getPostsForPublicKey,
     getSinglePost,
-    getProfiles
+    getProfiles,
+    getPostsStateless,
   };
 }
