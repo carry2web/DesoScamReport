@@ -95,7 +95,13 @@ export const Post = ({ post, username, userProfile, isQuote, isComment }) => {
 
       <div className={styles.postContentContainer}>
         <div className={styles.header}>
-          {isComment && <Avatar profile={ProfileEntryResponse || userProfile} size={40} />}
+          {isComment  
+            ?<Avatar profile={ProfileEntryResponse || userProfile} size={40} />
+            :
+            <div className={styles.mobileAvatarContainer}>
+              <Avatar profile={ProfileEntryResponse || userProfile} size={45} />
+            </div>          
+          }
           <div className={styles.postSummary}>
 
             <div className={styles.postLinks}>

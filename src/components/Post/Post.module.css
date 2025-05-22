@@ -13,6 +13,8 @@
     gap: var(--spacing-md);
     padding: var(--spacing-md);
     border-radius: var(--radius-md);
+
+    position: relative;
   }
 
   .postBody{
@@ -45,11 +47,19 @@
   
   .header {
     display: flex;
+    align-items: center;
     gap: var(--radius-md);
     max-width: 100%;
     width: 100%;
+
+    height: 48px;
+    justify-content: center;    
   }
   
+  .replies .header{
+    height: auto;
+  }
+
   .username {
     white-space: nowrap;
     overflow: hidden;
@@ -245,10 +255,14 @@
 .postLinks{
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-xs);
+  gap: var(--spacing-sm);
   overflow: hidden;
   max-width: 100%;
   flex: 1;
+}
+
+.replies .postLinks{
+  gap: var(--spacing-xs);
 }
 
 .userLinksWrapper{
@@ -257,6 +271,7 @@
   overflow: hidden;
   max-width: 100%;
   align-items: center;
+  line-height: var(--line-height-tight);
 }
 
 .avatarContainer{
@@ -264,6 +279,9 @@
   top: calc(var(--navbar-height) + var(--spacing-md));
 }
 
+.quote .avatarContainer{
+  position: static;
+}
 
 .toggleRawButton {
   background: none;
@@ -276,4 +294,33 @@
 
 .toggleRawButton:hover {
   text-decoration: none;
+}
+
+.mobileAvatarContainer{
+  display: none;
+}
+
+@media (max-width: 780px) {
+
+  .avatarContainer {
+    display: none;
+  }
+
+  .mobileAvatarContainer {
+    display: block;
+  }
+
+  .postContentContainer{
+    gap: var(--spacing-sm);
+  }
+
+  .post {
+    padding: calc(var(--spacing-md) - 2px) var(--spacing-md);
+    border-radius: var(--radius-sm);
+  }
+
+  .comment{
+    border-radius: 0;
+  }
+
 }
