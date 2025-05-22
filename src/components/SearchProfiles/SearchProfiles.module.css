@@ -97,3 +97,7 @@
   .errorMessage {
     color: var(--color-error);
   }  
+
+@media (max-width: 640px) {
+
+}

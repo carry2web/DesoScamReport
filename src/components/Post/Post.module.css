@@ -67,7 +67,7 @@
     color: var(--color-text-muted);
     font-size: var(--font-size-sm);
     white-space: nowrap;
-    flex: 1;
+    /* flex: 1; */
   }
 
   .username:hover{
@@ -110,7 +110,7 @@
     line-height: 1.5;
   }
   
-  .footer {
+  .stats {
     display: flex;
     gap: var(--spacing-md);
     font-size: var(--font-size-sm);
@@ -196,7 +196,7 @@
       margin-bottom: 0;
   }   
   
-  .post.comment .postContentContainer .footer{
+  .post.comment .postContentContainer .stats{
     gap: var(--spacing-xs);
     font-size: var(--font-size-xs);
   }

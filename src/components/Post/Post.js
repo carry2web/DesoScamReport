@@ -24,6 +24,8 @@ export const Post = ({ post, username, userProfile, isQuote, isComment }) => {
     CommentCount,
     LikeCount,
     DiamondCount,
+    RepostCount,
+    QuoteRepostCount,
     RepostedPostEntryResponse,
     PosterPublicKeyBase58Check,
     ProfileEntryResponse,
@@ -161,8 +163,9 @@ export const Post = ({ post, username, userProfile, isQuote, isComment }) => {
           </div>
         )}
 
-        <div className={styles.footer}>
+        <div className={styles.stats}>
           <span>💬 {CommentCount}</span>
+          <span>🔁 {RepostCount + QuoteRepostCount}</span>
           <span>❤️ {LikeCount}</span>
           <span>💎 {DiamondCount}</span>
         </div>
