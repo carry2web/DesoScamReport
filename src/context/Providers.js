@@ -15,7 +15,7 @@ export function Providers({ children }) {
       <QueryProvider>
         <AuthProvider>
           <UserProvider>
-            {children}
+            {children}         
           </UserProvider>
         </AuthProvider>
       </QueryProvider>
