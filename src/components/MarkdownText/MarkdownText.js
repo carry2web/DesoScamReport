@@ -18,10 +18,9 @@ export const formatMentionsAndCoins = (text) => {
 export const MarkdownText = ({ text }) => {
 
   const normalized = text
-    // Step 0: Escape asterisk at the start of a line to avoid unintended <li> in Markdown
-    //.replace(/^\* /gm, '\\* ')
-    // Step 1: removes lone backslashes before real \n, fixing \\\n
-    .replace(/\\(?=\n)/g, '')
+    // Step 1: removes lone backslashes before real \n, fixing \\\n, \\\\\n, etc.
+    //The \\+ pattern matches one or more backslashes before newlines (instead of just one), so it will properly handle your case with four backslashes (\\\\) followed by \n\n.
+    .replace(/\\+(?=\n)/g, '')
     // Step 2: turns escaped \n into a proper line break
     .replace(/\\n/g, '  \n')
     // Step 3: Replace all *single* real newlines (not \n\n) with a line break
