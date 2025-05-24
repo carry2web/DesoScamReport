@@ -17,6 +17,7 @@ import { queryKeys } from '@/queries';
 import styles from './SearchProfiles.module.css';
 
 export const SearchProfiles = () => {
+    const [isFocused, setIsFocused] = useState(false);
     const [query, setQuery] = useState('');
     const [debouncedQuery, setDebouncedQuery] = useState('');
     const { getProfiles, getSingleProfile } = useDeSoApi();
@@ -70,17 +71,21 @@ export const SearchProfiles = () => {
     useClickOutside(containerRef, () => {
         setQuery('');
         setDebouncedQuery('');
+        setIsFocused(false);
     });    
 
     const handleInternalLinkClick = () => {
         // Close search results when internal links are clicked
         setQuery('');
         setDebouncedQuery('');
+        setIsFocused(false);
     };
 
     const handleProfileClick = (username, event) => {
+        event.stopPropagation(); // 👈 prevents container click handler
         // Only navigate if the click wasn't on any interactive element
         if (!event.target.closest('a')) {
+            setIsFocused(false); 
             setQuery('');
             setDebouncedQuery('');
             router.push(`/${username}`);
@@ -90,6 +95,7 @@ export const SearchProfiles = () => {
     const handleKeyDown = (username, event) => {
         if (event.key === 'Enter' || event.key === ' ') {
             event.preventDefault();
+            setIsFocused(false); 
             setQuery('');
             setDebouncedQuery('');
             router.push(`/${username}`);
@@ -97,10 +103,11 @@ export const SearchProfiles = () => {
     };
 
     return (
-        <div className={styles.container} ref={containerRef}>
+        <div className={classNames(styles.container, { [styles.focus]: isFocused })} ref={containerRef} onClick={() => setIsFocused(true)}>
             <Input 
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
+                onFocus={() => setIsFocused(true)}
                 placeholder="Search profiles..."      
                 spellCheck="false" 
             />

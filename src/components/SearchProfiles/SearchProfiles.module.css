@@ -3,6 +3,7 @@
   display: inline-block;
   width: 100%;
   max-width: 400px;
+  box-sizing: border-box; 
 }
   
   .input {
@@ -107,6 +108,16 @@
     margin: 0;
 }
 
-@media (max-width: 640px) {
+.focus{
+  
+}
 
+@media (max-width: 640px) {
+  .focus{
+    position: absolute;
+    left: var(--spacing-sm);
+    right: var(--spacing-sm);
+    max-width: calc(100% - var(--spacing-sm) - var(--spacing-sm)); /* Ensure it doesn't overflow */
+    z-index: 1;   
+  }
 }
