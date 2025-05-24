@@ -47,7 +47,12 @@ export const SearchProfiles = () => {
               }
               return [response.data.Profile]; // keep format consistent with list
             } else {
-              const response = await getProfiles({ UsernamePrefix: debouncedQuery });
+              const response = await getProfiles({ 
+                UsernamePrefix: debouncedQuery,
+                AddGlobalFeedBoolean: false,
+                FetchUsersThatHODL: false,
+                NumToFetch: 10
+            });
               if (!response.success) throw new Error(response.error);
               return response.data?.ProfilesFound || [];
             }
