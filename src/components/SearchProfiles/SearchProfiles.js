@@ -28,14 +28,16 @@ export const SearchProfiles = () => {
     useEffect(() => {
         const delay = setTimeout(() => {
             const trimmed = query.trim();
-            // Strip @ prefix for username searches
-            const processedQuery = trimmed.startsWith('@') 
-                ? trimmed.slice(1) 
-                : trimmed;
-            setDebouncedQuery(processedQuery);           
+
+            // Remove @ or $ prefix if present
+            const processedQuery = trimmed.replace(/^[@$]/, '');
+
+            setDebouncedQuery(processedQuery);
         }, 300);
+
         return () => clearTimeout(delay);
     }, [query]);
+        
 
     const isPublicKey = isMaybePublicKey(debouncedQuery);
 
