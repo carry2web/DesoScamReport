@@ -7,19 +7,18 @@ export const formatMentionsAndCoins = (text) => {
   // Step 0: Normalize escaped underscore
   const safeText = text.replace(/\\_/g, '_');
 
+  // Step 1: Format mentions and coins
   return safeText
     // @username → [@username](/username)
-    .replace(/(^|\s)@([a-zA-Z0-9_]{1,30})(?![.\w])/g, '$1[@$2](/$2)')
+    .replace(/(^|\s)@([a-zA-Z0-9_]{1,30})(?!\w)/g, '$1[@$2](/$2)')
     // $COIN → [$COIN](/COIN)
-    .replace(/(^|\s)\$([a-zA-Z0-9_]{1,30})(?![.\w])/g, '$1[$$$2](/$2)');
+    .replace(/(^|\s)\$([a-zA-Z0-9_]{1,30})(?!\w)/g, '$1[$$$2](/$2)');  
 };
 
-
-export const MarkdownText = ({ text }) => {
-
-  const normalized = text
+export const normalizeLineBreaks = (text) => {
+  return text
     // Step 1: removes lone backslashes before real \n, fixing \\\n, \\\\\n, etc.
-    //The \\+ pattern matches one or more backslashes before newlines (instead of just one), so it will properly handle your case with four backslashes (\\\\) followed by \n\n.
+    // The \\+ pattern matches one or more backslashes before newlines (instead of just one), so it will properly handle your case with four backslashes (\\\\) followed by \n\n.
     .replace(/\\+(?=\n)/g, '')
     // Step 2: turns escaped \n into a proper line break
     .replace(/\\n/g, '  \n')
@@ -27,7 +26,12 @@ export const MarkdownText = ({ text }) => {
     // matches single newlines, not double ones
     // (uses negative lookahead and capture group to preserve the preceding char)    
     .replace(/([^\n])\n(?!\n)/g, '$1  \n');  
- 
+};
+
+
+export const MarkdownText = ({ text }) => {
+  
+  const normalized = normalizeLineBreaks(text);
 
   const processed = formatMentionsAndCoins(normalized);
 
