@@ -75,7 +75,8 @@ export const SearchProfiles = () => {
             <Input 
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search profiles..."       
+                placeholder="Search profiles..."      
+                spellcheck="false" 
             />
 
             {debouncedQuery && (
