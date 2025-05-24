@@ -26,7 +26,12 @@ export const SearchProfiles = () => {
 
     useEffect(() => {
         const delay = setTimeout(() => {
-            setDebouncedQuery(query.trim());
+            const trimmed = query.trim();
+            // Strip @ prefix for username searches
+            const processedQuery = trimmed.startsWith('@') 
+                ? trimmed.slice(1) 
+                : trimmed;
+            setDebouncedQuery(processedQuery);           
         }, 300);
         return () => clearTimeout(delay);
     }, [query]);
