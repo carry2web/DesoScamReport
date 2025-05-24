@@ -98,6 +98,14 @@
     color: var(--color-error);
   }  
 
+.description p,
+.description ul, 
+.description ol,
+.description pre,
+.description blockquote {
+    margin: 0;
+}
+
 @media (max-width: 640px) {
 
 }

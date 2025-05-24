@@ -10,6 +10,8 @@ import Link from "next/link";
 import { Input } from '@/components/Input';
 import { Dropdown } from "@/components/Dropdown";
 
+import { MarkdownText } from '@/components/MarkdownText';
+
 import { useClickOutside } from '@/hooks/useClickOutside';
 
 import { Avatar } from "@/components/Avatar";
@@ -104,7 +106,7 @@ export const SearchProfiles = () => {
                                         <div className={styles.username}>@{profile.Username}</div>
                                         {profile.Description && (
                                             <div className={styles.description}>
-                                                {profile.Description}
+                                                <MarkdownText text={profile.Description} /> 
                                             </div>
                                         )}
                                     </div>
