@@ -92,3 +92,19 @@ export const MarkdownText = ({ text, onInternalLinkClick = null }) => {
     />
   );
 };
+
+// NOTE:
+// Markdown images from external hosts (e.g., Slack, Google Drive, private CDNs) 
+// may trigger CSP warnings in some browsers due to how certain image URLs are parsed,
+// or how those services handle cookies, redirects, or cross-origin headers.
+//
+// Example:
+//   ![image.png](https://files.slack.com/files-pri/T02B2KBJY5Q-F08RQ3W1VFB/image.png)
+//
+// This can result in warnings like:
+//   "Content Security Policy of your site blocks the use of 'eval' in JavaScript"
+//   or "Third-party cookie will be blocked"
+//
+// These warnings are safe to ignore and do not impact functionality or security.
+// We're preserving user-submitted Markdown as-is, without stripping or transforming content.
+
