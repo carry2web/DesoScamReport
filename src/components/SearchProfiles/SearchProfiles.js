@@ -1,21 +1,17 @@
 'use client';
 
 import { useRef, useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { useDeSoApi } from '@/api/useDeSoApi';
 import { useQuery } from '@tanstack/react-query';
 import { isMaybePublicKey } from '@/utils/profileUtils';
 import classNames from 'classnames';
-import Link from "next/link";
 
 import { Input } from '@/components/Input';
 import { Dropdown } from "@/components/Dropdown";
-
 import { MarkdownText } from '@/components/MarkdownText';
-
 import { useClickOutside } from '@/hooks/useClickOutside';
-
 import { Avatar } from "@/components/Avatar";
-
 import { queryKeys } from '@/queries';
 
 import styles from './SearchProfiles.module.css';
@@ -24,6 +20,7 @@ export const SearchProfiles = () => {
     const [query, setQuery] = useState('');
     const [debouncedQuery, setDebouncedQuery] = useState('');
     const { getProfiles, getSingleProfile } = useDeSoApi();
+    const router = useRouter();
 
     const containerRef = useRef(null);
 
@@ -40,14 +37,13 @@ export const SearchProfiles = () => {
         queryKey: isPublicKey
         ? queryKeys.profileByPublicKey(debouncedQuery)
         : queryKeys.searchProfilesByUsernamePrefix(debouncedQuery),        
-        // supports seach by public key
         queryFn: async () => {
             if (isPublicKey) {
               const response = await getSingleProfile({ PublicKeyBase58Check: debouncedQuery });
               if (!response.success || !response.data?.Profile) {
                 throw new Error(response.error || 'Profile not found');
               }
-              return [response.data.Profile]; // keep format consistent with list
+              return [response.data.Profile];
             } else {
               const response = await getProfiles({ 
                 UsernamePrefix: debouncedQuery,
@@ -71,9 +67,32 @@ export const SearchProfiles = () => {
         setDebouncedQuery('');
     });    
 
+    const handleInternalLinkClick = () => {
+        // Close search results when internal links are clicked
+        setQuery('');
+        setDebouncedQuery('');
+    };
+
+    const handleProfileClick = (username, event) => {
+        // Only navigate if the click wasn't on any interactive element
+        if (!event.target.closest('a')) {
+            setQuery('');
+            setDebouncedQuery('');
+            router.push(`/${username}`);
+        }
+    };
+
+    const handleKeyDown = (username, event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            setQuery('');
+            setDebouncedQuery('');
+            router.push(`/${username}`);
+        }
+    };
+
     return (
         <div className={styles.container} ref={containerRef}>
-
             <Input 
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
@@ -91,26 +110,28 @@ export const SearchProfiles = () => {
                             <div className={styles.message}>Loading...</div>
                         ) : data?.length > 0 ? (
                             data.map((profile) => (
-                                <Link
+                                <div
                                     key={profile.PublicKeyBase58Check}
-                                    href={`/${profile.Username}`}
-                                    prefetch={false}
                                     className={styles.item}
-                                    onClick={() => {
-                                        setQuery('');
-                                        setDebouncedQuery('');
-                                    }}
+                                    onClick={(e) => handleProfileClick(profile.Username, e)}
+                                    onKeyDown={(e) => handleKeyDown(profile.Username, e)}
+                                    role="button"
+                                    tabIndex={0}
+                                    aria-label={`View profile of ${profile.Username}`}
                                 >
                                     <Avatar profile={profile} size={60} />
                                     <div className={styles.info}>
                                         <div className={styles.username}>@{profile.Username}</div>
                                         {profile.Description && (
                                             <div className={styles.description}>
-                                                <MarkdownText text={profile.Description} /> 
+                                                <MarkdownText 
+                                                    text={profile.Description} 
+                                                    onInternalLinkClick={handleInternalLinkClick}
+                                                /> 
                                             </div>
                                         )}
                                     </div>
-                                </Link>
+                                </div>
                             ))
                         ) : (
                         <div className={styles.message}>No profiles found</div>
