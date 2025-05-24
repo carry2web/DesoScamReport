@@ -1,5 +1,6 @@
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import Link from 'next/link';
 
 export const formatMentionsAndCoins = (text) => {
   if (!text) return '';
@@ -41,11 +42,51 @@ export const MarkdownText = ({ text }) => {
       remarkPlugins={[remarkGfm]}
       skipHtml
       disallowedElements={['script', 'iframe']}
+      
+      // no handling of internal links
+
+      // components={{
+      //   a: ({ node, ...props }) => (
+      //     <a {...props} target="_blank" rel="noopener noreferrer" />
+      //   ),
+      // }}
+
+      // handling of internal links
+
+      // suggested by Claude AI
+      // components={{
+      //   a: ({ node, href, children, ...props }) => {
+      //     // Check if it's an internal link (starts with /)
+      //     if (href && href.startsWith('/')) {
+      //       return (
+      //         <Link href={href} {...props}>
+      //           {children}
+      //         </Link>
+      //       );
+      //     }
+      //     // External links - keep as regular anchor with target="_blank"
+      //     return (
+      //       <a href={href} target="_blank" rel="noopener noreferrer" {...props}>
+      //         {children}
+      //       </a>
+      //     );
+      //   },
+      // }}      
+
+      // Suggested by ChatGPT
       components={{
-        a: ({ node, ...props }) => (
-          <a {...props} target="_blank" rel="noopener noreferrer" />
-        ),
-      }}
+        a: ({ node, href, ...props }) => {
+          const isInternal = href?.startsWith('/');
+          if (isInternal) {
+            return (
+              <Link href={href} {...props} />
+            );
+          }
+          return (
+            <a href={href} target="_blank" rel="noopener noreferrer" {...props} />
+          );
+        },
+      }}      
     />
   );
 };
