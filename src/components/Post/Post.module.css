@@ -255,7 +255,7 @@
 .postLinks{
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-sm);
+  gap: var(--spacing-xs);
   overflow: hidden;
   max-width: 100%;
   flex: 1;
@@ -270,8 +270,7 @@
   gap: var(--spacing-xs);
   overflow: hidden;
   max-width: 100%;
-  align-items: center;
-  line-height: var(--line-height-tight);
+  align-items: baseline;
 }
 
 .avatarContainer{
@@ -347,4 +346,24 @@
     border-radius: 0;
   }
 
+}
+
+@media (max-width: 510px) {
+  .userLinksWrapper{
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+  }
+
+  .displayName{
+    display: none;
+  }
+
+  .username{    
+    color: var(--color-accent);
+    font-size: var(--font-size-base);
+  }
+
+  .username:hover{
+    color: var(--color-accent-hover);
+  } 
 }
