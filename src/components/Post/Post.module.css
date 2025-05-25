@@ -300,6 +300,30 @@
   display: none;
 }
 
+.replyBox {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  width: 100%;
+  gap: var(--spacing-sm);
+}
+
+.replyBox textarea {
+  width: 100%;
+  padding: var(--spacing-sm);
+  font-size: var(--font-size-sm);
+  border-radius: var(--radius-sm);
+  resize: vertical;
+  box-sizing: border-box;
+  min-height: 70px;
+}
+
+.replyActions{
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
 @media (max-width: 780px) {
 
   .avatarContainer {
