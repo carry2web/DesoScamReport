@@ -66,10 +66,15 @@ export const PostStats = ({ post, onReply }) => {
   return (
     <>
       <div className={styles.stats}>
-        {/* 💬 icon triggers reply box - uses local count */}
-        <span onClick={() => setShowReplyBox((prev) => !prev)} style={{ cursor: "pointer" }}>
+        {/* 💬 icon clickable only if user is authenticated */}
+        <span
+          onClick={userPublicKey ? () => setShowReplyBox((prev) => !prev) : undefined}
+          style={{ cursor: userPublicKey ? "pointer" : "default" }}
+          title={userPublicKey ? "Reply to this post" : "Login to reply"}
+        >
           💬 {localCommentCount}
         </span>
+
         <span>🔁 {RepostCount + QuoteRepostCount}</span>
         <span>❤️ {LikeCount}</span>
         <span>💎 {DiamondCount}</span>
