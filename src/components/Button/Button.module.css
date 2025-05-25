@@ -12,6 +12,7 @@
     transition: background-color 0.2s ease, box-shadow 0.2s ease;
     box-shadow: var(--shadow-sm);
     min-width: 80px;
+    line-height: var(--line-height-base);
   }
   
   /* Variants */
