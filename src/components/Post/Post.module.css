@@ -322,7 +322,6 @@
   display: flex;
   align-items: center;
   gap: var(--spacing-sm);
-  justify-content: flex-end;
 }
 
 @media (max-width: 780px) {
