@@ -1,0 +1,58 @@
+.notification {
+    border: 1px solid var(--color-border);
+    background-color: var(--color-surface);
+
+    transition: background 0.2s ease;
+
+    display: flex;
+    align-items: center;
+
+    width: 100%;
+    box-sizing: border-box;    
+
+    gap: var(--spacing-md);
+    padding: var(--spacing-md);
+    border-radius: var(--radius-md);
+
+    position: relative;
+}
+
+.notification:hover {
+    background-color: var(--color-surface-alt);
+}
+
+
+
+.notificationWithThread {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.parentPostContainer, .submittedPostContainer{
+    position: relative;
+}
+
+.toggleButton {
+    background: none;
+    border: none;
+    color: #5da9ff;
+    cursor: pointer;
+    padding: 0;
+    font-size: 14px;
+    align-self: flex-start;
+
+    border: 1px solid var(--color-border);
+    background-color: var(--color-surface);    
+
+    width: 90px;
+    text-align: center;
+    line-height: 19px;
+    height: 20px;
+
+    position: absolute;
+    z-index: 1;
+    right: calc(50% - 45px);
+    top: -5px;  
+}
