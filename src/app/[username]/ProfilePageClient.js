@@ -52,6 +52,9 @@ export const ProfilePageClient = () => {
 
   return (
     <>
+      <p style={{ marginBottom: '1rem', marginTop: '0' }}>
+        <Link href={`/${rawParam}/posts`}>View Posts</Link> | <Link href={`/${rawParam}/feed`}>Follow Feed</Link> | <Link href={`/${rawParam}/notifications`}>Notifications Feed</Link>
+      </p>
 
       <Profile
         profile={data}
@@ -60,10 +63,6 @@ export const ProfilePageClient = () => {
         isError={isError}
         error={error}
       />
-
-      <p style={{ marginTop: '1rem' }}>
-        <Link href={`/${rawParam}/posts`}>→ View Posts</Link> <Link href={`/${rawParam}/feed`}>→ Follow Feed</Link> <Link href={`/${rawParam}/notifications`}>→ Notifications Feed</Link>
-      </p>
 
     </>
   );

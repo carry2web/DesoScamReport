@@ -27,29 +27,58 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: var(--spacing-md);
+}
+
+
+.parentPostContainer{
+
+}
+
+.notificationWithThread.open .parentPostContainer {
+
 }
 
 .parentPostContainer, .submittedPostContainer{
     position: relative;
 }
 
+.notificationWithThread.open .submittedPostContainer{
+    margin-left: 35px;
+}
+
+.notificationWithThread.open .submittedPostContainer:before{
+    z-index: -1;
+    content: "";
+    display: block;
+    width: 18px;
+    height: calc(50% + 15px);
+    position: absolute;
+    left: -18px;
+    top: -15px;
+    border-radius: 0 0 0 var(--radius-md);
+    border: 2px solid var(--color-border);
+    border-top: none;
+    border-right: none;
+    box-sizing: border-box;
+}
+
 .toggleButton {
     background: none;
     border: none;
-    color: #5da9ff;
+    color: var(--color-accent);
     cursor: pointer;
     padding: 0;
-    font-size: 14px;
-    align-self: flex-start;
 
     border: 1px solid var(--color-border);
     background-color: var(--color-surface);    
+    border-radius: var(--radius-sm);
 
     width: 90px;
     text-align: center;
-    line-height: 19px;
-    height: 20px;
+
+    font-size: var(--font-size-xs);
+    line-height: var(--line-height-tight);
 
     position: absolute;
     z-index: 1;
