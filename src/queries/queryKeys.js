@@ -13,7 +13,10 @@ export const queryKeys = {
 
     // Follow feed (posts from followed users)
     followFeedPosts: (publicKey) => ['follow-feed-posts', publicKey], // Feed for a user
-  
+
+    // Notifications for a user
+    notifications: (publicKey) => ['notifications', publicKey],
+
     // Profile search
     searchProfilesByUsernamePrefix: (query) => ['search-profiles-by-username-prefix', query],
 };

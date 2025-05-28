@@ -82,6 +82,14 @@ export function useDeSoApi() {
       },
     });
   }, [apiRequest]);    
+
+  // for notifiations feed
+  const getNotifications = useCallback((params) => {
+    return apiRequest({
+      endpoint: "get-notifications",
+      options: { body: JSON.stringify(params) },
+    });
+  }, [apiRequest]);    
   
   return {
     getSingleProfile,
@@ -93,5 +101,6 @@ export function useDeSoApi() {
     getSinglePost,
     getProfiles,
     getPostsStateless,
+    getNotifications,
   };
 }
