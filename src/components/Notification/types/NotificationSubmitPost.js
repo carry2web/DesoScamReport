@@ -49,39 +49,3 @@ export const NotificationSubmitPost = ({ profile, publicKey, submittedPost, pare
     </div>
   );
 };
-
-
-
-// "use client";
-
-// import { useState } from 'react';
-// import { Post } from '@/components/Post';
-// import styles from '../Notification.module.css';
-
-// export const NotificationSubmitPost = ({ profile, publicKey, submittedPost, parentPost }) => {
-//   const [showParent, setShowParent] = useState(false);
-
-//   const toggleParent = () => setShowParent((prev) => !prev);
-
-//   return (
-//     <div className={styles.notificationWithThread}>
-
-//         {parentPost && (
-//             <button className={styles.toggleButton} onClick={toggleParent}>
-//                 {showParent ? 'Hide' : 'Replied to...'}
-//             </button>     
-//         )}
-
-
-//         {parentPost && showParent && (
-//             <div className={styles.parentPostContainer}>           
-//                 <Post post={parentPost} />
-//             </div>
-//         )}
-
-//         <div className={styles.submittedPostContainer}>     
-//             <Post post={submittedPost} />
-//         </div>
-//     </div>
-//   );
-// };
