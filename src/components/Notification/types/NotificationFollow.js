@@ -11,9 +11,15 @@ export const NotificationFollow = ({ profile, publicKey, isUnfollow }) => {
   return (
     <div className={styles.notification}>
       <Link href={`/${username}`}><Avatar profile={profile} size={48} /></Link>
-      <div>
-        <Link href={`/${username}`}><strong>{username}</strong></Link>
-        {isUnfollow ? ' unfollowed you' : ' started following you'}
+      <div className={styles.notificationContent}>
+        <div className={styles.notificationHeader}>
+          <div className={styles.notificationSummary}>
+            <div>
+              <Link href={`/${username}`}><strong>{username}</strong></Link>
+              {isUnfollow ? ' unfollowed you' : ' started following you'}              
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -97,6 +97,7 @@
     gap: var(--radius-md);
     max-width: 100%;
     width: 100%;
+    flex: 1;
 }
 
 .notificationContent{
