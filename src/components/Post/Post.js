@@ -281,14 +281,13 @@ export const Post = ({ post, username, userProfile, isQuote, isComment }) => {
         {ImageURLs && ImageURLs.length > 0 && (
           <div className={styles.imageGallery}>
             {showRaw 
-            ? 
-            // <pre>{JSON.stringify(ImageURLs, null, 2)}</pre>           
+            ?          
             <>
-            {ImageURLs?.length > 0 && (
-              <pre>
-                {ImageURLs.map((url) => `${url}\n`).join('')}
-              </pre>
-            )}            
+              {ImageURLs?.length > 0 && (
+                <pre>
+                  {ImageURLs.map((url) => `${url}\n`).join('')}
+                </pre>
+              )}            
             </>
             : 
             <>
