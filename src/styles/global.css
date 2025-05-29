@@ -88,6 +88,9 @@ pre {
   white-space: pre-wrap;
   word-wrap: break-word;
   margin: var(--spacing-sm) 0;
+  max-width: 100%;
+  box-sizing: border-box;
+  width: 100%;
 }
 
 blockquote {
@@ -97,6 +100,9 @@ blockquote {
   padding: var(--spacing-md) var(--spacing-md);
   border-left: 3px solid var(--color-border);
   font-size: var(--font-size-sm);
+  max-width: 100%;
+  box-sizing: border-box;
+  width: 100%;
 }
 
 

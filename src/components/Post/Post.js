@@ -21,15 +21,21 @@ export const Post = ({ post, username, userProfile, isQuote, isComment }) => {
   const {
     PostHashHex,
     Body,
+    ImageURLs,
     CommentCount,
     RepostedPostEntryResponse,
     PosterPublicKeyBase58Check,
     ProfileEntryResponse,
   } = post;
 
+  const { getSinglePost } = useDeSoApi();
+  const queryClient = useQueryClient();
+
   const shouldFetchFirstPage = useRef(false);
 
-  const [showRaw, setShowRaw] = useState(false);
+  const [showRaw, setShowRaw] = useState(() => {
+    return queryClient.getQueryData(uiKeys.rawVisible(PostHashHex)) ?? false;
+  });  
 
   const rawUsername =
     username || ProfileEntryResponse?.Username || PosterPublicKeyBase58Check || 'Unknown';
@@ -37,9 +43,6 @@ export const Post = ({ post, username, userProfile, isQuote, isComment }) => {
   const isPublicKey = isMaybePublicKey(rawUsername);
   const lookupKey = !isPublicKey && rawUsername.startsWith('@') ? rawUsername.slice(1) : rawUsername;
   const displayName = ProfileEntryResponse?.ExtraData?.DisplayName || userProfile?.ExtraData?.DisplayName;
-
-  const { getSinglePost } = useDeSoApi();
-  const queryClient = useQueryClient();
 
   const [showReplies, setShowReplies] = useState(() => {
     return queryClient.getQueryData(uiKeys.commentsVisible(PostHashHex)) ?? false;
@@ -251,10 +254,19 @@ export const Post = ({ post, username, userProfile, isQuote, isComment }) => {
               </div>
             </div>
             <div className={styles.postControls}>
-              {Body && (
-                <button onClick={() => setShowRaw((prev) => !prev)} className={styles.toggleRawButton}>
+              {(Body || (ImageURLs && ImageURLs.length > 0)) && (
+                <button 
+                  onClick={() => {
+                    setShowRaw(prev => {
+                      const newVal = !prev;
+                      queryClient.setQueryData(uiKeys.rawVisible(PostHashHex), newVal);
+                      return newVal;
+                    });
+                  }} 
+                  className={styles.toggleRawButton}
+                >
                   {showRaw ? 'Show Rendered 📄' : 'Show Raw 📝'}
-                </button>
+                </button>                
               )}
             </div>
           </div>
@@ -265,6 +277,34 @@ export const Post = ({ post, username, userProfile, isQuote, isComment }) => {
             {showRaw ? <pre>{Body.replace(/\\/g, '\\\\')}</pre> : <MarkdownText text={Body} />}
           </div>
         )}
+
+        {ImageURLs && ImageURLs.length > 0 && (
+          <div className={styles.imageGallery}>
+            {showRaw 
+            ? 
+            // <pre>{JSON.stringify(ImageURLs, null, 2)}</pre>           
+            <>
+            {ImageURLs?.length > 0 && (
+              <pre>
+                {ImageURLs.map((url) => `${url}\n`).join('')}
+              </pre>
+            )}            
+            </>
+            : 
+            <>
+              {ImageURLs.map((url, index) => (
+                <img
+                  key={index}
+                  src={url}
+                  alt={`Post image ${index + 1}`}
+                  className={styles.postImage}
+                  loading="lazy"
+                />
+              ))}
+            </>
+            }
+          </div>
+        )}        
 
         {RepostedPostEntryResponse && (
           <div className={styles.repost}>
