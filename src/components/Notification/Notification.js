@@ -5,7 +5,8 @@ import {
     NotificationDefault, 
     NotificationFollow, 
     NotificationSubmitPost,
-    NotificationDiamond 
+    NotificationDiamond,
+    NotificationReaction 
 } from './types/';
 
 export const Notification = ({ notification, postsByHash, profilesByPublicKey }) => {
@@ -22,11 +23,14 @@ export const Notification = ({ notification, postsByHash, profilesByPublicKey })
     const submittedPost = postsByHash?.[submitMeta?.PostHashBeingModifiedHex];
     const parentPost = postsByHash?.[submitMeta?.ParentPostHashHex];
 
-    // relatted to Diamond notifications
+    // related to Diamond notifications
     const isDiamond =
         transferMeta?.DiamondLevel > 0 &&
         transferMeta?.PostHashHex &&
-        transferMeta.PostHashHex.length > 0;    
+        transferMeta.PostHashHex.length > 0;   
+        
+    // related to Reaction notifications
+    const isReaction = Metadata?.CreatePostAssociationTxindexMetadata?.AssociationType === 'REACTION';
 
     switch (txnType) {
         case 'FOLLOW':
@@ -56,7 +60,6 @@ export const Notification = ({ notification, postsByHash, profilesByPublicKey })
                 />
             );      
         case 'BASIC_TRANSFER': {
-
             if (isDiamond) {
                 const post = postsByHash?.[transferMeta.PostHashHex];
                 return (
@@ -68,9 +71,23 @@ export const Notification = ({ notification, postsByHash, profilesByPublicKey })
                     />
                 );
             }
-
             return <NotificationDefault notification={notification} />;
-        }                       
+        };
+        case 'CREATE_POST_ASSOCIATION': {
+            if (isReaction) {
+                const post = postsByHash?.[Metadata?.CreatePostAssociationTxindexMetadata?.PostHashHex];
+                const reaction = Metadata?.CreatePostAssociationTxindexMetadata?.AssociationValue
+                return (
+                    <NotificationReaction
+                        profile={profile}
+                        publicKey={publicKey}
+                        post={post}
+                        reaction={reaction}
+                    />
+                );
+            }
+            return <NotificationDefault notification={notification} />;
+        };                          
         default:
             return <NotificationDefault notification={notification} />;
     }

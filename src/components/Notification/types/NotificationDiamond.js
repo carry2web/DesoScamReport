@@ -10,7 +10,6 @@ export const NotificationDiamond = ({ profile, publicKey, post, diamondLevel }) 
 
     return (
         <div className={styles.notification}>
-
             <div role="img" aria-label="diamond" className={styles.diamondsIcon}>
                 {Array.from({ length: diamondLevel }, (_, i) => (
                     <div key={i}>💎</div>

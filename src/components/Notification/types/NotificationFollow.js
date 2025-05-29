@@ -10,17 +10,27 @@ export const NotificationFollow = ({ profile, publicKey, isUnfollow }) => {
 
   return (
     <div className={styles.notification}>
-      <Link href={`/${username}`}><Avatar profile={profile} size={48} /></Link>
-      <div className={styles.notificationContent}>
-        <div className={styles.notificationHeader}>
-          <div className={styles.notificationSummary}>
-            <div>
-              <Link href={`/${username}`}><strong>{username}</strong></Link>
-              {isUnfollow ? ' unfollowed you' : ' started following you'}              
-            </div>
-          </div>
-        </div>
+
+      <div role="img" aria-label="follow" className={styles.followIcon}>
+        <div>🤵</div>
+        <div className={styles.plusIcon}>➕</div>
       </div>
+
+      <div className={styles.notificationContent}>
+
+          <div className={styles.notificationHeader}>
+              <Link href={`/${username}`}>
+                  <Avatar profile={profile} size={48} className={styles.avatar}/>
+                  <Avatar profile={profile} size={45} className={styles.avatarMobile}/>
+              </Link>
+
+              <div className={styles.notificationSummary}>
+                  <div><Link href={`/${username}`}>{username}</Link> {isUnfollow ? ' unfollowed you' : ' started following you'}</div>                       
+              </div>
+          </div>
+
+      </div>
+
     </div>
   );
 };
