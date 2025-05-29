@@ -242,6 +242,12 @@
 .postBody img {
   max-width: 100%;
   margin: var(--spacing-md) 0;
+
+  max-height: calc(100vh - var(--navbar-height) - var(--footer-height) - var(--spacing-md) * 2);
+  width: auto;
+  height: auto;
+  border-radius: var(--radius-sm);
+  object-fit: contain; /* ensures full image fits without cropping */    
 }
 
 .postSummary{
@@ -322,6 +328,27 @@
   align-items: center;
   gap: var(--spacing-sm);
 }
+
+
+.imageGallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-md);
+  overflow-wrap: anywhere;
+  word-break: normal;
+  width: 100%;
+}
+
+.postImage {
+  max-width: 100%;
+
+  max-height: calc(100vh - var(--navbar-height) - var(--footer-height) - var(--spacing-lg) * 2);
+  width: auto;
+  height: auto;
+  border-radius: var(--radius-sm);
+  object-fit: contain; /* ensures full image fits without cropping */  
+}
+
 
 @media (max-width: 780px) {
 
