@@ -21,6 +21,7 @@ export const Notification = ({ notification, postsByHash, profilesByPublicKey })
     // related to SUBMIT_POST notifications
     const { SubmitPostTxindexMetadata: submitMeta } = Metadata || {};
     const submittedPost = postsByHash?.[submitMeta?.PostHashBeingModifiedHex];
+    const submittedPostHex = submitMeta?.PostHashBeingModifiedHex;
     const parentPost = postsByHash?.[submitMeta?.ParentPostHashHex];
 
     // related to Diamond notifications
@@ -47,6 +48,7 @@ export const Notification = ({ notification, postsByHash, profilesByPublicKey })
                     profile={profile}
                     publicKey={publicKey}
                     submittedPost={submittedPost}
+                    submittedPostHex={submittedPostHex}
                     parentPost={parentPost}
                 />
             ); 
