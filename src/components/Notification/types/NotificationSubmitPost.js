@@ -42,7 +42,7 @@ export const NotificationSubmitPost = ({ profile, publicKey, submittedPost, subm
                 href={`/${publicKey}`}
                 prefetch={false}
               >
-                {submittedPostHex}
+                {publicKey}
               </Link>              
               {' '}not found. Check it at{' '}
               <Link
