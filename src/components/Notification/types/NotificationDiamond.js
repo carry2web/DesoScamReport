@@ -3,10 +3,14 @@
 
 import Link from 'next/link';
 import { Avatar } from '@/components/Avatar';
+import { isMaybePublicKey } from '@/utils/profileUtils';
 import styles from '../Notification.module.css';
 
 export const NotificationDiamond = ({ profile, publicKey, post, diamondLevel }) => {
     const username = profile?.Username || publicKey;
+
+    const isPublicKey = isMaybePublicKey(username);
+    const lookupKey = !isPublicKey ? `@${username}` : username;       
 
     return (
         <div className={styles.notification}>
@@ -25,7 +29,7 @@ export const NotificationDiamond = ({ profile, publicKey, post, diamondLevel }) 
                     </Link>
 
                     <div className={styles.notificationSummary}>
-                        <div><Link href={`/${username}`}>{username}</Link> diamonded your post</div> 
+                        <div><Link href={`/${username}`}>{lookupKey}</Link> diamonded your post</div> 
                         <div className={styles.postLinkWrapper}>
                             <Link href={`/${username}/posts/${post.PostHashHex}`} className={styles.postLink} prefetch={false}>{post.PostHashHex}</Link>
                         </div>                        

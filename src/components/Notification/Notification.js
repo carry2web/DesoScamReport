@@ -6,7 +6,8 @@ import {
     NotificationFollow, 
     NotificationSubmitPost,
     NotificationDiamond,
-    NotificationReaction 
+    NotificationReaction,
+    NotificationTransfer  
 } from './types/';
 
 export const Notification = ({ notification, postsByHash, profilesByPublicKey }) => {
@@ -73,7 +74,14 @@ export const Notification = ({ notification, postsByHash, profilesByPublicKey })
                     />
                 );
             }
-            return <NotificationDefault notification={notification} />;
+
+            return (
+                <NotificationTransfer
+                    profile={profile}
+                    publicKey={publicKey}
+                    nanosAmount={transferMeta?.TotalOutputNanos}
+                />
+            );            
         };
         case 'CREATE_POST_ASSOCIATION': {
             if (isReaction) {

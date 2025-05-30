@@ -3,10 +3,14 @@
 
 import Link from 'next/link';
 import { Avatar } from '@/components/Avatar';
+import { isMaybePublicKey } from '@/utils/profileUtils';
 import styles from '../Notification.module.css';
 
 export const NotificationFollow = ({ profile, publicKey, isUnfollow }) => {
   const username = profile?.Username || publicKey;
+
+  const isPublicKey = isMaybePublicKey(username);
+  const lookupKey = !isPublicKey ? `@${username}` : username;   
 
   return (
     <div className={styles.notification}>
@@ -25,7 +29,7 @@ export const NotificationFollow = ({ profile, publicKey, isUnfollow }) => {
               </Link>
 
               <div className={styles.notificationSummary}>
-                  <div><Link href={`/${username}`}>{username}</Link> {isUnfollow ? ' unfollowed you' : ' started following you'}</div>                       
+                  <div><Link href={`/${username}`}>{lookupKey}</Link> {isUnfollow ? ' unfollowed you' : ' started following you'}</div>                       
               </div>
           </div>
 

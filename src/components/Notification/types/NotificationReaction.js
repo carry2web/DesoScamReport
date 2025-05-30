@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import classNames from 'classnames';
 import { Avatar } from '@/components/Avatar';
+import { isMaybePublicKey } from '@/utils/profileUtils';
 import styles from '../Notification.module.css';
 
 const reactionMap = {
@@ -17,6 +18,9 @@ const reactionMap = {
 
 export const NotificationReaction = ({ profile, publicKey, post, reaction }) => {
   const username = profile?.Username || publicKey;
+
+  const isPublicKey = isMaybePublicKey(username);
+  const lookupKey = !isPublicKey ? `@${username}` : username;    
 
   const animationClass = styles[reaction?.toLowerCase()] || '';
 
@@ -35,7 +39,7 @@ export const NotificationReaction = ({ profile, publicKey, post, reaction }) => 
 
           <div className={styles.notificationSummary}>
             <div>
-              <Link href={`/${username}`}>{username}</Link> reacted{' '}
+              <Link href={`/${username}`}>{lookupKey}</Link> reacted{' '}
               <span className={classNames(styles.reactionEmoji, animationClass)}>
                 {reactionMap[reaction] || '❓'}
               </span>{' '}
