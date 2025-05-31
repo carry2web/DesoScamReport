@@ -3,6 +3,19 @@ import remarkGfm from 'remark-gfm';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
+export const preprocessText = (text) => {
+  if (!text) return '';
+  
+  // Handle edge cases where entire content is just a markdown symbol
+  const trimmed = text.trim();
+  if (/^[\+\-\*]$/.test(trimmed)) {
+    return `\\${trimmed}`;
+  }
+  
+  // Handle standalone symbols at start of lines
+  return text.replace(/(^|\n)(\s*)([\+\-\*])(\s*$)/gm, '$1$2\\$3$4');
+};
+
 export const formatMentionsAndCoins = (text) => {
   if (!text) return '';
 
@@ -30,7 +43,8 @@ export const normalizeLineBreaks = (text) => {
 export const MarkdownText = ({ text, onInternalLinkClick = null }) => {
   const router = useRouter();
   
-  const normalized = normalizeLineBreaks(text);
+  const preprocessed = preprocessText(text);
+  const normalized = normalizeLineBreaks(preprocessed);
   const processed = formatMentionsAndCoins(normalized);
 
   return (
