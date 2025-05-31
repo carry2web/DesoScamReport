@@ -41,11 +41,9 @@ export const NotificationsPageClient = ({ rawParam }) => {
 
       return response.data.Profile;
     },
-    staleTime: 1000 * 30,
-    cacheTime: 1000 * 60 * 5,
-    retry: false,
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
+    // Using global defaults from QueryProvider
+    // Global defaults: staleTime: 2min, gcTime: 10min, retry: networkAwareRetry,
+    // refetchOnReconnect: false (fixes wake-from-sleep), etc.
   });
 
   const {
@@ -80,11 +78,14 @@ export const NotificationsPageClient = ({ rawParam }) => {
       const lastNotification = notifications.at(-1);
       return lastNotification?.Index ? lastNotification.Index - 1 : undefined;
     },
-    staleTime: 1000 * 30,
-    cacheTime: 1000 * 60 * 5,
-    retry: false,
-    refetchOnWindowFocus: false,
-    enabled: !!(isPublicKey ? lookupKey : userProfile?.PublicKeyBase58Check), // Only run when we have the public key
+    // Only run when we have a valid public key:
+    // - For public key URLs: use lookupKey immediately
+    // - For username URLs: wait for userProfile query to complete and get PublicKeyBase58Check
+    enabled: !!(isPublicKey ? lookupKey : userProfile?.PublicKeyBase58Check),
+
+    // Using global defaults - much cleaner!
+    // Optional: Only override if you need different behavior for notifications
+    staleTime: 1000 * 15, // 15 seconds - very fresh notifications
   });
 
   const loadMoreRef = useRef(null);

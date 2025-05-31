@@ -19,10 +19,9 @@ export const SinglePostPageClient = ({ postHash, rawParam }) => {
       if (!response.success) throw new Error(response.error || 'Failed to fetch post');
       return response.data?.PostFound || null;
     },
-    staleTime: 1000 * 30,
-    cacheTime: 1000 * 60 * 5,
-    retry: false,
-    refetchOnWindowFocus: false,
+    // Using global defaults from QueryProvider
+    // Global defaults: staleTime: 2min, gcTime: 10min, retry: networkAwareRetry,
+    // refetchOnReconnect: false (fixes wake-from-sleep), etc.
   });
 
   if (isLoading) return <Page><p>Loading post...</p></Page>;

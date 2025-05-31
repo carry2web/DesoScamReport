@@ -64,9 +64,13 @@ export const SearchProfiles = () => {
             }
         },        
         enabled: !!debouncedQuery,
-        staleTime: 30 * 1000,
-        cacheTime: 5 * 60 * 1000,
-        retry: false,
+
+        // Search-specific settings (different from global defaults):
+        staleTime: 30 * 1000, // 30 seconds - search results can change frequently
+        gcTime: 5 * 60 * 1000, // 5 minutes - don't cache search results too long (was cacheTime)
+        retry: false, // Don't retry failed searches automatically - let user retype
+        
+        // These could use global defaults, but keeping for explicit search behavior:
         refetchOnWindowFocus: false,
     });
 

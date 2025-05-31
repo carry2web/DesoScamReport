@@ -1,7 +1,7 @@
 import { Page } from '@/components/Page';
-import { HydrationBoundary, QueryClient, dehydrate } from '@tanstack/react-query';
+import { HydrationBoundary, dehydrate } from '@tanstack/react-query';
 import { SinglePostPageClient } from './SinglePostPageClient';
-import { queryKeys } from '@/queries';
+import { queryKeys, createServerQueryClient } from '@/queries';
 import { getSinglePost } from '@/api/server/getSinglePost';
 import { avatarUrl } from '@/utils/profileUtils';
 
@@ -40,7 +40,7 @@ export default async function SinglePostPage({ params }) {
   const rawParam = decodeURIComponent(username);
   const PostHashHex = decodeURIComponent(posthash);
 
-  const queryClient = new QueryClient();
+  const queryClient = createServerQueryClient();
   const queryKey = queryKeys.singlePost(PostHashHex);
 
   await queryClient.prefetchQuery({

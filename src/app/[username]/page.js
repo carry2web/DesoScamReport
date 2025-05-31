@@ -1,8 +1,8 @@
 import { Page } from '@/components/Page';
-import { HydrationBoundary, QueryClient, dehydrate } from '@tanstack/react-query';
+import { HydrationBoundary, dehydrate } from '@tanstack/react-query';
 import { ProfilePageClient } from './ProfilePageClient';
 import { isMaybePublicKey, avatarUrl } from '@/utils/profileUtils';
-import { queryKeys } from '@/queries';
+import { queryKeys, createServerQueryClient } from '@/queries';
 import { getSingleProfile } from '@/api/server/getSingleProfile';
 
 export async function generateMetadata({ params }) {
@@ -63,7 +63,7 @@ export default async function ProfilePage({ params }) {
   const isPublicKey = isMaybePublicKey(rawParam);
   const lookupKey = !isPublicKey && rawParam.startsWith('@') ? rawParam.slice(1) : rawParam;
 
-  const queryClient = new QueryClient();
+  const queryClient = createServerQueryClient();
 
   const queryKey = isPublicKey
     ? queryKeys.profileByPublicKey(rawParam)
