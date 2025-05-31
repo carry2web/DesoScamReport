@@ -43,11 +43,9 @@ export const ProfilePageClient = () => {
 
       return response.data.Profile;
     },
-    staleTime: 1000 * 30,
-    cacheTime: 1000 * 60 * 5,
-    retry: false,
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
+    // Using global defaults from QueryProvider
+    // Global defaults: staleTime: 2min, gcTime: 10min, retry: networkAwareRetry, 
+    // refetchOnReconnect: false (fixes wake-from-sleep), etc.
   });
 
   return (

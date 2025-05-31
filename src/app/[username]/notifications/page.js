@@ -1,9 +1,9 @@
 import { Page } from '@/components/Page';
-import { HydrationBoundary, QueryClient, dehydrate } from '@tanstack/react-query';
+import { HydrationBoundary, dehydrate } from '@tanstack/react-query';
 import { NotificationsPageClient } from './NotificationsPageClient';
 import { isMaybePublicKey, avatarUrl } from '@/utils/profileUtils';
 import { getSingleProfile } from '@/api/server/getSingleProfile';
-import { queryKeys } from '@/queries';
+import { queryKeys, createServerQueryClient } from '@/queries';
 
 export async function generateMetadata({ params }) {
   const { username } = await params;
@@ -53,7 +53,7 @@ export default async function NotificationsPage({ params }) {
   const isPublicKey = isMaybePublicKey(rawParam);
   const lookupKey = !isPublicKey && rawParam.startsWith('@') ? rawParam.slice(1) : rawParam;
 
-  const queryClient = new QueryClient();
+  const queryClient = createServerQueryClient();
 
   const queryKey = isPublicKey
     ? queryKeys.profileByPublicKey(rawParam)

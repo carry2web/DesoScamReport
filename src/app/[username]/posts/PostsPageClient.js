@@ -41,11 +41,8 @@ export const PostsPageClient = ({ rawParam }) => {
 
       return response.data.Profile;
     },
-    staleTime: 1000 * 30,
-    cacheTime: 1000 * 60 * 5,
-    retry: false,
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
+    // Most settings removed - using global defaults from QueryProvider
+    // Global defaults: staleTime: 2min, gcTime: 10min, retry: networkAwareRetry, etc.
   });
 
   const {
@@ -75,10 +72,9 @@ export const PostsPageClient = ({ rawParam }) => {
       const posts = lastPage?.Posts || [];
       return posts.length < POSTS_PER_PAGE ? undefined : posts.at(-1)?.PostHashHex;
     },
-    staleTime: 1000 * 30,
-    cacheTime: 1000 * 60 * 5,
-    retry: false,
-    refetchOnWindowFocus: false,
+    // Using global defaults - much cleaner!
+    // Optional: Only override if you need different behavior for posts
+    staleTime: 1000 * 60, // Optional: 1 minute for posts (vs 2min global default)    
   });
 
   const loadMoreRef = useRef(null);

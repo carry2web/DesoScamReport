@@ -90,12 +90,16 @@ export const Post = ({ post, username, userProfile, isQuote, isComment }) => {
       return lastPage.hasMore ? totalLoaded : undefined;
     },    
     enabled: showReplies,
-    staleTime: Infinity,
-    cacheTime: Infinity,
+
+    // Comment-specific cache behavior (different from global defaults):
+    staleTime: Infinity, // Comments never become stale - keep cached indefinitely
+    gcTime: Infinity, // Keep comments in cache forever
+
+    // These match global defaults, so we could remove them, but keeping for clarity:
     refetchOnWindowFocus: false,
-    refetchOnMount: false,
-    refetchOnReconnect: false,
-    retry: false,
+    refetchOnMount: false, 
+    refetchOnReconnect: false, // Important: prevents wake-from-sleep issues
+    retry: false, // Don't retry failed comment loads
   });
 
   const comments = data?.pages.flatMap((page) => page.comments) || [];

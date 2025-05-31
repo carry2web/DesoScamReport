@@ -13,6 +13,9 @@ import { Button } from "@/components/Button";
 
 import { useToast } from "@/hooks/useToast";
 
+import { useQueryClient } from '@tanstack/react-query';
+import { queryKeys } from '@/queries';
+
 import Link from 'next/link';
 
 import styles from "./page.module.css";
@@ -29,6 +32,8 @@ export default function Home() {
     showErrorToast,
     showSuccessToast,
   } = useToast();    
+
+  const queryClient = useQueryClient();
 
   const { userProfile } = useUser();
 
@@ -75,6 +80,15 @@ export default function Home() {
 
         const postTransaction = await signAndSubmitTransaction(result.data?.TransactionHex)
         const { TxnHashHex } = postTransaction
+
+        if (postTransaction?.PostEntryResponse) {
+          const username = userProfile?.Username || userPublicKey;
+          
+          // Invalidate user's posts to trigger refetch
+          await queryClient.invalidateQueries({ 
+            queryKey: queryKeys.userPosts(username) 
+          });
+        }        
 
         // toast.success('Post published successfully 🎉');
 

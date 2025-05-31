@@ -42,11 +42,9 @@ export const PostsPageClient = ({ rawParam }) => {
 
       return response.data.Profile;
     },
-    staleTime: 1000 * 30,
-    cacheTime: 1000 * 60 * 5,
-    retry: false,
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
+    // Using global defaults from QueryProvider
+    // Global defaults: staleTime: 2min, gcTime: 10min, retry: networkAwareRetry,
+    // refetchOnReconnect: false (fixes wake-from-sleep), etc.
   });
 
   const {
@@ -76,10 +74,14 @@ export const PostsPageClient = ({ rawParam }) => {
       const posts = lastPage?.PostsFound || [];
       return posts.length < POSTS_PER_PAGE ? undefined : posts.at(-1)?.PostHashHex;
     },
-    staleTime: 1000 * 30,
-    cacheTime: 1000 * 60 * 5,
-    retry: false,
-    refetchOnWindowFocus: false,
+    // Only run when we have a valid public key for ReaderPublicKeyBase58Check:
+    // - For public key URLs: use lookupKey immediately
+    // - For username URLs: wait for userProfile query to complete and get PublicKeyBase58Check
+    enabled: !!(isPublicKey ? lookupKey : userProfile?.PublicKeyBase58Check),
+    
+    // Using global defaults - much cleaner!
+    // Optional: Only override if you need different behavior for feed posts
+    staleTime: 1000 * 30, // 30 seconds for fresh follow feed
   });
 
   const loadMoreRef = useRef(null);
