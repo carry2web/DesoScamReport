@@ -16,6 +16,7 @@
     margin: 0 auto;
     max-width: 960px;
     padding: 0 var(--container-sides-padding);
+    /* padding-right: calc(var(--container-sides-padding, 20px) + var(--scrollbar-offset, 0px)); */
 
     margin-top: var(--navbar-height);
     margin-bottom: var(--footer-height);

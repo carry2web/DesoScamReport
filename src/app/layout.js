@@ -10,12 +10,15 @@ export const metadata = {
   description: "Designed by @brootle",
 };
 
-export default function RootLayout({ children }) {
+export default function RootLayout({ children, modal }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body>
         <Providers>
-          <MainLayout>{children}</MainLayout>
+          <MainLayout>
+            {children}
+            {modal}
+          </MainLayout>
         </Providers>
         <ToastUI />
       </body>

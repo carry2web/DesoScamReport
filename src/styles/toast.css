@@ -1,3 +1,7 @@
+.Toastify__toast-container{
+  z-index: 99992;
+}
+
 .Toastify__toast-container--bottom-right {
     bottom: var(--footer-height);
     right: var(--toastify-toast-right);

@@ -1,10 +1,13 @@
 "use client";
 
-import styles from "./Navbar.module.css";
 import Link from "next/link";
 
 import { SearchProfiles } from "@/components/SearchProfiles";
 import { ThemeSelector } from "@/components/ThemeSelector";
+
+import { Button } from "@/components/Button";
+
+import { useAuth } from "@/context/AuthContext";
 
 import { 
   Home as HomeIcon
@@ -12,7 +15,11 @@ import {
 
 import { UserMenu } from "@/components/UserMenu";
 
+import styles from "./Navbar.module.css";
+
 export const Navbar = () => {
+
+  const { userPublicKey } = useAuth();
 
   return (
     <nav className={styles.container}>
@@ -25,6 +32,13 @@ export const Navbar = () => {
       </div>
 
       <div className={styles.end}>
+
+        {userPublicKey && (
+          <Button href="/compose/post" size="small">
+            Post
+          </Button>
+        )}        
+
         <UserMenu />
         <ThemeSelector />
       </div>

@@ -10,6 +10,7 @@
     box-sizing: border-box;
     display: flex;
     padding: 11px var(--container-sides-padding);
+    /* padding-right: calc(var(--container-sides-padding, 20px) + var(--scrollbar-offset, 0px)); */
     position: fixed;
     width: 100%;
     z-index: 99990;
