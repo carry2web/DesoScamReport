@@ -213,7 +213,7 @@ export default function Home() {
             </a>
             <span className={styles.linkSeparator}>•</span>
             <a 
-              href="https://github.com/brootle/deso-starter-nextjs-plus/blob/main/README.md" 
+              href="https://github.com/brootle/deso-starter-nextjs-plus/blob/master/README.md" 
               target="_blank" 
               rel="noopener noreferrer"
               className={styles.docsLink}

@@ -1,5 +1,5 @@
 import { Navbar } from "@/components/Navbar";
-import { Footer } from "@/components/Footer"
+// import { Footer } from "@/components/Footer"
 import styles from "./MainLayout.module.css";
 
 export const MainLayout = ({ children, modal }) => {
@@ -7,7 +7,7 @@ export const MainLayout = ({ children, modal }) => {
     <div className={styles.container}>
       <Navbar />
       <main className={styles.mainContainer}>{children}</main>
-      <Footer />
+      {/* <Footer /> */}
       {modal}
     </div>
   );
