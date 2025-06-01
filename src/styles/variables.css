@@ -2,6 +2,7 @@
     --navbar-height: 60px;
     --footer-height: 40px;
     --container-sides-padding: 20px;
+    --scrollbar-offset: 0; /* used when modal is opened to avoid layout shift */
 
     --control-height-sm: 32px;
     --control-height-md: 40px;
