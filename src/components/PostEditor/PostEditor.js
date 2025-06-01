@@ -71,7 +71,9 @@ export const PostEditor = ({
 
         showSuccessToast(
           <div>
-            Post published successfully 🎉 <Link href={`/${username}/posts/${tx.TxnHashHex}`}>View</Link>
+            Post published successfully 🎉 
+            <br />
+            <Link href={`/${username}/posts/`}>View in Posts</Link>
           </div>,
           { autoClose: 7000 }
         );
@@ -93,18 +95,38 @@ export const PostEditor = ({
 
   return (
     <div className={styles.postContainer}>
+      {/* Authentication Warning */}
+      {!resolvedUserPublicKey && (
+        <div className={styles.authWarning}>
+          <div className={styles.warningIcon}>🔐</div>
+          <div className={styles.warningContent}>
+            <h3>Authentication Required</h3>
+            <p>You need to connect your wallet to create posts on DeSo.</p>
+            <p className={styles.warningAction}>
+              👆 Use the <strong>Login</strong> button in the navigation to get started
+            </p>
+          </div>
+        </div>
+      )}
+
+
       <textarea
         disabled={loading || disabled || !resolvedUserPublicKey}
         value={postText}
         onChange={handlePostChange}
-        placeholder={`Write a post as ${resolvedUserProfile?.Username || resolvedUserPublicKey}`}
+        // placeholder={`Write a post as ${resolvedUserProfile?.Username || resolvedUserPublicKey}`}
+        placeholder={
+          resolvedUserPublicKey 
+            ? `Write a post as ${resolvedUserProfile?.Username || resolvedUserPublicKey}`
+            : "Login to start posting..."
+        }
       />
       <Button
         disabled={!postText.trim() || disabled || !resolvedUserPublicKey}
         isLoading={loading}
         onClick={handleSubmitPost}
       >
-        Post to DeSo
+        {resolvedUserPublicKey ? 'Post to DeSo' : 'Login to Post'}
       </Button>
     </div>
   );
