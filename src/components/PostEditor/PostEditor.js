@@ -95,21 +95,6 @@ export const PostEditor = ({
 
   return (
     <div className={styles.postContainer}>
-      {/* Authentication Warning */}
-      {!resolvedUserPublicKey && (
-        <div className={styles.authWarning}>
-          <div className={styles.warningIcon}>🔐</div>
-          <div className={styles.warningContent}>
-            <h3>Authentication Required</h3>
-            <p>You need to connect your wallet to create posts on DeSo.</p>
-            <p className={styles.warningAction}>
-              👆 Use the <strong>Login</strong> button in the navigation to get started
-            </p>
-          </div>
-        </div>
-      )}
-
-
       <textarea
         disabled={loading || disabled || !resolvedUserPublicKey}
         value={postText}
