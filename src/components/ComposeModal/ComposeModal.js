@@ -59,7 +59,7 @@ export const ComposeModal = ({ isDirect = false }) => {
               onClick={handleClose}
               aria-label="Close modal"
             >
-              ×
+              <span className={styles.closeIcon}>&times;</span>
             </button>
           </div>
 

@@ -5,3 +5,5 @@ export { ThemeLight } from "./ThemeLight"
 export { ThemeDark } from "./ThemeDark"
 
 export { DefaultAvatar } from "./DefaultAvatar";
+
+export { Images } from "./Images";
