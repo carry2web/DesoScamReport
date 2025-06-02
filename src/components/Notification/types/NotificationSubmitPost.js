@@ -31,7 +31,7 @@ export const NotificationSubmitPost = ({ profile, publicKey, submittedPost, subm
   });
 
   // there is a bug, if poster has no profile and no username - post is null
-  // need to reportt to DeSo team
+  // check bug report here https://github.com/deso-protocol/backend/issues/736
   if (!submittedPost) {
     return (
       <div className={styles.notification}>
