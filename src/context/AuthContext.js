@@ -91,10 +91,14 @@ export function AuthProvider({ children }) {
     return await identity.signAndSubmit({ TransactionHex });
   };
 
+  const getIdentityJWT = async () => {
+    return await identity.jwt();
+  };
+
   return (
     <AuthContext.Provider value={{ 
       userPublicKey, login, logout, setActiveUser, altUsers, isAuthChecking,
-      signTransaction, submitTransaction, signAndSubmitTransaction
+      signTransaction, submitTransaction, signAndSubmitTransaction, getIdentityJWT
     }}>
       {children}
     </AuthContext.Provider>

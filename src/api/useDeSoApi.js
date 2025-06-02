@@ -90,6 +90,26 @@ export function useDeSoApi() {
       options: { body: JSON.stringify(params) },
     });
   }, [apiRequest]);    
+
+  // upload image to deso 
+  const uploadImage = useCallback((params) => {
+    const { imageFile, userPublicKey, jwt } = params;
+
+    if (!imageFile || !userPublicKey || !jwt) {
+      return Promise.resolve({ success: false, error: "Missing data" });
+    }
+
+    const formData = new FormData();
+    formData.append("file", imageFile);
+    formData.append("UserPublicKeyBase58Check", userPublicKey);
+    formData.append("JWT", jwt);
+
+    return apiRequest({
+      endpoint: "upload-image",
+      options: { body: formData},
+    });
+  }, [apiRequest]);
+
   
   return {
     getSingleProfile,
@@ -102,5 +122,6 @@ export function useDeSoApi() {
     getProfiles,
     getPostsStateless,
     getNotifications,
+    uploadImage
   };
 }
