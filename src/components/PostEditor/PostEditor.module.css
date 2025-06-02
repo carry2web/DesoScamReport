@@ -18,7 +18,155 @@
     border-radius: var(--radius-md);
 }
 
+.postActions{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.uploadActions {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+}
+
 .error{
     color: var(--color-error);
     font-size: var(--font-size-sm);
+}
+
+.attachedImagesContainer{
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-md);
+}
+
+.previewImageContainer{
+    position: relative;
+    width: 100px;
+    height: 100px;
+    border-radius: var(--radius-md);
+    background-color: var(--color-input-bg);    
+    box-shadow: var(--shadow-sm);
+}
+
+.previewImage{
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+}
+
+.removeImageButton{
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background-color: var(--color-btn-danger-bg);
+    color: var(--color-btn-text);
+    border: none;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 0;
+    box-shadow: var(--shadow-sm);
+}
+
+.removeImageButton:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.removeImageButton:hover {
+    background-color: var(--color-btn-danger-hover-bg);
+}   
+
+.previewImagePlaceholder {
+    width: 100px;
+    height: 100px;
+    border-radius: var(--radius-md);
+    background-color: var(--color-input-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    box-shadow: var(--shadow-sm);
+}
+
+.spinner {
+    width: 24px;
+    height: 24px;
+    border: 3px solid rgba(0, 0, 0, 0.1);
+    border-top-color: var(--color-text-muted);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.retryButton {
+    background: none;
+    border: none;
+    color: var(--color-text-muted);
+    font-size: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    opacity: 0.8;
+    transition: opacity 0.2s ease;
+}
+
+.retryButton:hover {
+    opacity: 1;
+}
+
+
+.hiddenFileInput {
+  display: none;
+}
+
+.uploadContainer {
+
+}
+
+.uploadIconButton {
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  color: var(--color-text-muted);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  box-shadow: var(--shadow-sm);
+  padding: 0;
+  box-shadow: none;
+}
+
+.uploadIconButton:hover {
+  color: var(--color-text);
+  background-color: var(--color-surface-hover);
+}
+
+.disabledUploadIconButton {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.uploadIcon {
+  width: 20px;
+  height: 20px;
 }
