@@ -192,6 +192,8 @@ Pull requests are welcome! Open issues or suggestions any time.
 
 Built using the [DeSo Protocol](https://github.com/deso-protocol) — the decentralized social blockchain.
 
+---
+
 ## 🪲 Known Issues and Bug Reports
 
 During development, several minor issues were identified with the DeSo backend API:
