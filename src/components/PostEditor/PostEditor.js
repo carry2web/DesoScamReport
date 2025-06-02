@@ -26,7 +26,7 @@ export const PostEditor = ({
   const resolvedUserProfile = userProfile || user.userProfile;
   const signAndSubmitTransaction = auth.signAndSubmitTransaction;
 
-  const { submitPost, uploadImage } = useDeSoApi(); // ✅ added uploadImage
+  const { submitPost, uploadImage } = useDeSoApi();
   const { showErrorToast, showSuccessToast } = useToast();
   const queryClient = useQueryClient();
 
@@ -47,11 +47,9 @@ export const PostEditor = ({
     setPostText(e.target.value);
   };
 
-  // ✅ Handle post submission
   const handleSubmitPost = async () => {
     setLoading(true);
     try {
-      
       const settings = {
         UpdaterPublicKeyBase58Check: resolvedUserPublicKey,
         BodyObj: { 
@@ -69,7 +67,7 @@ export const PostEditor = ({
       }
 
       if (result.success && result.data?.TransactionHex) {
-        //const tx = await signAndSubmitTransaction(result.data.TransactionHex);
+        const tx = await signAndSubmitTransaction(result.data.TransactionHex);
         const username = resolvedUserProfile?.Username || resolvedUserPublicKey;
 
         await queryClient.invalidateQueries({
@@ -100,38 +98,77 @@ export const PostEditor = ({
     }
   };
 
+  // const handleImageUpload = async (event) => {
+  //   const file = event.target.files?.[0];
+  //   if (!file) return;
+
+  //   const jwt = await auth.getIdentityJWT();
+  //   const publicKey = resolvedUserPublicKey;
+
+  //   if (!jwt || !publicKey) {
+  //     showErrorToast("Missing auth data. Please login again.");
+  //     return;
+  //   }
+
+  //   const result = await uploadImage({
+  //     imageFile: file,
+  //     userPublicKey: publicKey,
+  //     jwt,
+  //   });
+
+  //   console.log("Image upload result:", result);
+
+  //   if (result.success) {
+  //     const imageUrl = result.data.ImageURL;
+  //     setUploadedImages((prev) => [...prev, imageUrl]); // ✅ append image
+  //     showSuccessToast("Image uploaded!");
+  //   } else {
+  //     showErrorToast(`Image upload failed: ${result.error}`);
+  //   }
+  // };
+
+
   const handleImageUpload = async (event) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
-    const jwt = await auth.getIdentityJWT();
-    const publicKey = resolvedUserPublicKey;
+    setLoading(true); // ✅ block submission during upload
 
-    if (!jwt || !publicKey) {
-      showErrorToast("Missing auth data. Please login again.");
-      return;
-    }
+    try {
+      const jwt = await auth.getIdentityJWT();
+      const publicKey = resolvedUserPublicKey;
 
-    const result = await uploadImage({
-      imageFile: file,
-      userPublicKey: publicKey,
-      jwt,
-    });
+      if (!jwt || !publicKey) {
+        showErrorToast("Missing auth data. Please login again.");
+        return;
+      }
 
-    console.log("Image upload result:", result);
+      const result = await uploadImage({
+        imageFile: file,
+        userPublicKey: publicKey,
+        jwt,
+      });
 
-    if (result.success) {
-      const imageUrl = result.data.ImageURL;
-      setUploadedImages((prev) => [...prev, imageUrl]); // ✅ append image
-      showSuccessToast("Image uploaded!");
-    } else {
-      showErrorToast(`Image upload failed: ${result.error}`);
+      console.log("Image upload result:", result);
+
+      if (result.success) {
+        const imageUrl = result.data.ImageURL;
+        setUploadedImages((prev) => [...prev, imageUrl]);
+        showSuccessToast("Image uploaded!");
+      } else {
+        showErrorToast(`Image upload failed: ${result.error}`);
+      }
+    } catch (error) {
+      showErrorToast(`Unexpected error: ${error.message}`);
+    } finally {
+      setLoading(false); // ✅ ensure UI is unblocked
     }
   };
+
 
   const handleRemoveImage = (url) => {
     setUploadedImages((prev) => prev.filter((img) => img !== url)); // ✅ remove by URL
-  };
+  };  
 
   return (
     <div className={styles.postContainer}>
@@ -139,6 +176,7 @@ export const PostEditor = ({
         disabled={loading || disabled || !resolvedUserPublicKey}
         value={postText}
         onChange={handlePostChange}
+        // placeholder={`Write a post as ${resolvedUserProfile?.Username || resolvedUserPublicKey}`}
         placeholder={
           resolvedUserPublicKey 
             ? `Write a post as ${resolvedUserProfile?.Username || resolvedUserPublicKey}`
@@ -160,7 +198,7 @@ export const PostEditor = ({
         onChange={handleImageUpload} 
         disabled={!resolvedUserPublicKey}
         style={{ marginTop: '1rem' }}
-      />
+      />  
 
 
       {uploadedImages.length > 0 && (
@@ -196,9 +234,7 @@ export const PostEditor = ({
             </div>
           ))}
         </div>
-      )}
-
-
+      )}      
 
     </div>
   );
@@ -206,6 +242,8 @@ export const PostEditor = ({
 
 
 
+
+// ORIGINAL NO IMAGE UPLOAD VERSION
 // "use client";
 
 // import { useState, useEffect } from "react";
