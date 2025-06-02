@@ -24,6 +24,11 @@ export const NotificationReaction = ({ profile, publicKey, post, reaction }) => 
 
   const animationClass = styles[reaction?.toLowerCase()] || '';
 
+  const postUsername = post?.ProfileEntryResponse?.Username;
+  const postPublicKey = post?.PosterPublicKeyBase58Check;
+  const postHash = post?.PostHashHex;
+  const hasPostLink = (postHash && (postUsername || postPublicKey));
+
   return (
     <div className={styles.notification}>
       <div role="img" aria-label="reaction" className={styles.reactionIcon}>
@@ -45,15 +50,18 @@ export const NotificationReaction = ({ profile, publicKey, post, reaction }) => 
               </span>{' '}
               at your post
             </div>
-            <div className={styles.postLinkWrapper}>
-              <Link
-                href={`/${username}/posts/${post.PostHashHex}`}
-                className={styles.postLink}
-                prefetch={false}
-              >
-                {post.PostHashHex}
-              </Link>
-            </div>
+            
+            {hasPostLink && (
+              <div className={styles.postLinkWrapper}>
+                <Link
+                  href={`/${postUsername || postPublicKey}/posts/${postHash}`}
+                  className={styles.postLink}
+                  prefetch={false}
+                >
+                  {postHash}
+                </Link>
+              </div>
+            )}
           </div>
         </div>
 
