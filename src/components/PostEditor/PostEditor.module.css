@@ -12,7 +12,7 @@
     resize: vertical;
     max-height: none;
     height: 100px;
-    min-height: 100px;
+    min-height: 120px;
     padding: var(--spacing-lg);
     box-sizing: border-box;
     border-radius: var(--radius-md);
