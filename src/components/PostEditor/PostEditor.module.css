@@ -62,8 +62,8 @@
     position: absolute;
     top: -8px;
     right: -8px;
-    background-color: var(--color-btn-danger-bg);
-    color: var(--color-btn-text);
+    background-color: var(--color-btn-secondary-bg);
+    color: var(--color-text-muted);
     border: none;
     border-radius: 50%;
     width: 20px;
@@ -82,7 +82,8 @@
 }
 
 .removeImageButton:hover {
-    background-color: var(--color-btn-danger-hover-bg);
+    background-color: var(--color-btn-secondary-hover-bg);
+    color: var(--color-text);
 }   
 
 .previewImagePlaceholder {
