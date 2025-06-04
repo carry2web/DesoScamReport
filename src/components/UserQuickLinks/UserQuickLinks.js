@@ -64,29 +64,31 @@ export const UserQuickLinks = ({ profile, rawParam }) => {
             {open ? <span className={styles.fabIconClose}>×</span> : <span className={styles.fabIconMenu}>☰</span>} {/* Use a simple icon or text for toggle */}
         </button>
 
-        <div
-            ref={menuRef}
-            className={classNames(styles.menuWrapper, {
-                [styles.menuOpen]: open,
-                [styles.menuClosed]: !open,
-            })}
-        >
-        <Link href={`/${base}`} className={styles.avatarWrapper} onClick={() => setOpen(false)}>
-            <Avatar profile={profile} size="medium" />
-        </Link>
-        {links.map(({ label, href }) => (
-            <Link
-                key={label}
-                href={href}
-                onClick={() => setOpen(false)}
-                className={classNames(styles.link, {
-                    [styles.active]: pathname === href,
+        {open && (
+            <div
+                ref={menuRef}
+                className={classNames(styles.menuWrapper, {
+                    [styles.menuOpen]: open,
+                    [styles.menuClosed]: !open,
                 })}
             >
-            {label}
+            <Link href={`/${base}`} className={styles.avatarWrapper} onClick={() => setOpen(false)}>
+                <Avatar profile={profile} size="medium" />
             </Link>
-        ))}
-        </div>
+            {links.map(({ label, href }) => (
+                <Link
+                    key={label}
+                    href={href}
+                    onClick={() => setOpen(false)}
+                    className={classNames(styles.link, {
+                        [styles.active]: pathname === href,
+                    })}
+                >
+                {label}
+                </Link>
+            ))}
+            </div>
+        )}
     </div>
     );
 };
