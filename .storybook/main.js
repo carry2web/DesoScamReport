@@ -29,6 +29,16 @@ const config = {
       '@': join(__dirname, '../src'),
     };
 
+    // Configure esbuild to handle JSX in .js files
+    config.esbuild = {
+      ...config.esbuild,
+      loader: {
+        '.js': 'jsx',
+        '.ts': 'tsx',
+      },
+      include: /\.(jsx?|tsx?)$/,
+    };    
+
     return config;
   }
 };

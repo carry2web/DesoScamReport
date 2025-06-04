@@ -6,6 +6,9 @@ import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
 import { useRef, useEffect } from 'react';
 import { Post } from '@/components/Post';
 import { queryKeys } from '@/queries';
+
+import { UserQuickLinks } from '@/components/UserQuickLinks';
+
 import styles from './page.module.css';
 
 const POSTS_PER_PAGE = 10;
@@ -112,6 +115,8 @@ export const PostsPageClient = ({ rawParam }) => {
           ? userProfile.ExtraData?.DisplayName || userProfile.Username
           : rawParam}
       </h2> */}
+
+      <UserQuickLinks profile={userProfile} rawParam={rawParam} />
 
       {posts.length === 0 && <p>No posts found.</p>}
 

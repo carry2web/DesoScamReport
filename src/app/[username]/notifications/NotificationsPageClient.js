@@ -6,6 +6,9 @@ import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
 import { useRef, useEffect } from 'react';
 import { Notification } from '@/components/Notification';
 import { queryKeys } from '@/queries';
+
+import { UserQuickLinks } from '@/components/UserQuickLinks'; 
+
 import styles from './page.module.css';
 
 const NOTIFICATIONS_PER_PAGE = 50;
@@ -132,6 +135,8 @@ export const NotificationsPageClient = ({ rawParam }) => {
 
   return (
     <>
+      <UserQuickLinks profile={userProfile} rawParam={rawParam} />
+
       {notifications.length === 0 && <p>No notifications found.</p>}
 
       <div className={styles.notificationsContainer}>
