@@ -51,6 +51,7 @@ button{
   transition: background-color 0.2s ease, box-shadow 0.2s ease;
   box-shadow: var(--shadow-sm);
   line-height: var(--line-height-base);
+  box-shadow: none;
 }
 
 textarea {

@@ -4,9 +4,10 @@ import { useParams } from 'next/navigation';
 import { useDeSoApi } from '@/api/useDeSoApi';
 import { isMaybePublicKey } from '@/utils/profileUtils';
 import { useQuery } from '@tanstack/react-query';
-import Link from 'next/link';
+// import Link from 'next/link';
 
 import { Profile } from '@/components/Profile';
+import { UserQuickLinks } from '@/components/UserQuickLinks';
 
 import { queryKeys } from '@/queries';
 
@@ -50,9 +51,11 @@ export const ProfilePageClient = () => {
 
   return (
     <>
-      <p style={{ marginBottom: '1rem', marginTop: '0' }}>
+      {/* <p style={{ marginBottom: '1rem', marginTop: '0' }}>
         <Link href={`/${rawParam}/posts`}>View Posts</Link> | <Link href={`/${rawParam}/feed`}>Follow Feed</Link> | <Link href={`/${rawParam}/notifications`}>Notifications Feed</Link>
-      </p>
+      </p> */}
+
+      <UserQuickLinks profile={data} rawParam={rawParam} />
 
       <Profile
         profile={data}
