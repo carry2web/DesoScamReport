@@ -64,14 +64,14 @@ export const UserQuickLinks = ({ profile, rawParam }) => {
             {open ? <span className={styles.fabIconClose}>×</span> : <span className={styles.fabIconMenu}>☰</span>} {/* Use a simple icon or text for toggle */}
         </button>
 
-        {open && (
-            <div
-                ref={menuRef}
-                className={classNames(styles.menuWrapper, {
-                    [styles.menuOpen]: open,
-                    [styles.menuClosed]: !open,
-                })}
-            >
+        {/* Always render the menu element for proper animation */}
+        <div
+            ref={menuRef}
+            className={classNames(styles.menuWrapper, {
+                [styles.menuOpen]: open,
+                [styles.menuClosed]: !open,
+            })}
+        >
             <Link href={`/${base}`} className={styles.avatarWrapper} onClick={() => setOpen(false)}>
                 <Avatar profile={profile} size="medium" />
             </Link>
@@ -87,8 +87,7 @@ export const UserQuickLinks = ({ profile, rawParam }) => {
                 {label}
                 </Link>
             ))}
-            </div>
-        )}
+        </div>
     </div>
     );
 };

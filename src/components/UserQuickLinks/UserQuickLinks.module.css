@@ -46,6 +46,10 @@
 }
 
 .menuWrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    
     background: var(--color-surface-alt);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-lg);
@@ -56,17 +60,18 @@
     flex-direction: column;
     align-items: flex-start;
     gap: var(--spacing-md);
-    opacity: 1;
-    transform: translateY(-12px);
-    transition: opacity 0.3s ease, transform 0.3s ease;
     backdrop-filter: blur(8px);
-    opacity: 0.50;
+    
+    /* Default closed state */
+    opacity: 0;
+    transform: translateY(-12px);
+    pointer-events: none;
+    
+    /* Animation */
+    transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
 .menuOpen {
-    position: absolute;
-    top: 0;
-    left: 0;
     opacity: 0.95;
     transform: translateY(0);
     pointer-events: auto;
