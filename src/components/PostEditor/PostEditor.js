@@ -17,9 +17,14 @@ export const PostEditor = ({
   mode = "create",
   post = null,
   disabled = false,
-  onClose,
   userPublicKey = null,
   userProfile = null,
+
+  // For comments
+  ParentStakeID = null,
+  isComment = false,
+  onReply,
+  onClose,
 }) => {
   const auth = useAuth();
   const user = useUser();
@@ -60,10 +65,10 @@ export const PostEditor = ({
     try {
       const settings = {
         UpdaterPublicKeyBase58Check: resolvedUserPublicKey,
+        ...(isComment && ParentStakeID) && {ParentStakeID: ParentStakeID },
         BodyObj: { 
           Body: postText,
-          // ImageURLs: uploadedImages, // ✅ include uploaded images 
-          ...(successfulImageUrls.length > 0 && { ImageURLs: successfulImageUrls }),
+          ...(successfulImageUrls.length > 0 && { ImageURLs: successfulImageUrls }), // ✅ include uploaded images 
         },
         MinFeeRateNanosPerKB: 1500,
       };
@@ -71,48 +76,110 @@ export const PostEditor = ({
       const result = await submitPost(settings);
 
       if (result.error) {
-        showErrorToast(`Failed to publish post: ${result.error}`);
+        showErrorToast(`Failed to submit post: ${result.error}`);
         return;
       }
 
       if (result.success && result.data?.TransactionHex) {
         const username = resolvedUserProfile?.Username || resolvedUserPublicKey;
-        await signAndSubmitTransaction(result.data.TransactionHex);
-        await queryClient.invalidateQueries({
-          queryKey: queryKeys.userPosts(username),
-        });
+        // await signAndSubmitTransaction(result.data.TransactionHex);
+        const tx = await signAndSubmitTransaction(result.data.TransactionHex);
 
-        showSuccessToast(
-          <div>
-            Post published successfully 🎉 
-            <br />
-            <Link href={`/${username}/posts/`}>View in Posts</Link>
-          </div>,
-          { autoClose: 7000 }
-        );
+        if(!isComment) {
+          await queryClient.invalidateQueries({
+            queryKey: queryKeys.userPosts(username),
+          });
+        }
+
+        if(!isComment){
+          showSuccessToast(
+            <div>
+              Post published successfully 🎉 
+              <br />
+              <Link href={`/${username}/posts/`}>View in Posts</Link>
+            </div>,
+            { autoClose: 7000 }
+          );
+        }
 
         setPostText('');
-        
+
+        // ✅ Comment-specific callback (e.g. in PostStats)
+        if (onReply) {
+          onReply(tx?.PostEntryResponse);
+        }
+
+        // ✅ Close editor if applicable
         if (onClose) {
           onClose();
         }        
       }
     } catch (error) {
       const msg = error?.message || 'Error submitting post';
-      showErrorToast(`Failed to publish post: ${msg}`);
+      showErrorToast(`Failed to submit post: ${msg}`);
     } finally {
       setLoading(false);
     }
   };
 
-  // support tracjking individual image upload status
+  // support tracking individual image upload status
+  // const handleImageUpload = async (event) => {
+  //   const files = Array.from(event.target.files || []);
+  //   event.target.value = "";
+  //   if (files.length === 0) return;
+
+  //   const newItems = files.map((file) => ({
+  //     id: URL.createObjectURL(file), // temporary unique ID for rendering
+  //     file,
+  //     url: null,
+  //     status: "uploading",
+  //   }));
+
+  //   setUploadedImages((prev) => [...prev, ...newItems]);
+
+  //   const jwt = await auth.getIdentityJWT();
+  //   const publicKey = resolvedUserPublicKey;
+
+  //   if (!jwt || !publicKey) {
+  //     showErrorToast("Missing auth data. Please login again.");
+  //     return;
+  //   }
+
+  //   newItems.forEach(async (item) => {
+  //     try {
+  //       const result = await uploadImage({
+  //         imageFile: item.file,
+  //         userPublicKey: publicKey,
+  //         jwt,
+  //       });
+
+  //       setUploadedImages((prev) =>
+  //         prev.map((img) =>
+  //           img.id === item.id
+  //             ? result.success
+  //               ? { ...img, url: result.data.ImageURL, status: "success" }
+  //               : { ...img, status: "error" }
+  //             : img
+  //         )
+  //       );
+  //     } catch (err) {
+  //       setUploadedImages((prev) =>
+  //         prev.map((img) =>
+  //           img.id === item.id ? { ...img, status: "error" } : img
+  //         )
+  //       );
+  //     }
+  //   });
+  // };
+
   const handleImageUpload = async (event) => {
     const files = Array.from(event.target.files || []);
     event.target.value = "";
     if (files.length === 0) return;
 
     const newItems = files.map((file) => ({
-      id: URL.createObjectURL(file), // temporary unique ID for rendering
+      //id: URL.createObjectURL(file), // temporary unique ID for rendering
+      id: crypto.randomUUID(), // Use a more reliable unique ID
       file,
       url: null,
       status: "uploading",
@@ -128,34 +195,97 @@ export const PostEditor = ({
       return;
     }
 
-    newItems.forEach(async (item) => {
-      try {
-        const result = await uploadImage({
-          imageFile: item.file,
-          userPublicKey: publicKey,
-          jwt,
-        });
+    setImageLoading(true); // ✅ Start tracking
 
-        setUploadedImages((prev) =>
-          prev.map((img) =>
-            img.id === item.id
-              ? result.success
-                ? { ...img, url: result.data.ImageURL, status: "success" }
-                : { ...img, status: "error" }
-              : img
-          )
-        );
-      } catch (err) {
-        setUploadedImages((prev) =>
-          prev.map((img) =>
-            img.id === item.id ? { ...img, status: "error" } : img
-          )
-        );
-      }
-    });
-  };
+    await Promise.all(
+      newItems.map(async (item) => {
+        try {
+          const result = await uploadImage({
+            imageFile: item.file,
+            userPublicKey: publicKey,
+            jwt,
+          });
+
+          setUploadedImages((prev) =>
+            prev.map((img) =>
+              img.id === item.id
+                ? result.success
+                  ? { ...img, url: result.data.ImageURL, status: "success" }
+                  : { ...img, status: "error" }
+                : img
+            )
+          );
+        } catch (err) {
+          setUploadedImages((prev) =>
+            prev.map((img) =>
+              img.id === item.id ? { ...img, status: "error" } : img
+            )
+          );
+        }
+      })
+    )
+
+    setImageLoading(false); // ✅ End tracking when all are done
+  };  
 
   // handle paste events to extract images
+  // const handlePaste = async (event) => {
+  //   const items = event.clipboardData?.items;
+  //   if (!items) return;
+
+  //   const imageItems = Array.from(items).filter(
+  //     (item) => item.kind === "file" && item.type.startsWith("image/")
+  //   );
+
+  //   if (imageItems.length === 0) return;
+
+  //   const files = imageItems.map((item) => item.getAsFile()).filter(Boolean);
+  //   if (files.length === 0) return;
+
+  //   const newItems = files.map((file) => ({
+  //     id: URL.createObjectURL(file), // temporary unique ID for rendering
+  //     file,
+  //     url: null,
+  //     status: "uploading",
+  //   }));
+
+  //   setUploadedImages((prev) => [...prev, ...newItems]);
+
+  //   const jwt = await auth.getIdentityJWT();
+  //   const publicKey = resolvedUserPublicKey;
+
+  //   if (!jwt || !publicKey) {
+  //     showErrorToast("Login to upload pasted images.");
+  //     return;
+  //   }
+
+  //   newItems.forEach(async (item) => {
+  //     try {
+  //       const result = await uploadImage({
+  //         imageFile: item.file,
+  //         userPublicKey: publicKey,
+  //         jwt,
+  //       });
+
+  //       setUploadedImages((prev) =>
+  //         prev.map((img) =>
+  //           img.id === item.id
+  //             ? result.success
+  //               ? { ...img, url: result.data.ImageURL, status: "success" }
+  //               : { ...img, status: "error" }
+  //             : img
+  //         )
+  //       );
+  //     } catch (err) {
+  //       setUploadedImages((prev) =>
+  //         prev.map((img) =>
+  //           img.id === item.id ? { ...img, status: "error" } : img
+  //         )
+  //       );
+  //     }
+  //   });
+  // };
+
   const handlePaste = async (event) => {
     const items = event.clipboardData?.items;
     if (!items) return;
@@ -170,7 +300,8 @@ export const PostEditor = ({
     if (files.length === 0) return;
 
     const newItems = files.map((file) => ({
-      id: URL.createObjectURL(file), // temporary unique ID for rendering
+      //id: URL.createObjectURL(file), // temporary unique ID for rendering
+      id: crypto.randomUUID(), // Use a more reliable unique ID
       file,
       url: null,
       status: "uploading",
@@ -186,32 +317,38 @@ export const PostEditor = ({
       return;
     }
 
-    newItems.forEach(async (item) => {
-      try {
-        const result = await uploadImage({
-          imageFile: item.file,
-          userPublicKey: publicKey,
-          jwt,
-        });
+    setImageLoading(true); // ✅ Start tracking
 
-        setUploadedImages((prev) =>
-          prev.map((img) =>
-            img.id === item.id
-              ? result.success
-                ? { ...img, url: result.data.ImageURL, status: "success" }
-                : { ...img, status: "error" }
-              : img
-          )
-        );
-      } catch (err) {
-        setUploadedImages((prev) =>
-          prev.map((img) =>
-            img.id === item.id ? { ...img, status: "error" } : img
-          )
-        );
-      }
-    });
-  };
+    await Promise.all(
+      newItems.map(async (item) => {
+        try {
+          const result = await uploadImage({
+            imageFile: item.file,
+            userPublicKey: publicKey,
+            jwt,
+          });
+
+          setUploadedImages((prev) =>
+            prev.map((img) =>
+              img.id === item.id
+                ? result.success
+                  ? { ...img, url: result.data.ImageURL, status: "success" }
+                  : { ...img, status: "error" }
+                : img
+            )
+          );
+        } catch (err) {
+          setUploadedImages((prev) =>
+            prev.map((img) =>
+              img.id === item.id ? { ...img, status: "error" } : img
+            )
+          );
+        }
+      })
+    );
+
+    setImageLoading(false); // ✅ End tracking when all are done
+  };  
 
   // retry failed uploads
   const handleRetryUpload = async (item) => {
@@ -255,15 +392,20 @@ export const PostEditor = ({
   };  
 
   return (
-    <div className={styles.postContainer}>
+      <div
+        className={classNames(styles.postContainer, {
+          [styles.commentContainer]: isComment,
+        })}
+      >
       <textarea
+        name={isComment ? 'commentText' : 'postText'}
         disabled={loading || disabled || !resolvedUserPublicKey}
         value={postText}
         onChange={handlePostChange}
         onPaste={handlePaste}
         placeholder={
           resolvedUserPublicKey 
-            ? `Write a post as ${resolvedUserProfile?.Username || resolvedUserPublicKey}`
+            ? `${isComment ? 'Reply as' : 'Write a post as'} ${resolvedUserProfile?.Username || resolvedUserPublicKey}...`
             : "Login to start posting..."
         }
       />
@@ -290,13 +432,60 @@ export const PostEditor = ({
             </label>
           </div>
         </div>
-        <Button
+        {
+          isComment 
+          ? (
+          <div className={styles.actionButtons}>
+            <Button
+              onClick={onClose}
+              disabled={loading}
+              variant="secondary"
+              size="small"
+            >
+                Cancel
+            </Button>
+            <Button 
+                onClick={handleSubmitPost}
+                isLoading={loading}
+                // disabled={!postText.trim() || disabled || !resolvedUserPublicKey || imageLoading}
+                disabled={
+                  (!postText.trim() && uploadedImages.filter((img) => img.url).length === 0) ||
+                  disabled ||
+                  !resolvedUserPublicKey ||
+                  imageLoading
+                }                
+                variant="primary"
+                size="small"
+            >
+              {loading ? "Posting..." : "Reply"}    
+            </Button>
+          </div>
+          )
+          : (
+            <div className={styles.actionButtons}>
+              <Button
+                // disabled={!postText.trim() || disabled || !resolvedUserPublicKey || imageLoading}
+                disabled={
+                  (!postText.trim() && uploadedImages.filter((img) => img.url).length === 0) ||
+                  disabled ||
+                  !resolvedUserPublicKey ||
+                  imageLoading
+                }                
+                isLoading={loading}
+                onClick={handleSubmitPost}
+              >
+                {resolvedUserPublicKey ? 'Post to DeSo' : 'Login to Post'}
+              </Button>  
+            </div>
+          )
+        }
+        {/* <Button
           disabled={!postText.trim() || disabled || !resolvedUserPublicKey || imageLoading}
           isLoading={loading}
           onClick={handleSubmitPost}
         >
           {resolvedUserPublicKey ? 'Post to DeSo' : 'Login to Post'}
-        </Button>        
+        </Button>         */}
       </div>
 
 
@@ -306,7 +495,7 @@ export const PostEditor = ({
             <div key={img.id} className={styles.previewImageContainer}>
               {/* Thumbnail */}
               {img.status === "success" && img.url && (
-                <img src={img.url} alt="Uploaded" className={styles.previewImage} />
+                <img src={img.url} alt={`Uploaded image ${img.id}`} className={styles.previewImage} />
               )}
 
               {img.status === "uploading" && (
@@ -345,142 +534,3 @@ export const PostEditor = ({
     </div>
   );
 };
-
-
-
-
-// ORIGINAL NO IMAGE UPLOAD VERSION
-// "use client";
-
-// import { useState, useEffect } from "react";
-// import Link from "next/link";
-// import { useAuth } from "@/context/AuthContext";
-// import { useUser } from "@/context/UserContext";
-// import { useDeSoApi } from "@/api/useDeSoApi";
-// import { useToast } from "@/hooks/useToast";
-// import { useQueryClient } from "@tanstack/react-query";
-// import { queryKeys } from "@/queries";
-// import { Button } from "@/components/Button";
-// import styles from "./PostEditor.module.css";
-
-// export const PostEditor = ({
-//   mode = "create",
-//   post = null,
-//   disabled = false,
-//   onClose,
-//   userPublicKey = null,
-//   userProfile = null,
-// }) => {
-//   const auth = useAuth();
-//   const user = useUser();
-
-//   const resolvedUserPublicKey = userPublicKey || auth.userPublicKey;
-//   const resolvedUserProfile = userProfile || user.userProfile;
-//   const signAndSubmitTransaction = auth.signAndSubmitTransaction;
-
-//   const { submitPost } = useDeSoApi();
-//   const { showErrorToast, showSuccessToast } = useToast();
-//   const queryClient = useQueryClient();
-
-//   const [postText, setPostText] = useState('');
-//   const [loading, setLoading] = useState(false);
-
-//   useEffect(() => {
-//     if (mode === "quote") {
-//       console.log("Quote mode - TODO: prefill quoted text from post");
-//     } else if (mode === "edit") {
-//       console.log("Edit mode - TODO: load post.Body into editor");
-//     }
-//   }, [mode, post]);
-
-//   const handlePostChange = (e) => {
-//     setPostText(e.target.value);
-//   };
-
-//   const handleSubmitPost = async () => {
-//     setLoading(true);
-//     try {
-//       const settings = {
-//         UpdaterPublicKeyBase58Check: resolvedUserPublicKey,
-//         BodyObj: { Body: postText },
-//         MinFeeRateNanosPerKB: 1500,
-//       };
-
-//       const result = await submitPost(settings);
-
-//       if (result.error) {
-//         showErrorToast(`Failed to publish post: ${result.error}`);
-//         return setLoading(false);
-//       }
-
-//       if (result.success && result.data?.TransactionHex) {
-//         const tx = await signAndSubmitTransaction(result.data.TransactionHex);
-//         const username = resolvedUserProfile?.Username || resolvedUserPublicKey;
-
-//         await queryClient.invalidateQueries({
-//           queryKey: queryKeys.userPosts(username),
-//         });
-
-//         showSuccessToast(
-//           <div>
-//             Post published successfully 🎉 
-//             <br />
-//             <Link href={`/${username}/posts/`}>View in Posts</Link>
-//           </div>,
-//           { autoClose: 7000 }
-//         );
-
-//         setPostText('');
-        
-//         if (onClose) {
-//           onClose();
-//         }        
-//       }
-
-//       setLoading(false);
-//     } catch (error) {
-//       const msg = error?.message || 'Error submitting post';
-//       showErrorToast(`Failed to publish post: ${msg}`);
-//       setLoading(false);
-//     }
-//   };
-
-//   const testJWT = async () => {
-//     const jwt = await auth.getIdentityJWT();
-//     if (jwt) {
-//       console.log("JWT:", jwt);
-//       showSuccessToast("JWT retrieved successfully! Check console for details.");
-//     } else {
-//       showErrorToast("Failed to retrieve JWT.");
-//     }
-//   }
-
-//   return (
-//     <div className={styles.postContainer}>
-//       <textarea
-//         disabled={loading || disabled || !resolvedUserPublicKey}
-//         value={postText}
-//         onChange={handlePostChange}
-//         // placeholder={`Write a post as ${resolvedUserProfile?.Username || resolvedUserPublicKey}`}
-//         placeholder={
-//           resolvedUserPublicKey 
-//             ? `Write a post as ${resolvedUserProfile?.Username || resolvedUserPublicKey}`
-//             : "Login to start posting..."
-//         }
-//       />
-//       <Button
-//         disabled={!postText.trim() || disabled || !resolvedUserPublicKey}
-//         isLoading={loading}
-//         onClick={handleSubmitPost}
-//       >
-//         {resolvedUserPublicKey ? 'Post to DeSo' : 'Login to Post'}
-//       </Button>
-//       <Button
-//         variant="secondary"
-//         onClick={testJWT}
-//       >
-//         Test JWT  
-//       </Button>
-//     </div>
-//   );
-// };
