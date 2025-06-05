@@ -22,7 +22,7 @@
     font-size: var(--font-size-xl);
     cursor: pointer;
     box-shadow: var(--shadow-md);
-    transition: background 0.3s ease, backdrop-filter 0.3s ease;
+    transition: background 0.2s ease, backdrop-filter 0.2s ease;
     backdrop-filter: blur(6px);
     opacity: 0.9;
     padding: 0;
@@ -50,17 +50,7 @@
     top: 0;
     left: 0;
     
-    background: var(--color-surface-alt);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-lg);
-    padding: var(--spacing-lg);
     margin-top: calc(var(--control-height-md) + var(--spacing-sm));
-    box-shadow: var(--shadow-lg);
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--spacing-md);
-    backdrop-filter: blur(8px);
     
     /* Default closed state */
     opacity: 0;
@@ -68,7 +58,20 @@
     pointer-events: none;
     
     /* Animation */
-    transition: opacity 0.3s ease, transform 0.3s ease;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.dropdown{
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+    backdrop-filter: blur(8px);
+}
+
+.linksSection{
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
 }
 
 .menuOpen {

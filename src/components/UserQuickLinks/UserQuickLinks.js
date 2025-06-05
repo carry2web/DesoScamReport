@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation';
 import classNames from 'classnames';
 import { Avatar } from '@/components/Avatar';
 import { useClickOutside } from '@/hooks/useClickOutside';
+import { Dropdown } from "@/components/Dropdown";
 import styles from './UserQuickLinks.module.css';
 
 export const UserQuickLinks = ({ profile, rawParam }) => {
@@ -67,26 +68,31 @@ export const UserQuickLinks = ({ profile, rawParam }) => {
         {/* Always render the menu element for proper animation */}
         <div
             ref={menuRef}
+            aria-hidden={!open}
             className={classNames(styles.menuWrapper, {
                 [styles.menuOpen]: open,
                 [styles.menuClosed]: !open,
             })}
         >
-            <Link href={`/${base}`} className={styles.avatarWrapper} onClick={() => setOpen(false)}>
-                <Avatar profile={profile} size="medium" />
-            </Link>
-            {links.map(({ label, href }) => (
-                <Link
-                    key={label}
-                    href={href}
-                    onClick={() => setOpen(false)}
-                    className={classNames(styles.link, {
-                        [styles.active]: pathname === href,
-                    })}
-                >
-                {label}
+            <Dropdown className={styles.dropdown}>
+                <Link href={`/${base}`} className={styles.avatarWrapper} onClick={() => setOpen(false)}>
+                    <Avatar profile={profile} size="medium" />
                 </Link>
-            ))}
+                <div className={styles.linksSection}>
+                    {links.map(({ label, href }) => (
+                        <Link
+                            key={label}
+                            href={href}
+                            onClick={() => setOpen(false)}
+                            className={classNames(styles.link, {
+                                [styles.active]: pathname === href,
+                            })}
+                        >
+                            {label}
+                        </Link>
+                    ))}
+                </div>
+            </Dropdown>
         </div>
     </div>
     );
