@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
 import { useUser } from "@/context/UserContext";
@@ -36,6 +36,8 @@ export const PostEditor = ({
   const { submitPost, uploadImage } = useDeSoApi();
   const { showErrorToast, showSuccessToast } = useToast();
   const queryClient = useQueryClient();
+
+  const inputId = useRef(`imageUpload-${crypto.randomUUID()}`);
 
   const [postText, setPostText] = useState('');
   const [loading, setLoading] = useState(false);
@@ -414,7 +416,8 @@ export const PostEditor = ({
         <div className={styles.uploadActions}>
           <div className={styles.uploadContainer}>
             <input
-              id="imageUpload"
+              // id="imageUpload"
+              id={inputId.current}
               type="file"
               accept="image/*"
               multiple
@@ -423,7 +426,8 @@ export const PostEditor = ({
               className={styles.hiddenFileInput}
             />
             <label
-              htmlFor="imageUpload"
+              // htmlFor="imageUpload"
+              htmlFor={inputId.current}
               className={classNames(styles.uploadIconButton, {
                 [styles.disabledUploadIconButton]: !resolvedUserPublicKey,
               })}
