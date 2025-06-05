@@ -1,12 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { useDeSoApi } from "@/api/useDeSoApi";
+// import { useDeSoApi } from "@/api/useDeSoApi";
 import { useAuth } from "@/context/AuthContext";
-import { useToast } from "@/hooks/useToast";
+// import { useToast } from "@/hooks/useToast";
 import styles from "./Post.module.css";
 
-import { Button } from "@/components/Button";
+// import { Button } from "@/components/Button";
+import { PostEditor } from "@/components/PostEditor";
 
 // PostStats component handles the stats (💬 🔁 ❤️ 💎) display
 // and manages the inline reply UI and submission logic.
@@ -21,47 +22,49 @@ export const PostStats = ({ post, onReply }) => {
   } = post;
 
   const [showReplyBox, setShowReplyBox] = useState(false);
-  const [replyText, setReplyText] = useState("");
-  const [loading, setLoading] = useState(false);
+  // const [replyText, setReplyText] = useState("");
+  // const [loading, setLoading] = useState(false);
   
   // ✅ Local state to track comment count for optimistic updates
   const [localCommentCount, setLocalCommentCount] = useState(CommentCount);
 
-  const { submitPost } = useDeSoApi();
-  const { signAndSubmitTransaction, userPublicKey } = useAuth();
-  const { showErrorToast } = useToast();
+  const { userPublicKey } = useAuth();
 
-  const handleReply = async () => {
-    setLoading(true);
-    try {
-      const settings = {
-        UpdaterPublicKeyBase58Check: userPublicKey,
-        ParentStakeID: PostHashHex,
-        BodyObj: { Body: replyText },
-        MinFeeRateNanosPerKB: 1500,
-      };
+  // const { submitPost } = useDeSoApi();
+  // const { signAndSubmitTransaction, userPublicKey } = useAuth();
+  // const { showErrorToast } = useToast();
 
-      const result = await submitPost(settings);
-      if (result.error) throw new Error(result.error);
+  // const handleReply = async () => {
+  //   setLoading(true);
+  //   try {
+  //     const settings = {
+  //       UpdaterPublicKeyBase58Check: userPublicKey,
+  //       ParentStakeID: PostHashHex,
+  //       BodyObj: { Body: replyText },
+  //       MinFeeRateNanosPerKB: 1500,
+  //     };
 
-      const tx = await signAndSubmitTransaction(result.data.TransactionHex);
+  //     const result = await submitPost(settings);
+  //     if (result.error) throw new Error(result.error);
 
-      // ✅ Increment local comment count optimistically
-      setLocalCommentCount(prev => prev + 1);
+  //     const tx = await signAndSubmitTransaction(result.data.TransactionHex);
 
-      // ✅ Calls parent handler to inject fresh reply
-      if (onReply) onReply(tx?.PostEntryResponse);
+  //     // ✅ Increment local comment count optimistically
+  //     setLocalCommentCount(prev => prev + 1);
 
-      // ✅ Reset UI state after success
-      setReplyText("");
-      setShowReplyBox(false);
-    } catch (err) {
-      showErrorToast(`Reply failed: ${err.message}`);
-      // Note: We don't decrement on error since the increment only happens on success
-    } finally {
-      setLoading(false);
-    }
-  };
+  //     // ✅ Calls parent handler to inject fresh reply
+  //     if (onReply) onReply(tx?.PostEntryResponse);
+
+  //     // ✅ Reset UI state after success
+  //     setReplyText("");
+  //     setShowReplyBox(false);
+  //   } catch (err) {
+  //     showErrorToast(`Reply failed: ${err.message}`);
+  //     // Note: We don't decrement on error since the increment only happens on success
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   return (
     <>
@@ -81,7 +84,7 @@ export const PostStats = ({ post, onReply }) => {
       </div>
 
       {/* Inline reply UI */}
-      {showReplyBox && (
+      {/* {showReplyBox && (
         <div className={styles.replyBox}>
           <textarea
             rows={3}
@@ -109,7 +112,22 @@ export const PostStats = ({ post, onReply }) => {
             </Button>
           </div>
         </div>
-      )}
+      )} */}
+
+
+      {/* Use PostEditor for inline reply box */}
+      {showReplyBox && (
+        <PostEditor 
+          isComment={true} 
+          ParentStakeID={PostHashHex}
+          onClose={() => setShowReplyBox(false)}
+          onReply={(newComment) => {
+            setLocalCommentCount((prev) => prev + 1);
+            setShowReplyBox(false);
+            if (onReply) onReply(newComment); // propagate up
+          }}
+        />        
+      )}      
     </>
   );
 };
