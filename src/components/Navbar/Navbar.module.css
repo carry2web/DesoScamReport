@@ -30,6 +30,15 @@
     gap: 15px;    
 }
 
+.start,
+.end{
+    min-width: 200px;  
+}
+
+.end{
+    justify-content: flex-end;
+}
+
 .middle{
     flex: 1;
     display: flex;
@@ -45,4 +54,11 @@
 
 .logo:hover {
     color: var(--color-accent);
+}
+
+@media screen and (max-width: 860px) {
+    .start,
+    .end{
+        min-width: 0;
+    }
 }
