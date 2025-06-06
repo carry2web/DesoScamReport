@@ -171,7 +171,7 @@
   align-items: center;
   justify-content: center;
   background-color: var(--color-btn-secondary-bg);
-  color: var(--color-text-muted);
+  color: var(--color-text);
   border-radius: var(--radius-sm);
   cursor: pointer;
   transition: background-color 0.2s ease;
@@ -181,7 +181,6 @@
 }
 
 .uploadIconButton:hover {
-  color: var(--color-text);
   background-color: var(--color-btn-secondary-hover-bg);
 }
 

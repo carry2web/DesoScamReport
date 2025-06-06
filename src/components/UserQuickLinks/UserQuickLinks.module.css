@@ -13,9 +13,6 @@
     top: 0;
     left: 0;
 
-    background: var(--color-surface-alt);
-    color: var(--color-text);
-    border: none;
     border-radius: var(--radius-md);
     width: var(--control-height-md);
     height: var(--control-height-md);
@@ -30,10 +27,15 @@
     display: flex;
     align-items: center;
     justify-content: center;
+
+    color: var(--color-text);
+    background-color: var(--color-btn-secondary-bg);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--color-border);
 }
 
 .fabIconClose{
-    margin-bottom: 7px;
+    margin-bottom: 6px;
     font-size: var(--font-size-3xl);
 }
 
@@ -42,7 +44,7 @@
 }
 
 .fabButton:hover {
-    background: var(--color-surface-hover);
+    background-color: var(--color-btn-secondary-hover-bg);
 }
 
 .menuWrapper {
