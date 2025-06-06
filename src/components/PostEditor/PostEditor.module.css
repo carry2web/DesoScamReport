@@ -165,24 +165,29 @@
 }
 
 .uploadIconButton {
-  width: 36px;
-  height: 36px;
+  width: var(--control-height-md);
+  height: var(--control-height-md);
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: none;
+  background-color: var(--color-btn-secondary-bg);
   color: var(--color-text-muted);
   border-radius: var(--radius-sm);
   cursor: pointer;
   transition: background-color 0.2s ease;
   box-shadow: var(--shadow-sm);
   padding: 0;
-  box-shadow: none;
+  border: 1px solid var(--color-border);
 }
 
 .uploadIconButton:hover {
   color: var(--color-text);
-  background-color: var(--color-surface-hover);
+  background-color: var(--color-btn-secondary-hover-bg);
+}
+
+.commentContainer .uploadIconButton {
+  width: var(--control-height-sm);
+  height: var(--control-height-sm);
 }
 
 .disabledUploadIconButton {
@@ -192,6 +197,11 @@
 }
 
 .uploadIcon {
-  width: 20px;
-  height: 20px;
+  width: 22px;
+  height: 22px;
 }
+
+.commentContainer .uploadIcon {
+  width: 18px;
+  height: 18px;
+} 
