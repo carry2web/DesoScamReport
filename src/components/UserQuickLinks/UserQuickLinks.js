@@ -68,7 +68,7 @@ export const UserQuickLinks = ({ profile, rawParam }) => {
         {/* Always render the menu element for proper animation */}
         <div
             ref={menuRef}
-            aria-hidden={!open}
+            // aria-hidden={!open}
             className={classNames(styles.menuWrapper, {
                 [styles.menuOpen]: open,
                 [styles.menuClosed]: !open,
