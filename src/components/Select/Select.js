@@ -85,7 +85,7 @@ export const Select = ({ options, placeholder = "Select...", value, onChange, si
             style={floatingStyles}
             className={styles.dropdownContainer}
           >
-            <Dropdown maxHeight={maxHeight}>
+            <Dropdown maxHeight={maxHeight} className={styles.dropdown}>
               {options.map((option) => (
                 <MenuItem
                     key={option.value}

@@ -31,6 +31,8 @@
     cursor: default;
     width: 260px;
     box-sizing: border-box;
+
+    padding: var(--spacing-sm) var(--spacing-sm); 
   }
   
   .loggedUserData{

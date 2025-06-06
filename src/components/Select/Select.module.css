@@ -52,3 +52,6 @@
     z-index: 99999;
   }
   
+  .dropdown{
+    padding: var(--spacing-sm) 0;
+  }
