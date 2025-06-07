@@ -144,6 +144,14 @@ export const PostStats = ({ post, username, ProfileEntryResponse, isStatsDisable
     router.push('/compose/post'); // Navigate to the compose page with the quoted post
   }
 
+  const getRepostTitle = () => {
+    if (!userPublicKey) return "Login to repost";
+    if (!post?.Body && !post?.ImageURLs?.length && !post?.VideoURLs?.length) {
+      return "Can't repost empty post";
+    }
+    return "Repost options";
+  };
+
   return (
     <>
       <div className={styles.stats}>
@@ -163,12 +171,13 @@ export const PostStats = ({ post, username, ProfileEntryResponse, isStatsDisable
         <span className={styles.iconWrapper}>
           <span
             ref={refs.setReference}
-            onClick={userPublicKey && !isStatsDisabled && !isReposting ? () => setShowRepostDropdown((prev) => !prev) : undefined}
+            onClick={userPublicKey && !isStatsDisabled && !isReposting && (post?.Body || post?.ImageURLs || post?.VideoURLs) ? () => setShowRepostDropdown((prev) => !prev) : undefined}
             className={classNames(styles.repostIcon, {
               [styles.reposting]: isReposting,
-              [styles.disabled]: isStatsDisabled || !userPublicKey,
+              [styles.disabled]: isStatsDisabled || !userPublicKey || (!post?.Body && !post?.ImageURLs && !post?.VideoURLs),
             })}
-            title={userPublicKey ? "Repost options" : "Login to repost"}
+            // title={userPublicKey ? "Repost options" : "Login to repost"}
+            title={getRepostTitle()}
           >
             🔁
           </span>
