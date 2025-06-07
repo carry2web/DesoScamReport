@@ -61,6 +61,7 @@ export const MarkdownText = ({ text, onInternalLinkClick = null }) => {
             return (
               <Link 
                 href={href} 
+                prefetch={false} // ⬅️ Disable automatic prefetch
                 {...props} 
                 onClick={(e) => {
                   //console.log('Internal link clicked:', href);
