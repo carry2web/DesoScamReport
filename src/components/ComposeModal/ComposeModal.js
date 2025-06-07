@@ -1,11 +1,25 @@
 'use client';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { PostEditor } from '@/components/PostEditor';
+import { useEditorPost } from '@/context/EditorPostContext';
+
 import styles from './ComposeModal.module.css';
 
 export const ComposeModal = ({ isDirect = false }) => {
   const router = useRouter();
+
+  const { quotedPost, editablePost, clearEditorState } = useEditorPost();
+
+  // ✅ Consume quoted/editable post from context immediately
+  const [localQuotedPost] = useState(quotedPost);
+  const [localEditablePost] = useState(editablePost);  
+
+  useEffect(() => {
+    if (localQuotedPost || localEditablePost) {
+      clearEditorState(); // Clear context state when editor mounts and if there's a quoted or editable post
+    }
+  }, [localQuotedPost, localEditablePost]);
 
   useEffect(() => {
     // Add modal class to body
@@ -30,9 +44,10 @@ export const ComposeModal = ({ isDirect = false }) => {
       document.body.style.position = '';
       document.body.style.top = '';
       document.body.style.width = '';
-      window.scrollTo(0, scrollY);
+      window.scrollTo(0, scrollY);  
     };
   }, []);
+
 
   const handleClose = () => {
     if (isDirect) {
@@ -41,6 +56,19 @@ export const ComposeModal = ({ isDirect = false }) => {
       router.back(); // In-app navigation goes back
     }
   };
+
+  // Determine modal title and mode
+  const getModalTitle = () => {
+    if (localQuotedPost) return 'Quote Post';
+    if (localEditablePost) return 'Edit Post';
+    return 'Compose Post';
+  };
+
+  const getEditorMode = () => {
+    if (localQuotedPost) return 'quote';
+    if (localEditablePost) return 'edit';
+    return 'create';
+  };  
 
   return (
     <>
@@ -53,7 +81,7 @@ export const ComposeModal = ({ isDirect = false }) => {
       <div className={styles.overlay} onClick={handleClose}>
         <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
           <div className={styles.header}>
-            <h2>Compose Post</h2>
+            <h2>{getModalTitle()}</h2>
             <button 
               className={styles.closeButton}
               onClick={handleClose}
@@ -66,8 +94,11 @@ export const ComposeModal = ({ isDirect = false }) => {
           <div className={styles.content}>
             {/* 🎉 Your PostEditor component! */}
             <PostEditor 
-              onClose={handleClose} // ✨ Closes modal after successful post
-            />
+              mode={getEditorMode()}
+              quotedPost={localQuotedPost}
+              editablePost={localEditablePost}
+              onClose={handleClose}
+            />            
           </div>
         </div>
       </div>

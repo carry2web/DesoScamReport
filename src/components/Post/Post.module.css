@@ -349,6 +349,37 @@
   object-fit: contain; /* ensures full image fits without cropping */  
 }
 
+.repostDropdown {
+  width: fit-content;
+}
+
+.iconWrapper {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xxs);
+}
+
+.repostIcon {
+  cursor: pointer;
+}
+
+.repostIcon.disabled {
+  cursor: default;
+}
+
+.reposting {
+  animation: fadePulse 0.5s ease-in-out infinite;
+}
+
+@keyframes fadePulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+
 
 @media (max-width: 780px) {
 

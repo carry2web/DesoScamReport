@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
 import { useUser } from "@/context/UserContext";
@@ -9,13 +9,15 @@ import { useToast } from "@/hooks/useToast";
 import { useQueryClient } from "@tanstack/react-query";
 import { queryKeys } from "@/queries";
 import { Button } from "@/components/Button";
+import { Post } from "@/components/Post";
 import { Images as ImagesIcon } from '@/assets/icons';
 import classNames from 'classnames';
 import styles from "./PostEditor.module.css";
 
 export const PostEditor = ({
   mode = "create",
-  post = null,
+  quotedPost = null, // ✅ for quoted post
+  editablePost = null, // ✅ for editable post  
   disabled = false,
   userPublicKey = null,
   userProfile = null,
@@ -37,26 +39,40 @@ export const PostEditor = ({
   const { showErrorToast, showSuccessToast } = useToast();
   const queryClient = useQueryClient();
 
-  const inputId = useRef(`imageUpload-${crypto.randomUUID()}`);
-
   const [postText, setPostText] = useState('');
   const [loading, setLoading] = useState(false);
 
   const [imageLoading, setImageLoading] = useState(false);
   const [uploadedImages, setUploadedImages] = useState([]); // ✅ track uploaded image URLs
-  // Each item: { file, url, status: 'pending' | 'uploading' | 'success' | 'error' }  
 
   const successfulImageUrls = uploadedImages
   .filter((img) => img.status === "success")
   .map((img) => img.url);
 
+
   useEffect(() => {
-    if (mode === "quote") {
-      console.log("Quote mode - TODO: prefill quoted text from post");
-    } else if (mode === "edit") {
-      console.log("Edit mode - TODO: load post.Body into editor");
+    if (mode === "quote" && quotedPost) {
+      // For quotes, start with empty text (user adds their commentary)
+      setPostText('');
+    } else if (mode === "edit" && editablePost) {
+      // For edits, pre-populate with existing post content
+      setPostText(editablePost.Body || '');
+      // TODO: Also load existing images if any
+      if (editablePost.ImageURLs?.length > 0) {
+        const existingImages = editablePost.ImageURLs.map((url) => ({
+          id: crypto.randomUUID(), // Use a more reliable unique ID
+          file: null,
+          url: url,
+          status: "success"
+        }));
+        setUploadedImages(existingImages);
+      } else {
+        // Create mode - start fresh
+        setPostText('');
+        setUploadedImages([]);
+      }
     }
-  }, [mode, post]);
+  }, [mode, quotedPost, editablePost]);  
 
   const handlePostChange = (e) => {
     setPostText(e.target.value);
@@ -68,6 +84,8 @@ export const PostEditor = ({
       const settings = {
         UpdaterPublicKeyBase58Check: resolvedUserPublicKey,
         ...(isComment && ParentStakeID) && {ParentStakeID: ParentStakeID },
+        ...(mode === "quote" && quotedPost) && { RepostedPostHashHex: quotedPost?.post?.PostHashHex }, // ✅ Add quoted post reference
+        ...(mode === "edit" && editablePost) && { PostHashHexToModify: editablePost.PostHashHex }, // ✅ For editing existing posts        
         BodyObj: { 
           Body: postText,
           ...(successfulImageUrls.length > 0 && { ImageURLs: successfulImageUrls }), // ✅ include uploaded images 
@@ -84,7 +102,6 @@ export const PostEditor = ({
 
       if (result.success && result.data?.TransactionHex) {
         const username = resolvedUserProfile?.Username || resolvedUserPublicKey;
-        // await signAndSubmitTransaction(result.data.TransactionHex);
         const tx = await signAndSubmitTransaction(result.data.TransactionHex);
 
         if(!isComment) {
@@ -94,9 +111,20 @@ export const PostEditor = ({
         }
 
         if(!isComment){
+          const getSuccessMessage = () => {
+            switch(mode) {
+              case "quote":
+                return "Quote posted successfully 🎉";
+              case "edit":
+                return "Post updated successfully ✨";
+              default:
+                return "Post published successfully 🎉";
+            }
+          };
+
           showSuccessToast(
             <div>
-              Post published successfully 🎉 
+              {getSuccessMessage()}
               <br />
               <Link href={`/${username}/posts/`}>View in Posts</Link>
             </div>,
@@ -104,7 +132,9 @@ export const PostEditor = ({
           );
         }
 
+        // Reset form
         setPostText('');
+        setUploadedImages([]); // Clear uploaded images after successful post
 
         // ✅ Comment-specific callback (e.g. in PostStats)
         if (onReply) {
@@ -125,62 +155,12 @@ export const PostEditor = ({
   };
 
   // support tracking individual image upload status
-  // const handleImageUpload = async (event) => {
-  //   const files = Array.from(event.target.files || []);
-  //   event.target.value = "";
-  //   if (files.length === 0) return;
-
-  //   const newItems = files.map((file) => ({
-  //     id: URL.createObjectURL(file), // temporary unique ID for rendering
-  //     file,
-  //     url: null,
-  //     status: "uploading",
-  //   }));
-
-  //   setUploadedImages((prev) => [...prev, ...newItems]);
-
-  //   const jwt = await auth.getIdentityJWT();
-  //   const publicKey = resolvedUserPublicKey;
-
-  //   if (!jwt || !publicKey) {
-  //     showErrorToast("Missing auth data. Please login again.");
-  //     return;
-  //   }
-
-  //   newItems.forEach(async (item) => {
-  //     try {
-  //       const result = await uploadImage({
-  //         imageFile: item.file,
-  //         userPublicKey: publicKey,
-  //         jwt,
-  //       });
-
-  //       setUploadedImages((prev) =>
-  //         prev.map((img) =>
-  //           img.id === item.id
-  //             ? result.success
-  //               ? { ...img, url: result.data.ImageURL, status: "success" }
-  //               : { ...img, status: "error" }
-  //             : img
-  //         )
-  //       );
-  //     } catch (err) {
-  //       setUploadedImages((prev) =>
-  //         prev.map((img) =>
-  //           img.id === item.id ? { ...img, status: "error" } : img
-  //         )
-  //       );
-  //     }
-  //   });
-  // };
-
   const handleImageUpload = async (event) => {
     const files = Array.from(event.target.files || []);
     event.target.value = "";
     if (files.length === 0) return;
 
     const newItems = files.map((file) => ({
-      //id: URL.createObjectURL(file), // temporary unique ID for rendering
       id: crypto.randomUUID(), // Use a more reliable unique ID
       file,
       url: null,
@@ -230,64 +210,6 @@ export const PostEditor = ({
     setImageLoading(false); // ✅ End tracking when all are done
   };  
 
-  // handle paste events to extract images
-  // const handlePaste = async (event) => {
-  //   const items = event.clipboardData?.items;
-  //   if (!items) return;
-
-  //   const imageItems = Array.from(items).filter(
-  //     (item) => item.kind === "file" && item.type.startsWith("image/")
-  //   );
-
-  //   if (imageItems.length === 0) return;
-
-  //   const files = imageItems.map((item) => item.getAsFile()).filter(Boolean);
-  //   if (files.length === 0) return;
-
-  //   const newItems = files.map((file) => ({
-  //     id: URL.createObjectURL(file), // temporary unique ID for rendering
-  //     file,
-  //     url: null,
-  //     status: "uploading",
-  //   }));
-
-  //   setUploadedImages((prev) => [...prev, ...newItems]);
-
-  //   const jwt = await auth.getIdentityJWT();
-  //   const publicKey = resolvedUserPublicKey;
-
-  //   if (!jwt || !publicKey) {
-  //     showErrorToast("Login to upload pasted images.");
-  //     return;
-  //   }
-
-  //   newItems.forEach(async (item) => {
-  //     try {
-  //       const result = await uploadImage({
-  //         imageFile: item.file,
-  //         userPublicKey: publicKey,
-  //         jwt,
-  //       });
-
-  //       setUploadedImages((prev) =>
-  //         prev.map((img) =>
-  //           img.id === item.id
-  //             ? result.success
-  //               ? { ...img, url: result.data.ImageURL, status: "success" }
-  //               : { ...img, status: "error" }
-  //             : img
-  //         )
-  //       );
-  //     } catch (err) {
-  //       setUploadedImages((prev) =>
-  //         prev.map((img) =>
-  //           img.id === item.id ? { ...img, status: "error" } : img
-  //         )
-  //       );
-  //     }
-  //   });
-  // };
-
   const handlePaste = async (event) => {
     const items = event.clipboardData?.items;
     if (!items) return;
@@ -302,7 +224,6 @@ export const PostEditor = ({
     if (files.length === 0) return;
 
     const newItems = files.map((file) => ({
-      //id: URL.createObjectURL(file), // temporary unique ID for rendering
       id: crypto.randomUUID(), // Use a more reliable unique ID
       file,
       url: null,
@@ -393,6 +314,33 @@ export const PostEditor = ({
     setUploadedImages((prev) => prev.filter((img) => img.id !== id));
   };  
 
+  // ✅ Get placeholder text based on mode
+  const getPlaceholderText = () => {
+    if (!resolvedUserPublicKey) return "Login to start posting...";
+    
+    const username = resolvedUserProfile?.Username || resolvedUserPublicKey;
+    
+    if (isComment) return `Reply as ${username}...`;
+    if (mode === "quote") return `Add your thoughts about this post as ${username}...`;
+    if (mode === "edit") return `Edit your post as ${username}...`;
+    return `Write a post as ${username}...`;
+  };  
+
+  // ✅ Get button text based on mode
+  const getButtonText = () => {
+    if (!resolvedUserPublicKey) return 'Login to Post';
+    if (loading) {
+      if (isComment) return "Posting...";
+      if (mode === "quote") return "Quoting...";
+      if (mode === "edit") return "Updating...";
+      return "Posting...";
+    }
+    if (isComment) return "Reply";
+    if (mode === "quote") return "Quote Post";
+    if (mode === "edit") return "Update Post";
+    return "Post to DeSo";
+  };  
+
   return (
       <div
         className={classNames(styles.postContainer, {
@@ -405,18 +353,14 @@ export const PostEditor = ({
         value={postText}
         onChange={handlePostChange}
         onPaste={handlePaste}
-        placeholder={
-          resolvedUserPublicKey 
-            ? `${isComment ? 'Reply as' : 'Write a post as'} ${resolvedUserProfile?.Username || resolvedUserPublicKey}...`
-            : "Login to start posting..."
-        }
+        placeholder={getPlaceholderText()}
       />
 
       <div className={styles.postActions}>
         <div className={styles.uploadActions}>
-          <div className={styles.uploadContainer}>
+
+          {/* <div className={styles.uploadContainer}>
             <input
-              // id="imageUpload"
               id={inputId.current}
               type="file"
               accept="image/*"
@@ -426,7 +370,6 @@ export const PostEditor = ({
               className={styles.hiddenFileInput}
             />
             <label
-              // htmlFor="imageUpload"
               htmlFor={inputId.current}
               className={classNames(styles.uploadIconButton, {
                 [styles.disabledUploadIconButton]: !resolvedUserPublicKey,
@@ -434,7 +377,24 @@ export const PostEditor = ({
             >
               <ImagesIcon className={styles.uploadIcon} />
             </label>
-          </div>
+          </div> */}
+
+          <div className={styles.uploadContainer}>
+            <label className={classNames(styles.uploadIconButton, {
+              [styles.disabledUploadIconButton]: !resolvedUserPublicKey,
+            })}>
+              <input
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={handleImageUpload}
+                disabled={!resolvedUserPublicKey}
+                className={styles.hiddenFileInput}
+              />
+              <ImagesIcon className={styles.uploadIcon} />
+            </label>
+          </div>          
+
         </div>
         {
           isComment 
@@ -461,14 +421,14 @@ export const PostEditor = ({
                 variant="primary"
                 size="small"
             >
-              {loading ? "Posting..." : "Reply"}    
+              {/* {loading ? "Posting..." : "Reply"}     */}
+              {getButtonText()}
             </Button>
           </div>
           )
           : (
             <div className={styles.actionButtons}>
               <Button
-                // disabled={!postText.trim() || disabled || !resolvedUserPublicKey || imageLoading}
                 disabled={
                   (!postText.trim() && uploadedImages.filter((img) => img.url).length === 0) ||
                   disabled ||
@@ -478,18 +438,12 @@ export const PostEditor = ({
                 isLoading={loading}
                 onClick={handleSubmitPost}
               >
-                {resolvedUserPublicKey ? 'Post to DeSo' : 'Login to Post'}
+                {/* {resolvedUserPublicKey ? 'Post to DeSo' : 'Login to Post'} */}
+                {getButtonText()}
               </Button>  
             </div>
           )
         }
-        {/* <Button
-          disabled={!postText.trim() || disabled || !resolvedUserPublicKey || imageLoading}
-          isLoading={loading}
-          onClick={handleSubmitPost}
-        >
-          {resolvedUserPublicKey ? 'Post to DeSo' : 'Login to Post'}
-        </Button>         */}
       </div>
 
 
@@ -534,6 +488,16 @@ export const PostEditor = ({
         </div>
       )}
 
+      { quotedPost && (
+        <Post
+          post={quotedPost?.post}
+          username={quotedPost?.username}
+          userProfile={quotedPost?.ProfileEntryResponse}
+          isQuote={true}
+          hideStats={true}
+          isStatsDisabled={true}
+        />
+      )}
 
     </div>
   );

@@ -15,7 +15,7 @@ import styles from './Post.module.css';
 
 const COMMENT_LIMIT = 10;
 
-export const Post = ({ post, username, userProfile, isQuote, isComment }) => {
+export const Post = ({ post, username, userProfile, isQuote, isComment, hideStats = false, isStatsDisabled = false }) => {
   if (!post) return null;
 
   const {
@@ -311,12 +311,16 @@ export const Post = ({ post, username, userProfile, isQuote, isComment }) => {
 
         {RepostedPostEntryResponse && (
           <div className={styles.repost}>
-            <Post post={RepostedPostEntryResponse} isQuote />
+            <Post post={RepostedPostEntryResponse} isQuote hideStats={hideStats} isStatsDisabled={isStatsDisabled}/>
           </div>
         )}
 
+
         <PostStats
           post={post}
+          username={username}
+          ProfileEntryResponse={userProfile}
+          isStatsDisabled={isStatsDisabled}
           onReply={(newReply) => {
             if (!showReplies) {
               shouldFetchFirstPage.current = true; // mark that we need to fetch backend later
@@ -353,14 +357,19 @@ export const Post = ({ post, username, userProfile, isQuote, isComment }) => {
 
         />
 
-        {CommentCount > 0 && (
-          <button onClick={toggleReplies} className={styles.repliesButton}>
-            {isLoading
-              ? 'Loading replies...'
-              : showReplies
-              ? 'Hide replies'
-              : 'See replies...'}
-          </button>
+        {/* disable interaction including replies button */}
+        { !isStatsDisabled && (
+          <>
+            {CommentCount > 0 && (
+              <button onClick={toggleReplies} className={styles.repliesButton}>
+                {isLoading
+                  ? 'Loading replies...'
+                  : showReplies
+                  ? 'Hide replies'
+                  : 'See replies...'}
+              </button>
+            )}
+          </>
         )}
 
         {!showReplies && injectedComments.length > 0 && (

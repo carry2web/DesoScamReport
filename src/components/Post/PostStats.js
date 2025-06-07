@@ -1,17 +1,30 @@
 "use client";
 
-import { useState } from "react";
-// import { useDeSoApi } from "@/api/useDeSoApi";
+import { useState, useEffect } from "react";
+import { useRouter } from 'next/navigation';
+import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
-// import { useToast } from "@/hooks/useToast";
-import styles from "./Post.module.css";
+import { useUser } from "@/context/UserContext";
+import { useEditorPost } from "@/context/EditorPostContext";
+import { useDeSoApi } from "@/api/useDeSoApi";
+import { useToast } from "@/hooks/useToast";
+import { useQueryClient } from "@tanstack/react-query";
+import { queryKeys } from "@/queries";
 
-// import { Button } from "@/components/Button";
+import { useFloating, offset, flip, shift, size as applySize, autoUpdate, FloatingPortal } from "@floating-ui/react";
+import { useClickOutside } from "@/hooks/useClickOutside";
+import { Dropdown } from "@/components/Dropdown";
+import { MenuItem } from "@/components/MenuItem";
+
 import { PostEditor } from "@/components/PostEditor";
+
+import classNames from 'classnames';
+
+import styles from "./Post.module.css";
 
 // PostStats component handles the stats (💬 🔁 ❤️ 💎) display
 // and manages the inline reply UI and submission logic.
-export const PostStats = ({ post, onReply }) => {
+export const PostStats = ({ post, username, ProfileEntryResponse, isStatsDisabled, onReply }) => {
   const {
     PostHashHex,
     CommentCount,
@@ -21,98 +34,173 @@ export const PostStats = ({ post, onReply }) => {
     QuoteRepostCount,
   } = post;
 
+  const router = useRouter();
+
   const [showReplyBox, setShowReplyBox] = useState(false);
-  // const [replyText, setReplyText] = useState("");
-  // const [loading, setLoading] = useState(false);
+  const [showRepostDropdown, setShowRepostDropdown] = useState(false);
+  const [isReposting, setIsReposting] = useState(false);
   
-  // ✅ Local state to track comment count for optimistic updates
+  // ✅ Local state to track comment, repost, and quote counts for optimistic updates
   const [localCommentCount, setLocalCommentCount] = useState(CommentCount);
+  const [localRepostCount, setLocalRepostCount] = useState(RepostCount);
+  const [localQuoteCount, setLocalQuoteCount] = useState(QuoteRepostCount);
 
-  const { userPublicKey } = useAuth();
+  // sync local counts with initial post data
+  // This ensures that if the post data changes (e.g. via props update),
+  useEffect(() => {
+    setLocalCommentCount(CommentCount);
+    setLocalRepostCount(RepostCount);
+    setLocalQuoteCount(QuoteRepostCount);
+  }, [CommentCount, RepostCount, QuoteRepostCount]);  
 
-  // const { submitPost } = useDeSoApi();
-  // const { signAndSubmitTransaction, userPublicKey } = useAuth();
-  // const { showErrorToast } = useToast();
+  const { userPublicKey, signAndSubmitTransaction } = useAuth();
+  const { userProfile } = useUser();
+  const { setQuotedPost } = useEditorPost();
+  const { submitPost } = useDeSoApi();
+  const { showErrorToast, showSuccessToast } = useToast();  
+  const queryClient = useQueryClient();
 
-  // const handleReply = async () => {
-  //   setLoading(true);
-  //   try {
-  //     const settings = {
-  //       UpdaterPublicKeyBase58Check: userPublicKey,
-  //       ParentStakeID: PostHashHex,
-  //       BodyObj: { Body: replyText },
-  //       MinFeeRateNanosPerKB: 1500,
-  //     };
+  const {
+    refs,
+    floatingStyles,
+  } = useFloating({
+    placement: "bottom-start",
+    strategy: "fixed",
+    middleware: [offset(4), flip(), shift(), applySize({
+      apply: ({ rects, elements }) => {
+        Object.assign(elements.floating.style, {
+          width: `${rects.reference.width}px`,
+        });
+      },
+    })],
+    whileElementsMounted: autoUpdate,
+  });
 
-  //     const result = await submitPost(settings);
-  //     if (result.error) throw new Error(result.error);
+  useClickOutside([refs.reference, refs.floating], () => {
+    setShowRepostDropdown(false);
+  });  
 
-  //     const tx = await signAndSubmitTransaction(result.data.TransactionHex);
+  const handleReplyClick = () => {    
+    // Show the reply box
+    setShowReplyBox((prev) => !prev);
+  };
 
-  //     // ✅ Increment local comment count optimistically
-  //     setLocalCommentCount(prev => prev + 1);
+  const handleRepost = async () => {
+    setIsReposting(true);
+    setShowRepostDropdown(false);
 
-  //     // ✅ Calls parent handler to inject fresh reply
-  //     if (onReply) onReply(tx?.PostEntryResponse);
+    try {
+      const settings = {
+        UpdaterPublicKeyBase58Check: userPublicKey,
+        RepostedPostHashHex: PostHashHex,
+        BodyObj: {},
+        MinFeeRateNanosPerKB: 1500,
+      };
 
-  //     // ✅ Reset UI state after success
-  //     setReplyText("");
-  //     setShowReplyBox(false);
-  //   } catch (err) {
-  //     showErrorToast(`Reply failed: ${err.message}`);
-  //     // Note: We don't decrement on error since the increment only happens on success
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
+      const result = await submitPost(settings);
+
+      if (result.error || !result.data?.TransactionHex) {
+        throw new Error(result.error || "Missing transaction hex");
+      }
+
+      const tx = await signAndSubmitTransaction(result.data.TransactionHex);
+      if (tx?.PostEntryResponse) {
+
+        const username = userProfile?.Username || userPublicKey;
+
+
+        await queryClient.invalidateQueries({
+          queryKey: queryKeys.userPosts(username),
+        });        
+
+        setLocalRepostCount((prev) => prev + 1);
+
+        showSuccessToast(
+          <div>
+            Reposted successfully 🎉 
+            <br />
+            <Link href={`/${username}/posts/`}>View in Posts</Link>
+          </div>,
+          { autoClose: 7000 }
+        );
+      } else {
+        showErrorToast("Error submitting repost.");
+      }
+    } catch (error) {
+      const msg = error?.message || 'Error submitting repost';
+      showErrorToast(`Failed to submit repost. ${msg}`);
+    } finally {
+      setIsReposting(false);
+    }
+  };  
+
+  const handleQuoteRepost = async () => {
+    setShowRepostDropdown(false);
+    setQuotedPost({
+      post,
+      username, 
+      ProfileEntryResponse
+    }); // Set the post to be quoted in the editor
+    router.push('/compose/post'); // Navigate to the compose page with the quoted post
+  }
 
   return (
     <>
       <div className={styles.stats}>
         {/* 💬 icon clickable only if user is authenticated */}
-        <span
-          onClick={userPublicKey ? () => setShowReplyBox((prev) => !prev) : undefined}
-          style={{ cursor: userPublicKey ? "pointer" : "default" }}
-          title={userPublicKey ? "Reply to this post" : "Login to reply"}
-        >
-          💬 {localCommentCount}
+        <span className={styles.iconWrapper}>
+          <span
+            onClick={userPublicKey && !isStatsDisabled ? handleReplyClick : undefined}
+            style={{ cursor: userPublicKey && !isStatsDisabled ? "pointer" : "default" }}
+            title={userPublicKey ? "Reply to this post" : "Login to reply"}
+          >
+            💬 
+          </span>
+          {localCommentCount}
+        </span>        
+
+        {/* <span>🔁 {RepostCount + QuoteRepostCount}</span> */}
+        <span className={styles.iconWrapper}>
+          <span
+            ref={refs.setReference}
+            onClick={userPublicKey && !isStatsDisabled && !isReposting ? () => setShowRepostDropdown((prev) => !prev) : undefined}
+            className={classNames(styles.repostIcon, {
+              [styles.reposting]: isReposting,
+              [styles.disabled]: isStatsDisabled || !userPublicKey,
+            })}
+            title={userPublicKey ? "Repost options" : "Login to repost"}
+          >
+            🔁
+          </span>
+          {localRepostCount + localQuoteCount}
+        </span>   
+
+        {showRepostDropdown && (
+          <FloatingPortal>
+            <div
+              ref={refs.setFloating}
+              style={floatingStyles}
+              className={styles.dropdownContainer}
+            >
+              <Dropdown className={styles.repostDropdown}>
+                <MenuItem onClick={handleRepost}>🔁 Repost</MenuItem>
+                <MenuItem onClick={handleQuoteRepost}>💭 Quote</MenuItem>
+              </Dropdown>
+            </div>
+          </FloatingPortal>
+        )}
+
+        <span className={styles.iconWrapper}>
+          <span>❤️</span>  
+          {LikeCount}
         </span>
-
-        <span>🔁 {RepostCount + QuoteRepostCount}</span>
-        <span>❤️ {LikeCount}</span>
-        <span>💎 {DiamondCount}</span>
+        
+        <span className={styles.iconWrapper}>
+          <span>💎</span>  
+          {DiamondCount}
+        </span>
+        
       </div>
-
-      {/* Inline reply UI */}
-      {/* {showReplyBox && (
-        <div className={styles.replyBox}>
-          <textarea
-            rows={3}
-            value={replyText}
-            onChange={(e) => setReplyText(e.target.value)}
-            placeholder="Write your comment..."
-            disabled={loading}
-          />
-          <div className={styles.replyActions}>
-            <Button
-              onClick={() => setShowReplyBox(false)}
-              disabled={loading}
-              variant="secondary"
-              size="small"
-            >
-                Cancel</Button>
-            <Button 
-                onClick={handleReply}
-                isLoading={loading}
-                disabled={!replyText}
-                variant="primary"
-                size="small"
-            >
-              {loading ? "Posting..." : "Reply"}    
-            </Button>
-          </div>
-        </div>
-      )} */}
 
 
       {/* Use PostEditor for inline reply box */}
