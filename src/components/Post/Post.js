@@ -357,7 +357,7 @@ export const Post = ({ post, username, userProfile, isQuote, isComment, hideStat
 
         />
 
-        {/* disable interaction including replies button */}
+        {/* disable interaction including replies button and don't show any comments */}
         { !isStatsDisabled && (
           <>
             {CommentCount > 0 && (
@@ -369,36 +369,36 @@ export const Post = ({ post, username, userProfile, isQuote, isComment, hideStat
                   : 'See replies...'}
               </button>
             )}
-          </>
-        )}
 
-        {!showReplies && injectedComments.length > 0 && (
-          <div className={styles.repliesContainer}>
-            <div className={styles.replies}>
-              {injectedComments.map((comment) => (
-                <Post key={comment.PostHashHex} post={comment} isComment />
-              ))}
-            </div>
-          </div>
-        )}        
+            {!showReplies && injectedComments.length > 0 && (
+              <div className={styles.repliesContainer}>
+                <div className={styles.replies}>
+                  {injectedComments.map((comment) => (
+                    <Post key={comment.PostHashHex} post={comment} isComment />
+                  ))}
+                </div>
+              </div>
+            )}        
 
-        {showReplies && (
-          <div className={styles.repliesContainer}>
-            <div className={styles.replies}>
-              {comments.map((comment) => (
-                <Post key={comment.PostHashHex} post={comment} isComment />
-              ))}
-            </div>
-            {hasNextPage && (
-              <button
-                onClick={fetchNextPage}
-                disabled={isFetchingNextPage}
-                className={styles.loadMoreButton}
-              >
-                {isFetchingNextPage ? 'Loading more...' : 'Load more replies'}
-              </button>
+            {showReplies && (
+              <div className={styles.repliesContainer}>
+                <div className={styles.replies}>
+                  {comments.map((comment) => (
+                    <Post key={comment.PostHashHex} post={comment} isComment />
+                  ))}
+                </div>
+                {hasNextPage && (
+                  <button
+                    onClick={fetchNextPage}
+                    disabled={isFetchingNextPage}
+                    className={styles.loadMoreButton}
+                  >
+                    {isFetchingNextPage ? 'Loading more...' : 'Load more replies'}
+                  </button>
+                )}
+              </div>
             )}
-          </div>
+          </>
         )}
       </div>
     </div>
