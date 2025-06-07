@@ -366,6 +366,14 @@
   border-radius: var(--radius-sm);
 }
 
+.postVideoIframe{
+  max-width: 100%;
+  max-height: calc(100vh - var(--navbar-height) - var(--footer-height) - var(--spacing-lg) * 2);
+  width: auto;
+  height: auto;
+  border-radius: var(--radius-sm);
+}
+
 .repostDropdown {
   width: fit-content;
 }

@@ -223,6 +223,8 @@ export const Post = ({ post, username, userProfile, isQuote, isComment, isStatsD
     }
   };
 
+  const isCloudflareIframe = (url) => url.includes("iframe.videodelivery.net/");
+
   return (
     <div className={`${styles.post} ${isQuote ? styles.quote : ''} ${isComment ? styles.comment : ''}`}>
 
@@ -310,7 +312,7 @@ export const Post = ({ post, username, userProfile, isQuote, isComment, isStatsD
           </div>
         )}      
 
-        {VideoURLs && VideoURLs.length > 0 && (
+        {/* {VideoURLs && VideoURLs.length > 0 && (
           <div className={styles.videoGallery}>
             {showRaw 
               ? (
@@ -339,7 +341,44 @@ export const Post = ({ post, username, userProfile, isQuote, isComment, isStatsD
               )
             }
           </div>
-        )}
+        )} */}
+
+        {VideoURLs && VideoURLs.length > 0 && (
+          <div className={styles.videoGallery}>
+            {showRaw ? (
+              <pre>
+                {VideoURLs.map((url) => `${url}\n`).join("")}
+              </pre>
+            ) : (
+              <>
+                {VideoURLs.map((url, index) =>
+                  isCloudflareIframe(url) ? (
+                    <iframe
+                      key={index}
+                      src={url}
+                      className={styles.postVideoIframe}
+                      allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
+                      allowFullScreen
+                      loading="lazy"
+                      title={`Video ${index + 1}`}
+                      style={{ width: "100%", aspectRatio: "16/9", border: 0 }}
+                    />
+                  ) : (
+                    <video
+                      key={index}
+                      src={url}
+                      controls
+                      className={styles.postVideo}
+                      preload="metadata"
+                    >
+                      Your browser does not support the video tag.
+                    </video>
+                  )
+                )}
+              </>
+            )}
+          </div>
+        )}        
 
         {RepostedPostEntryResponse && (
           <div className={styles.repost}>
