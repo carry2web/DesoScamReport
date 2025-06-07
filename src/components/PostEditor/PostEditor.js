@@ -405,6 +405,7 @@ export const PostEditor = ({
               disabled={loading}
               variant="secondary"
               size="small"
+              className={styles.commentBtn}
             >
                 Cancel
             </Button>
@@ -420,6 +421,7 @@ export const PostEditor = ({
                 }                
                 variant="primary"
                 size="small"
+                className={styles.commentBtn}
             >
               {/* {loading ? "Posting..." : "Reply"}     */}
               {getButtonText()}
@@ -437,6 +439,7 @@ export const PostEditor = ({
                 }                
                 isLoading={loading}
                 onClick={handleSubmitPost}
+                className={styles.postButton}
               >
                 {/* {resolvedUserPublicKey ? 'Post to DeSo' : 'Login to Post'} */}
                 {getButtonText()}

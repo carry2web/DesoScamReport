@@ -204,3 +204,11 @@
   width: 18px;
   height: 18px;
 } 
+
+.commentBtn{
+  min-width: 100px;
+}
+
+.postButton{
+  min-width: 120px;
+}

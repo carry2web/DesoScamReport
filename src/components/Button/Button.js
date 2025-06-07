@@ -17,6 +17,7 @@ export const Button = ({
   href = null,
   as = null,
   onClick,
+  className,
   ...props
 }) => {
   const buttonClasses = classNames(
@@ -26,7 +27,8 @@ export const Button = ({
     { 
       [styles.loading]: isLoading,
       [styles.disabled]: disabled || isLoading // ✨ Add disabled class for visual styling
-    }
+    },
+    className
   );
 
   const content = (
@@ -124,7 +126,8 @@ Button.propTypes = {
   icon: PropTypes.node,
   trailingIcon: PropTypes.node,
   href: PropTypes.string,    
-  as: PropTypes.elementType,    
+  as: PropTypes.elementType,   
+  className: PropTypes.string 
 };
 
 Button.defaultProps = {
@@ -137,4 +140,5 @@ Button.defaultProps = {
   trailingIcon: null,
   href: null,
   as: null,
+  className: undefined
 };
