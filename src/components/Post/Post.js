@@ -15,7 +15,7 @@ import styles from './Post.module.css';
 
 const COMMENT_LIMIT = 10;
 
-export const Post = ({ post, username, userProfile, isQuote, isComment, hideStats = false, isStatsDisabled = false }) => {
+export const Post = ({ post, username, userProfile, isQuote, isComment, isStatsDisabled = false }) => {
   if (!post) return null;
 
   const {
@@ -311,7 +311,7 @@ export const Post = ({ post, username, userProfile, isQuote, isComment, hideStat
 
         {RepostedPostEntryResponse && (
           <div className={styles.repost}>
-            <Post post={RepostedPostEntryResponse} isQuote hideStats={hideStats} isStatsDisabled={isStatsDisabled}/>
+            <Post post={RepostedPostEntryResponse} isQuote isStatsDisabled={isStatsDisabled}/>
           </div>
         )}
 

@@ -494,7 +494,6 @@ export const PostEditor = ({
           username={quotedPost?.username}
           userProfile={quotedPost?.ProfileEntryResponse}
           isQuote={true}
-          hideStats={true}
           isStatsDisabled={true}
         />
       )}
