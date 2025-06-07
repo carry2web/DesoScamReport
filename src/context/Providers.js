@@ -4,6 +4,7 @@ import { ThemeProvider } from 'next-themes';
 import { AuthProvider } from '@/context/AuthContext';
 import { UserProvider } from '@/context/UserContext';
 import { QueryProvider } from '@/context/QueryProvider';
+import { EditorPostProvider } from '@/context/EditorPostContext';
 
 export function Providers({ children }) {
   return (
@@ -15,7 +16,9 @@ export function Providers({ children }) {
       <QueryProvider>
         <AuthProvider>
           <UserProvider>
-            {children}         
+            <EditorPostProvider>
+              {children}         
+            </EditorPostProvider>   
           </UserProvider>
         </AuthProvider>
       </QueryProvider>
