@@ -349,6 +349,23 @@
   object-fit: contain; /* ensures full image fits without cropping */  
 }
 
+.videoGallery{
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-md);
+  overflow-wrap: anywhere;
+  word-break: normal;
+  width: 100%;  
+}
+
+.postVideo{
+  max-width: 100%;
+  max-height: calc(100vh - var(--navbar-height) - var(--footer-height) - var(--spacing-lg) * 2);
+  width: auto;
+  height: auto;
+  border-radius: var(--radius-sm);
+}
+
 .repostDropdown {
   width: fit-content;
 }
