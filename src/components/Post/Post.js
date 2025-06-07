@@ -312,37 +312,6 @@ export const Post = ({ post, username, userProfile, isQuote, isComment, isStatsD
           </div>
         )}      
 
-        {/* {VideoURLs && VideoURLs.length > 0 && (
-          <div className={styles.videoGallery}>
-            {showRaw 
-              ? (
-                <>
-                  {VideoURLs.length > 0 && (
-                    <pre>
-                      {VideoURLs.map((url) => `${url}\n`).join('')}
-                    </pre>
-                  )}
-                </>
-              )
-              : (
-                <>
-                  {VideoURLs.map((url, index) => (
-                    <video
-                      key={index}
-                      src={url}
-                      controls
-                      className={styles.postVideo}
-                      preload="metadata"
-                    >
-                      Your browser does not support the video tag.
-                    </video>
-                  ))}
-                </>
-              )
-            }
-          </div>
-        )} */}
-
         {VideoURLs && VideoURLs.length > 0 && (
           <div className={styles.videoGallery}>
             {showRaw ? (
