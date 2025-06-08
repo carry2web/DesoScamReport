@@ -106,6 +106,22 @@ export const UserMenu = () => {
                     </DropdownSection>                    
                 }
 
+                {userPublicKey && 
+                    <DropdownSection>
+                        <div className={styles.quickLinks}>
+                            <Link href={`/${userProfile?.Username || userPublicKey}/posts`} className={styles.quickLink} onClick={closeDropdown}>
+                                📝 User Posts
+                            </Link>
+                            <Link href={`/${userProfile?.Username || userPublicKey}/feed`} className={styles.quickLink} onClick={closeDropdown}>
+                                🙂 Follow Feed
+                            </Link>
+                            <Link href={`/${userProfile?.Username || userPublicKey}/notifications`} className={styles.quickLink} onClick={closeDropdown}>   
+                                🔔 Notifications   
+                            </Link>
+                        </div>
+                    </DropdownSection>
+                }
+
 
                 {
                     userPublicKey &&
