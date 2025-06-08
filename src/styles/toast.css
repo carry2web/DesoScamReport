@@ -3,7 +3,7 @@
 }
 
 .Toastify__toast-container--bottom-right {
-    bottom: var(--footer-height);
+    /* bottom: var(--footer-height); */
     right: var(--toastify-toast-right);
     align-items: end;
 }
