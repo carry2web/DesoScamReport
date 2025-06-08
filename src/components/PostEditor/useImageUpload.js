@@ -270,18 +270,17 @@ export const useImageUpload = ({ userPublicKey, getJWT }) => {
   //   }
   // };
 
-  // Handle drag and drop (files only)
   const handleDrop = async (event) => {
     event.preventDefault();
     
-    const files = Array.from(event.dataTransfer.files);
+    const files = Array.from(event.dataTransfer.files).filter(
+      (file) => file.type.startsWith("image/")
+    );
+    
     if (files.length > 0) {
-      // Handle dropped files
       await uploadFiles(files);
     }
-
-    // Don't handle dropped URLs/text - let them paste as text
-  };  
+  };
 
   const handleDragOver = (event) => {
     event.preventDefault();
