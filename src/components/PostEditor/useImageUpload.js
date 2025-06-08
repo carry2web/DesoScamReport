@@ -117,12 +117,40 @@ export const useImageUpload = ({ userPublicKey, getJWT }) => {
     await uploadFiles(files);
   };
 
-  // Handle paste uploads (including GIF URLs)
+  // // Handle paste uploads (including GIF URLs)
+  // const handlePaste = async (event) => {
+  //   const items = event.clipboardData?.items;
+  //   if (!items) return;
+
+  //   // Check for image files first (direct paste)
+  //   const imageItems = Array.from(items).filter(
+  //     (item) => item.kind === "file" && item.type.startsWith("image/")
+  //   );
+
+  //   if (imageItems.length > 0) {
+  //     const files = imageItems.map((item) => item.getAsFile()).filter(Boolean);
+  //     await uploadFiles(files);
+  //     return;
+  //   }
+
+  //   // Check for text that might contain GIF URLs
+  //   const textItems = Array.from(items).filter(
+  //     (item) => item.kind === "string" && item.type === "text/plain"
+  //   );
+
+  //   if (textItems.length > 0) {
+  //     textItems[0].getAsString(async (text) => {
+  //       await handlePastedText(text);
+  //     });
+  //   }
+  // };
+
+  // Handle paste uploads (files only)
   const handlePaste = async (event) => {
     const items = event.clipboardData?.items;
     if (!items) return;
 
-    // Check for image files first (direct paste)
+    // Only handle direct image file paste
     const imageItems = Array.from(items).filter(
       (item) => item.kind === "file" && item.type.startsWith("image/")
     );
@@ -130,20 +158,10 @@ export const useImageUpload = ({ userPublicKey, getJWT }) => {
     if (imageItems.length > 0) {
       const files = imageItems.map((item) => item.getAsFile()).filter(Boolean);
       await uploadFiles(files);
-      return;
     }
 
-    // Check for text that might contain GIF URLs
-    const textItems = Array.from(items).filter(
-      (item) => item.kind === "string" && item.type === "text/plain"
-    );
-
-    if (textItems.length > 0) {
-      textItems[0].getAsString(async (text) => {
-        await handlePastedText(text);
-      });
-    }
-  };
+    // Let text paste through normally for URLs, text, etc.
+  };  
 
   // Handle pasted text (look for GIF URLs)
   const handlePastedText = async (text) => {
@@ -234,7 +252,25 @@ export const useImageUpload = ({ userPublicKey, getJWT }) => {
     setUploadedImages((prev) => prev.filter((img) => img.id !== id));
   };
 
-  // Handle drag and drop (including GIF URLs)
+  // // Handle drag and drop (including GIF URLs)
+  // const handleDrop = async (event) => {
+  //   event.preventDefault();
+    
+  //   const files = Array.from(event.dataTransfer.files);
+  //   if (files.length > 0) {
+  //     // Handle dropped files
+  //     await uploadFiles(files);
+  //     return;
+  //   }
+
+  //   // Handle dropped URLs
+  //   const text = event.dataTransfer.getData('text/plain');
+  //   if (text) {
+  //     await handlePastedText(text);
+  //   }
+  // };
+
+  // Handle drag and drop (files only)
   const handleDrop = async (event) => {
     event.preventDefault();
     
@@ -242,15 +278,10 @@ export const useImageUpload = ({ userPublicKey, getJWT }) => {
     if (files.length > 0) {
       // Handle dropped files
       await uploadFiles(files);
-      return;
     }
 
-    // Handle dropped URLs
-    const text = event.dataTransfer.getData('text/plain');
-    if (text) {
-      await handlePastedText(text);
-    }
-  };
+    // Don't handle dropped URLs/text - let them paste as text
+  };  
 
   const handleDragOver = (event) => {
     event.preventDefault();
