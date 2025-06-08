@@ -1,0 +1,1 @@
+copy of PostEditor component before refactoring to put everything related image upload outside into separate components and hook
