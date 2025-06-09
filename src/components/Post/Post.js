@@ -8,6 +8,7 @@ import { useState, useRef } from 'react';
 import { MarkdownText } from '@/components/MarkdownText';
 import { Avatar } from '@/components/Avatar';
 import { isMaybePublicKey } from '@/utils/profileUtils';
+import { formatTimestampNanos } from '@/utils/dateUtils';
 
 import { PostStats } from './PostStats';
 import { VideoGallery } from './VideoGallery';
@@ -30,6 +31,7 @@ export const Post = ({ post, username, userProfile, isQuote, isComment, isStatsD
     RepostedPostEntryResponse,
     PosterPublicKeyBase58Check,
     ProfileEntryResponse,
+    TimestampNanos
   } = post;
 
   const { getSinglePost } = useDeSoApi();
@@ -258,7 +260,7 @@ export const Post = ({ post, username, userProfile, isQuote, isComment, isStatsD
                 )}
               </div>
               <div className={styles.postLinkWrapper}>
-                <Link href={`/${lookupKey}/posts/${PostHashHex}`} className={styles.postLink} prefetch={false}>{PostHashHex}</Link>
+                <Link href={`/${lookupKey}/posts/${PostHashHex}`} className={styles.postLink} prefetch={false}>{TimestampNanos && <>{formatTimestampNanos(TimestampNanos)}. </>}{PostHashHex}</Link>                
               </div>
             </div>
             <div className={styles.postControls}>
