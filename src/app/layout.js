@@ -8,7 +8,6 @@ import { ToastUI } from '@/components/ToastUI';
 export const metadata = {
   title: 'DeSo NextJS Starter App',
   description: 'DeSo App designed by @brootle',
-  manifest: '/site.webmanifest',
   icons: {
     icon: [
       { url: '/icon.svg', sizes: 'any' },
@@ -23,6 +22,7 @@ export const metadata = {
 
 export const viewport = {
   themeColor: '#181A20',
+  colorScheme: 'dark',
 }
 
 export default function RootLayout({ children, modal }) {
