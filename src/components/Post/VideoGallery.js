@@ -4,6 +4,15 @@ export const VideoGallery = ({ Body, VideoURLs, showRaw }) => {
 
   const isCloudflareIframe = (url) => url.includes("iframe.videodelivery.net/");
 
+  const isLivepeerTvUrl = (url) => {
+    try {
+      const u = new URL(url);
+      return u.hostname === "lvpr.tv" && u.searchParams.has("v");
+    } catch {
+      return false;
+    }
+  };  
+
   // Helper for extracting YouTube IDs
   const getYouTubeId = (url) => {
     if (!url) return null;
@@ -86,7 +95,7 @@ export const VideoGallery = ({ Body, VideoURLs, showRaw }) => {
             {videoUrlsToRender && videoUrlsToRender.length > 0 && (
                 <div className={styles.videoGallery}>
                     {videoUrlsToRender.map((url, index) =>
-                    isCloudflareIframe(url) ? (
+                    (isCloudflareIframe(url) || isLivepeerTvUrl(url)) ? (
                         <iframe
                         key={index}
                         src={url}
