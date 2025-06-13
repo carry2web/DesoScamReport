@@ -62,3 +62,8 @@
 .postButton{
   min-width: 120px;
 }
+
+.textareaContainer {
+  position: relative;
+  width: 100%;
+}

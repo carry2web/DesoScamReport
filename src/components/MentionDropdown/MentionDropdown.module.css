@@ -1,0 +1,13 @@
+.container {
+  z-index: 99991;
+}
+
+.dropdown {
+  max-height: 200px;
+  overflow-y: auto;
+  padding: var(--spacing-sm) 0;
+}
+
+.message {
+  text-align: center;
+}
