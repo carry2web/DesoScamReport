@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
 import { useUser } from "@/context/UserContext";
@@ -13,6 +13,9 @@ import { Post } from "@/components/Post";
 
 import { ImageUploadButton, ImagePreviews } from "./ImageUpload";
 import { useImageUpload } from "./useImageUpload";
+
+import { useMentions } from "@/hooks/useMentions";
+import { MentionDropdown } from "@/components/MentionDropdown";
 
 import classNames from 'classnames';
 import styles from "./PostEditor.module.css";
@@ -44,6 +47,9 @@ export const PostEditor = ({
 
   const [postText, setPostText] = useState('');
   const [loading, setLoading] = useState(false);
+
+  // Textarea ref for mentions
+  const textareaRef = useRef(null);
  
   // ✅ Use the image upload hook
   const {
@@ -63,6 +69,22 @@ export const PostEditor = ({
     getJWT: auth.getIdentityJWT,
   });  
 
+  // ✅ Use mentions hook
+  const {
+    mentionState,
+    profiles,
+    isLoading: mentionsLoading,
+    selectedIndex,
+    setSelectedIndex,
+    handleTextChange: handleMentionTextChange,
+    handleKeyDown: handleMentionKeyDown,
+    insertMention,
+    closeMentions,
+    floatingStyles,
+    refs,
+  } = useMentions(textareaRef);
+
+
   useEffect(() => {
     if (mode === "quote" && quotedPost) {
       setPostText('');
@@ -77,8 +99,39 @@ export const PostEditor = ({
   }, [mode, quotedPost, editablePost]);  
 
   const handlePostChange = (e) => {
-    setPostText(e.target.value);
+    const newText = e.target.value;
+    const cursorPosition = e.target.selectionStart;
+    
+    setPostText(newText);
+    
+    // Handle mentions
+    handleMentionTextChange(newText, cursorPosition);
+  };  
+
+  // Handle direct text updates (for mention insertions)
+  const handleDirectTextUpdate = (newText) => {
+    setPostText(newText);
   };
+
+  const handleTextareaKeyDown = (e) => {
+    // Handle mention navigation first
+    const mentionHandled = handleMentionKeyDown(e, postText, handleDirectTextUpdate);
+    if (mentionHandled) {
+      return; // Mention system handled the key press
+    }
+    
+    // Handle other keyboard shortcuts here if needed
+  };
+  
+  const handleTextareaSelect = (e) => {
+    // Update mention state when cursor position changes
+    const cursorPosition = e.target.selectionStart;
+    handleMentionTextChange(postText, cursorPosition);
+  };
+  
+  const handleMentionSelect = (profile) => {
+    insertMention(profile, postText, handleDirectTextUpdate);
+  };  
 
   const handleSubmitPost = async () => {
     setLoading(true);
@@ -136,8 +189,8 @@ export const PostEditor = ({
 
         // Reset form
         setPostText('');
-        //setUploadedImages([]); // Clear uploaded images after successful post
         clearImages();
+        closeMentions();
 
         // ✅ Comment-specific callback (e.g. in PostStats)
         if (onReply) {
@@ -190,16 +243,34 @@ export const PostEditor = ({
           [styles.commentContainer]: isComment,
         })}
       >
-      <textarea
-        name={isComment ? 'commentText' : 'postText'}
-        disabled={loading || disabled || !resolvedUserPublicKey}
-        value={postText}
-        onChange={handlePostChange}
-        onPaste={handlePaste}
-        onDrop={handleDrop}
-        onDragOver={handleDragOver}        
-        placeholder={getPlaceholderText()}
-      />
+
+      <div className={styles.textareaContainer}>
+        <textarea
+          ref={textareaRef}
+          name={isComment ? 'commentText' : 'postText'}
+          disabled={loading || disabled || !resolvedUserPublicKey}
+          value={postText}
+          onChange={handlePostChange}
+          onKeyDown={handleTextareaKeyDown}
+          onSelect={handleTextareaSelect}
+          onPaste={handlePaste}
+          onDrop={handleDrop}
+          onDragOver={handleDragOver}        
+          placeholder={getPlaceholderText()}
+        />
+        
+        {/* Mention Dropdown */}
+        <MentionDropdown
+          isOpen={mentionState.isOpen}
+          profiles={profiles}
+          isLoading={mentionsLoading}
+          selectedIndex={selectedIndex}
+          floatingStyles={floatingStyles}
+          floatingRef={refs.setFloating}
+          onSelect={handleMentionSelect}
+          onHover={setSelectedIndex}
+        />
+      </div>      
 
       <div className={styles.postActions}>
         <div className={styles.uploadActions}>
