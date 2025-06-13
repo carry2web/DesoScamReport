@@ -84,9 +84,9 @@ export const VideoGallery = ({ Body, VideoURLs, showRaw }) => {
 
         {showRaw && (VideoURLs && VideoURLs.length > 0) && (
             <div className={styles.videoGallery}>
-            <pre>
-                {VideoURLs.map((url) => `${url}\n`).join("")}
-            </pre>
+              <pre>
+                  {VideoURLs.map((url) => `${url}\n`).join("")}
+              </pre>
             </div>
         )}
 
@@ -97,24 +97,24 @@ export const VideoGallery = ({ Body, VideoURLs, showRaw }) => {
                     {videoUrlsToRender.map((url, index) =>
                     (isCloudflareIframe(url) || isLivepeerTvUrl(url)) ? (
                         <iframe
-                        key={index}
-                        src={url}
-                        className={styles.postVideoIframe}
-                        allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
-                        allowFullScreen
-                        loading="lazy"
-                        title={`Video ${index + 1}`}
-                        style={{ width: "100%", aspectRatio: "16/9", border: 0 }}
+                          key={index}
+                          src={url}
+                          className={styles.postVideoIframe}
+                          allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
+                          allowFullScreen
+                          loading="lazy"
+                          title={`Video ${index + 1}`}
+                          style={{ width: "100%", aspectRatio: "16/9", border: 0 }}
                         />
                     ) : (
                         <video
-                        key={index}
-                        src={url}
-                        controls
-                        className={styles.postVideo}
-                        preload="metadata"
+                          key={index}
+                          src={url}
+                          controls
+                          className={styles.postVideo}
+                          preload="metadata"
                         >
-                        Your browser does not support the video tag.
+                          Your browser does not support the video tag.
                         </video>
                     )
                     )}
