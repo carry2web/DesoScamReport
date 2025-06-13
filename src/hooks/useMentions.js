@@ -64,14 +64,7 @@ export const useMentions = (textareaRef) => {
   const virtualAtElementRef = useRef({
     getBoundingClientRect: () => {
       const currentState = currentMentionStateRef.current;
-      
-      // Calculate coordinates in real-time during each call
       if (!textareaRef.current || !currentState.isOpen || currentState.startIndex === -1) {
-        console.log('Virtual element: returning zeros', { 
-          hasTextarea: !!textareaRef.current, 
-          isOpen: currentState.isOpen, 
-          startIndex: currentState.startIndex 
-        });
         return {
           width: 0, height: 0, x: 0, y: 0, top: 0, left: 0, right: 0, bottom: 0,
         };
@@ -80,20 +73,25 @@ export const useMentions = (textareaRef) => {
       const textarea = textareaRef.current;
       const textareaRect = textarea.getBoundingClientRect();
       const atSymbolCoords = getCursorCoordinates(textarea, currentState.startIndex);
-      
-      const result = {
+
+      // Position exactly at caret
+      const caretY = atSymbolCoords.top - textarea.scrollTop;
+      const caretX = atSymbolCoords.left - textarea.scrollLeft;
+
+      const anchorY = textareaRect.top + caretY;
+      const anchorX = textareaRect.left + caretX;
+
+      return {
         width: 0,
-        height: 20,
-        x: textareaRect.left + atSymbolCoords.left,
-        y: textareaRect.top + atSymbolCoords.top,
-        top: textareaRect.top + atSymbolCoords.top,
-        left: textareaRect.left + atSymbolCoords.left,
-        right: textareaRect.left + atSymbolCoords.left,
-        bottom: textareaRect.top + atSymbolCoords.top + 20,
+        height: 0,
+        x: anchorX,
+        y: anchorY,
+        top: anchorY,
+        left: anchorX,
+        right: anchorX,
+        bottom: anchorY,
       };
-      
-      return result;
-    },
+    }
   });
   
   const { getProfiles } = useDeSoApi();
@@ -112,57 +110,42 @@ export const useMentions = (textareaRef) => {
   const { refs, floatingStyles } = useFloating({
     placement: "bottom-start",
     middleware: [
-      offset(({ rects, middlewareData, placement }) => {
-        
-        if (!textareaRef.current || !mentionState.isOpen || mentionState.startIndex === -1) {
-          return 4; // Default offset
-        }
-
-        const textarea = textareaRef.current;
-        const textareaRect = textarea.getBoundingClientRect();
-        const atSymbolCoords = getCursorCoordinates(textarea, mentionState.startIndex);
-        
-        // Calculate where cursor is (document coordinates)
-        const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
-        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-        
-        const cursorX = textareaRect.left + atSymbolCoords.left + scrollLeft;
-        const cursorY = textareaRect.top + atSymbolCoords.top + scrollTop;
-        
-        // Where we want dropdown (20px below cursor)
-        const targetX = cursorX;
-        const targetY = cursorY + 20;
-        
-        // Where virtual element is (viewport coordinates)
-        const virtualX = textareaRect.left + atSymbolCoords.left;
-        const virtualY = textareaRect.top + atSymbolCoords.top;
-        
-        // Calculate offset needed
-        const offsetX = targetX - virtualX; // This is essentially scrollLeft
-        const offsetY = targetY - virtualY; // This is essentially scrollTop + 20
-        
-        return {
-          mainAxis: offsetY, // Y offset
-          crossAxis: offsetX, // X offset
-        };
-      }),     
+      offset(({ placement }) => ({
+        mainAxis: placement.startsWith('bottom') ? 25 : 0,
+        crossAxis: 0,
+      })),
       flip({
         mainAxis: true, // flip vertically
         padding: 8,     // flip before reaching edge (tweak as needed)
-    }),
+      }),
       shift(),
-        applySize({
-            apply: ({ elements }) => {
-                Object.assign(elements.floating.style, {
-                    maxHeight: `200px`,
-                    minWidth: '250px',
-                    overflowY: 'auto',
-                });
-            },
-        }),    
+      applySize({
+        apply: ({ elements }) => {
+            Object.assign(elements.floating.style, {
+                maxHeight: `200px`,
+                minWidth: '250px',
+                overflowY: 'auto',
+            });
+        },
+      }),    
     ],
     whileElementsMounted: autoUpdate,
   });
+
+  // Close mentions if textarea is scrolled
+  useEffect(() => {
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+
+    const handleScroll = () => {
+      if (mentionState.isOpen) {
+        closeMentions(); // Close the dropdown on scroll
+      }
+    };
+
+    textarea.addEventListener('scroll', handleScroll);
+    return () => textarea.removeEventListener('scroll', handleScroll);
+  }, [textareaRef, mentionState.isOpen, closeMentions]);  
 
   // Close mentions when clicking outside
   useClickOutside([refs.floating], () => {
@@ -174,10 +157,15 @@ export const useMentions = (textareaRef) => {
   // Debounce mention query
   useEffect(() => {
     const delay = setTimeout(() => {
-      setDebouncedQuery(mentionState.query);
+      // Only set debounced query if length >= 2
+      if (mentionState.query.length >= 2) {
+        setDebouncedQuery(mentionState.query);
+      } else {
+        setDebouncedQuery('');
+      }
     }, 300);
     return () => clearTimeout(delay);
-  }, [mentionState.query]);
+  }, [mentionState.query]);  
 
   // Search for profiles by username
   const { data: profiles = [], isLoading } = useQuery({
@@ -208,17 +196,18 @@ export const useMentions = (textareaRef) => {
   const parseMention = useCallback((text, cursorPosition) => {
     const beforeCursor = text.slice(0, cursorPosition);
     const mentionMatch = beforeCursor.match(/@([a-zA-Z0-9_]*)$/);
-    
+
     if (mentionMatch) {
+      const query = mentionMatch[1];
       const startIndex = beforeCursor.lastIndexOf('@');
       return {
-        isOpen: true,
-        query: mentionMatch[1],
+        isOpen: query.length >= 2, // Only open if at least 2 characters
+        query,
         startIndex,
         endIndex: cursorPosition,
       };
     }
-    
+
     return {
       isOpen: false,
       query: '',
@@ -226,6 +215,7 @@ export const useMentions = (textareaRef) => {
       endIndex: -1,
     };
   }, []);
+
 
   // Handle text change and cursor position
   const handleTextChange = useCallback((text, cursorPosition) => {
