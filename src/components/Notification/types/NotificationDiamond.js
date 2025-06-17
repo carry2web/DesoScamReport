@@ -6,7 +6,7 @@ import { Avatar } from '@/components/Avatar';
 import { isMaybePublicKey } from '@/utils/profileUtils';
 import styles from '../Notification.module.css';
 
-export const NotificationDiamond = ({ profile, publicKey, post, diamondLevel }) => {
+export const NotificationDiamond = ({ profile, publicKey, post, diamondLevel, isFocusTip }) => {
     const username = profile?.Username || publicKey;
 
     const isPublicKey = isMaybePublicKey(username);
@@ -19,11 +19,18 @@ export const NotificationDiamond = ({ profile, publicKey, post, diamondLevel }) 
 
     return (
         <div className={styles.notification}>
-            <div role="img" aria-label="diamond" className={styles.diamondsIcon}>
-                {Array.from({ length: diamondLevel }, (_, i) => (
-                    <div key={i}>💎</div>
-                ))}
-            </div>
+
+            {
+                isFocusTip 
+                ? <div role="img" aria-label="info" className={styles.infoIcon}>ℹ️</div>
+                :
+                <div role="img" aria-label="diamond" className={styles.diamondsIcon}>
+                    {Array.from({ length: diamondLevel }, (_, i) => (
+                        <div key={i}>💎</div>
+                    ))}
+                </div>                
+            }
+
 
             <div className={styles.notificationContent}>
 
@@ -34,7 +41,12 @@ export const NotificationDiamond = ({ profile, publicKey, post, diamondLevel }) 
                     </Link>
 
                     <div className={styles.notificationSummary}>
-                        <div><Link href={`/${username}`}>{lookupKey}</Link> diamonded your post</div> 
+
+                        {
+                            isFocusTip
+                            ? <div className={styles.focusTipText}>Your post tipped via <Link href={`/${username}`}>{lookupKey}</Link></div>
+                            : <div><Link href={`/${username}`}>{lookupKey}</Link> diamonded your post</div> 
+                        }                        
 
                         {hasPostLink && (
                             <div className={styles.postLinkWrapper}>

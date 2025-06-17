@@ -34,6 +34,9 @@ export const Notification = ({ notification, postsByHash, profilesByPublicKey })
     // related to Reaction notifications
     const isReaction = Metadata?.CreatePostAssociationTxindexMetadata?.AssociationType === 'REACTION';
 
+    const isFocusTip = Metadata?.CreatePostAssociationTxindexMetadata?.AssociationType === 'DIAMOND' && 
+        Metadata?.CreatePostAssociationTxindexMetadata?.AppPublicKeyBase58Check === 'BC1YLjEayZDjAPitJJX4Boy7LsEfN3sWAkYb3hgE9kGBirztsc2re1N' 
+
     switch (txnType) {
         case 'FOLLOW':
             return (
@@ -96,6 +99,19 @@ export const Notification = ({ notification, postsByHash, profilesByPublicKey })
                     />
                 );
             }
+
+            if (isFocusTip) {
+                const post = postsByHash?.[Metadata?.CreatePostAssociationTxindexMetadata?.PostHashHex];
+                return (
+                    <NotificationDiamond
+                        profile={profile}
+                        publicKey={publicKey}
+                        post={post}
+                        isFocusTip={true}
+                    />
+                );
+            }
+
             return <NotificationDefault notification={notification} />;
         };                          
         default:
