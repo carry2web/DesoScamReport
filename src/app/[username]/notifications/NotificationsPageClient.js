@@ -140,8 +140,8 @@ export const NotificationsPageClient = ({ rawParam }) => {
       {notifications.length === 0 && <p>No notifications found.</p>}
 
       <div className={styles.notificationsContainer}>
-        {notifications.map((notification) => (
-          <div key={`${notification.Index}`}>
+        {notifications.map((notification, index) => (
+          <div key={index}>
             <Notification
               notification={notification}
               postsByHash={postsByHash}
