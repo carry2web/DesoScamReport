@@ -85,7 +85,7 @@
     top: -5px;  
 }
 
-.diamondsIcon, .followIcon, .reactionIcon, .transferIcon, .infoIcon {
+.diamondsIcon, .followIcon, .reactionIcon, .transferIcon, .infoIcon, .associationIcon {
     display: flex;
     flex-direction: column;
     font-size: var(--font-size-lg);
@@ -219,6 +219,24 @@
 
     font-size: var(--font-size-sm);
     color: var(--color-text-muted);
+}
+
+.associationValue{
+    word-wrap: break-word;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    display: -webkit-box;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);  
+}
+
+.atomicTransWrapper{
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
 @media (max-width: 780px) {

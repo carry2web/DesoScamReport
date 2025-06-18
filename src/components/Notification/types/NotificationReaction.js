@@ -46,7 +46,7 @@ export const NotificationReaction = ({ profile, publicKey, post, reaction }) => 
             <div>
               <Link href={`/${username}`}>{lookupKey}</Link> reacted{' '}
               <span className={classNames(styles.reactionEmoji, animationClass)}>
-                {reactionMap[reaction] || '❓'}
+                {reactionMap[reaction] || 'ℹ️'}
               </span>{' '}
               at your post
             </div>

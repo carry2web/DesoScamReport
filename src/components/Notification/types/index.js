@@ -4,3 +4,5 @@ export { NotificationSubmitPost } from "./NotificationSubmitPost";
 export { NotificationDiamond } from "./NotificationDiamond";
 export { NotificationReaction } from "./NotificationReaction";
 export { NotificationTransfer } from "./NotificationTransfer";
+export { NotificationDaoCoinTransfer } from "./NotificationDaoCoinTransfer";
+export { NotificationUserAssociation } from "./NotificationUserAssociation";

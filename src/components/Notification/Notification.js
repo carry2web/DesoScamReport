@@ -7,8 +7,12 @@ import {
     NotificationSubmitPost,
     NotificationDiamond,
     NotificationReaction,
-    NotificationTransfer  
+    NotificationTransfer,
+    NotificationDaoCoinTransfer,
+    NotificationUserAssociation  
 } from './types/';
+
+import styles from './Notification.module.css';
 
 export const Notification = ({ notification, postsByHash, profilesByPublicKey }) => {
     const { Metadata } = notification;
@@ -55,16 +59,7 @@ export const Notification = ({ notification, postsByHash, profilesByPublicKey })
                     submittedPostHex={submittedPostHex}
                     parentPost={parentPost}
                 />
-            ); 
-        case 'SUBMIT_POST': 
-            return (
-                <NotificationSubmitPost
-                    profile={profile}
-                    publicKey={publicKey}
-                    submittedPost={submittedPost}
-                    parentPost={parentPost}
-                />
-            );      
+            );   
         case 'BASIC_TRANSFER': {
             if (isDiamond) {
                 const post = postsByHash?.[transferMeta.PostHashHex];
@@ -113,7 +108,105 @@ export const Notification = ({ notification, postsByHash, profilesByPublicKey })
             }
 
             return <NotificationDefault notification={notification} />;
-        };                          
+        };            
+        case 'DAO_COIN_TRANSFER': {
+            const daoMeta = Metadata?.DAOCoinTransferTxindexMetadata;
+            const daoAmountHex = daoMeta?.DAOCoinToTransferNanos;
+            const creatorUsername = daoMeta?.CreatorUsername;
+
+            return (
+                <NotificationDaoCoinTransfer
+                    profile={profile}
+                    publicKey={publicKey}
+                    daoAmountHex={daoAmountHex}
+                    creatorUsername={creatorUsername}
+                />
+            );
+        }      
+        case 'CREATE_USER_ASSOCIATION': {
+            const assocMeta = Metadata?.CreateUserAssociationTxindexMetadata;
+            return (
+                <NotificationUserAssociation
+                    profile={profile}
+                    publicKey={publicKey}
+                    associationType={assocMeta?.AssociationType}
+                    associationValue={assocMeta?.AssociationValue}
+                />
+            );
+        }                  
+        case 'ATOMIC_TXNS_WRAPPER': {
+            const innerTxns = Metadata?.AtomicTxnsWrapperTxindexMetadata?.InnerTxnsTransactionMetadata;
+            if (!innerTxns?.length) return <NotificationDefault notification={notification} />;
+
+            return (
+                <div className={styles.atomicTransWrapper}>
+                {innerTxns.map((tx, index) => {
+                    const innerType = tx.TxnType;
+                    const innerProfile = profilesByPublicKey?.[tx.TransactorPublicKeyBase58Check];
+
+                    if (innerType === 'CREATE_POST_ASSOCIATION') {
+                        const post = postsByHash?.[tx?.CreatePostAssociationTxindexMetadata?.PostHashHex];
+                        const reaction = tx?.CreatePostAssociationTxindexMetadata?.AssociationValue;
+                        return (
+                            <div key={index}>   
+                                <NotificationReaction
+                                    profile={innerProfile}
+                                    publicKey={tx.TransactorPublicKeyBase58Check}
+                                    post={post}
+                                    reaction={reaction}
+                                />
+                            </div>
+                        );
+                    }
+
+                    if (innerType === 'CREATE_USER_ASSOCIATION') {
+                        const assocMeta = tx?.CreateUserAssociationTxindexMetadata;
+                        return (
+                            <div key={index}>
+                                <NotificationUserAssociation
+                                    profile={innerProfile}
+                                    publicKey={tx.TransactorPublicKeyBase58Check}
+                                    associationType={assocMeta?.AssociationType}
+                                    associationValue={assocMeta?.AssociationValue}
+                                />
+                            </div>
+                        );
+                    }                         
+
+                    if (innerType === 'DAO_COIN_TRANSFER') {
+                        const { CreatorUsername, DAOCoinToTransferNanos } = tx?.DAOCoinTransferTxindexMetadata || {};
+                        return (
+                            <div key={index}>
+                                <NotificationDaoCoinTransfer
+                                    profile={innerProfile}
+                                    publicKey={tx.TransactorPublicKeyBase58Check}
+                                    creatorUsername={CreatorUsername}
+                                    daoAmountHex={DAOCoinToTransferNanos}
+                                />
+                            </div>
+                        );
+                    }                    
+
+                    if (innerType === 'BASIC_TRANSFER') {
+                        const amount = tx?.BasicTransferTxindexMetadata?.TotalOutputNanos;
+                        return (
+                            <div key={index}>
+                                <NotificationTransfer
+                                profile={innerProfile}
+                                publicKey={tx.TransactorPublicKeyBase58Check}
+                                nanosAmount={amount}
+                                />
+                            </div>
+                        );
+                    }                         
+
+                    return (
+                        <div key={index}><NotificationDefault notification={tx} /></div>
+                    );
+                })}
+                </div>
+            );
+        } 
         default:
             return <NotificationDefault notification={notification} />;
     }
