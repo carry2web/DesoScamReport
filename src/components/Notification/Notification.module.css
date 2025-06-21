@@ -251,4 +251,9 @@
     .postLink{
       font-size: var(--font-size-sm);
     }
+
+    .notification{
+      gap: var(--spacing-sm);
+      padding: var(--spacing-sm);
+    }
 }

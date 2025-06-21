@@ -1,7 +1,6 @@
 "use client";
 
 import Link from 'next/link';
-import classNames from 'classnames';
 import { Avatar } from '@/components/Avatar';
 import { isMaybePublicKey } from '@/utils/profileUtils';
 import styles from '../Notification.module.css';
@@ -32,7 +31,7 @@ export const NotificationReaction = ({ profile, publicKey, post, reaction }) => 
   return (
     <div className={styles.notification}>
       <div role="img" aria-label="reaction" className={styles.reactionIcon}>
-        <div>✨</div>
+        {reactionMap[reaction] || 'ℹ️'}
       </div>
 
       <div className={styles.notificationContent}>
@@ -44,11 +43,7 @@ export const NotificationReaction = ({ profile, publicKey, post, reaction }) => 
 
           <div className={styles.notificationSummary}>
             <div>
-              <Link href={`/${username}`}>{lookupKey}</Link> reacted{' '}
-              <span className={classNames(styles.reactionEmoji, animationClass)}>
-                {reactionMap[reaction] || 'ℹ️'}
-              </span>{' '}
-              at your post
+              <Link href={`/${username}`}>{lookupKey}</Link> reacted to your post
             </div>
             
             {hasPostLink && (
