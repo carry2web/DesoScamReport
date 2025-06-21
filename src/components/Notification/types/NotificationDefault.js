@@ -1,12 +1,12 @@
 // components/Notification/types/NotificationDefault.js
-"use client";
 
 import styles from '../Notification.module.css';
 
-export const NotificationDefault = ({ notification }) => {
+export const NotificationDefault = ({ notification, parentIndex }) => {
+  const indexToShow = notification?.Index ?? parentIndex;
   return (
     <div className={styles.notification}>
-      {notification?.Index && <span>{notification.Index}</span>} |{' '}
+      {indexToShow && <span>{indexToShow}</span>} |{' '}
       {notification?.Metadata?.TxnType && <span>{notification.Metadata.TxnType}</span>}
     </div>
   );

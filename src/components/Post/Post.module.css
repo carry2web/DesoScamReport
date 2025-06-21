@@ -421,12 +421,13 @@
   }
 
   .post {
-    padding: calc(var(--spacing-md) - 2px) var(--spacing-md);
+    padding: var(--spacing-md);
     border-radius: var(--radius-sm);
   }
 
   .comment{
     border-radius: 0;
+    padding: var(--spacing-sm);
   }
 
   .postLink{

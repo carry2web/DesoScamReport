@@ -6,3 +6,4 @@ export { NotificationReaction } from "./NotificationReaction";
 export { NotificationTransfer } from "./NotificationTransfer";
 export { NotificationDaoCoinTransfer } from "./NotificationDaoCoinTransfer";
 export { NotificationUserAssociation } from "./NotificationUserAssociation";
+export { NotificationDaoCoinLimitOrder } from './NotificationDaoCoinLimitOrder';
