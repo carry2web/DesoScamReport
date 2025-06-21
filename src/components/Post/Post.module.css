@@ -429,6 +429,10 @@
     border-radius: 0;
   }
 
+  .postLink{
+    font-size: var(--font-size-sm);
+  }  
+
 }
 
 @media (max-width: 510px) {

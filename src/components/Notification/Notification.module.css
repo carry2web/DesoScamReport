@@ -248,4 +248,7 @@
         display: block;
     }
 
+    .postLink{
+      font-size: var(--font-size-sm);
+    }
 }
