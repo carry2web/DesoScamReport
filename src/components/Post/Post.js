@@ -49,13 +49,6 @@ export const Post = ({ post, username, userProfile, isQuote, isComment, isInThre
     return queryClient.getQueryData(uiKeys.rawVisible(PostHashHex)) ?? false;
   });  
 
-  const rawUsername =
-    username || ProfileEntryResponse?.Username || PosterPublicKeyBase58Check || 'Unknown';
-
-  const isPublicKey = isMaybePublicKey(rawUsername);
-  const lookupKey = !isPublicKey && rawUsername.startsWith('@') ? rawUsername.slice(1) : rawUsername;
-  const displayName = ProfileEntryResponse?.ExtraData?.DisplayName || userProfile?.ExtraData?.DisplayName;
-
   const [showReplies, setShowReplies] = useState(() => {
     return queryClient.getQueryData(uiKeys.commentsVisible(PostHashHex)) ?? false;
   });
@@ -113,6 +106,13 @@ export const Post = ({ post, username, userProfile, isQuote, isComment, isInThre
     refetchOnReconnect: false, // Important: prevents wake-from-sleep issues
     retry: false, // Don't retry failed comment loads
   });
+
+  const rawUsername =
+    username || ProfileEntryResponse?.Username || PosterPublicKeyBase58Check || 'Unknown';
+
+  const isPublicKey = isMaybePublicKey(rawUsername);
+  const lookupKey = !isPublicKey && rawUsername.startsWith('@') ? rawUsername.slice(1) : rawUsername;
+  const displayName = ProfileEntryResponse?.ExtraData?.DisplayName || userProfile?.ExtraData?.DisplayName;  
 
   const comments = data?.pages.flatMap((page) => page.comments) || [];
 
