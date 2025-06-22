@@ -24,7 +24,11 @@ import styles from './Post.module.css';
 const COMMENT_LIMIT = 10;
 
 export const Post = ({ post, username, userProfile, isQuote, isComment, isInThread, isHighlighted, isStatsDisabled = false }) => {
-  if (!post) return null;
+
+  // Avoid hydration mismatch by skipping render until fully mounted.
+  // This prevents server-rendered HTML from differing from client-rendered DOM.  
+  const [isHydrated, setIsHydrated] = useState(false);
+  useEffect(() => setIsHydrated(true), []);
 
   const {
     PostHashHex,
@@ -39,24 +43,40 @@ export const Post = ({ post, username, userProfile, isQuote, isComment, isInThre
     TimestampNanos
   } = post;
 
-  const [isHydrated, setIsHydrated] = useState(false);
-
-  useEffect(() => {
-    setIsHydrated(true);
-  }, []);  
 
   const { getSinglePost } = useDeSoApi();
   const queryClient = useQueryClient();
 
   const shouldFetchFirstPage = useRef(false);
 
-  const [showRaw, setShowRaw] = useState(() => {
-    return queryClient.getQueryData(uiKeys.rawVisible(PostHashHex)) ?? false;
-  });  
+  // const [showRaw, setShowRaw] = useState(() => {
+  //   return queryClient.getQueryData(uiKeys.rawVisible(PostHashHex)) ?? false;
+  // });  
 
-  const [showReplies, setShowReplies] = useState(() => {
-    return queryClient.getQueryData(uiKeys.commentsVisible(PostHashHex)) ?? false;
-  });
+  // We initialize to `false` and update after hydration to avoid SSR mismatch.
+  // Do NOT use `useState(() => queryClient.getQueryData(...))` here, as it causes
+  // React hydration errors when the server and client render different values.  
+  const [showRaw, setShowRaw] = useState(false);
+
+  useEffect(() => {
+    const cached = queryClient.getQueryData(uiKeys.rawVisible(PostHashHex));
+    if (cached !== undefined) {
+      setShowRaw(cached);
+    }
+  }, [PostHashHex]);  
+
+  // const [showReplies, setShowReplies] = useState(() => {
+  //   return queryClient.getQueryData(uiKeys.commentsVisible(PostHashHex)) ?? false;
+  // });
+
+  const [showReplies, setShowReplies] = useState(false);
+
+  useEffect(() => {
+    const cached = queryClient.getQueryData(uiKeys.commentsVisible(PostHashHex));
+    if (cached !== undefined) {
+      setShowReplies(cached);
+    }
+  }, [PostHashHex]);  
 
   const {
     data,
@@ -122,26 +142,19 @@ export const Post = ({ post, username, userProfile, isQuote, isComment, isInThre
   const comments = data?.pages.flatMap((page) => page.comments) || [];
 
 
-  const newCommentsVisible = queryClient.getQueryData(uiKeys.newCommentsVisible(PostHashHex)) ?? true;
+  // const newCommentsVisible = queryClient.getQueryData(uiKeys.newCommentsVisible(PostHashHex)) ?? true;
+
+  const [newCommentsVisible, setNewCommentsVisible] = useState(true);
+
+  useEffect(() => {
+    const cached = queryClient.getQueryData(uiKeys.newCommentsVisible(PostHashHex));
+    if (cached !== undefined) setNewCommentsVisible(cached);
+  }, [PostHashHex]);  
 
   const injectedComments = newCommentsVisible
     ? data?.pages?.[0]?.comments?.filter(c => c.isLocal) || []
     : [];  
 
-
-  // ✅ NOW CHECK FOR THREAD RENDERING - AFTER ALL HOOKS
-  const hasParentPosts = ParentPosts && Array.isArray(ParentPosts) && ParentPosts.length > 0;
-  
-  if (hasParentPosts && !isInThread && isHydrated) {
-    return (
-      <PostThread 
-        parentPosts={ParentPosts}
-        currentPost={post}
-        username={username}
-        userProfile={userProfile}
-      />
-    );
-  }
     
   const toggleReplies = () => {
     const newVisible = !showReplies;
@@ -252,6 +265,25 @@ export const Post = ({ post, username, userProfile, isQuote, isComment, isInThre
       }
     }
   };
+
+  // 🔒 Safe render guard
+  if (!post || !isHydrated) {
+    return <div style={{ visibility: 'hidden', height: 0 }} />; // Or loading skeleton
+  }  
+
+  // ✅ NOW CHECK FOR THREAD RENDERING - AFTER ALL HOOKS
+  const hasParentPosts = ParentPosts && Array.isArray(ParentPosts) && ParentPosts.length > 0;
+  
+  if (hasParentPosts && !isInThread) {
+    return (
+      <PostThread 
+        parentPosts={ParentPosts}
+        currentPost={post}
+        username={username}
+        userProfile={userProfile}
+      />
+    );
+  }    
 
   return (
     <div 
