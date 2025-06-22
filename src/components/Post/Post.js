@@ -53,6 +53,9 @@ export const Post = ({ post, username, userProfile, isQuote, isComment, isInThre
   //   return queryClient.getQueryData(uiKeys.rawVisible(PostHashHex)) ?? false;
   // });  
 
+  // We initialize to `false` and update after hydration to avoid SSR mismatch.
+  // Do NOT use `useState(() => queryClient.getQueryData(...))` here, as it causes
+  // React hydration errors when the server and client render different values.  
   const [showRaw, setShowRaw] = useState(false);
 
   useEffect(() => {
