@@ -24,7 +24,9 @@ import styles from './Post.module.css';
 const COMMENT_LIMIT = 10;
 
 export const Post = ({ post, username, userProfile, isQuote, isComment, isInThread, isHighlighted, isStatsDisabled = false }) => {
-  if (!post) return null;
+
+  const [isHydrated, setIsHydrated] = useState(false);
+  useEffect(() => setIsHydrated(true), []);
 
   const {
     PostHashHex,
@@ -38,6 +40,7 @@ export const Post = ({ post, username, userProfile, isQuote, isComment, isInThre
     ProfileEntryResponse,
     TimestampNanos
   } = post;
+
 
   // const [isHydrated, setIsHydrated] = useState(false);
 
@@ -140,7 +143,14 @@ useEffect(() => {
   const comments = data?.pages.flatMap((page) => page.comments) || [];
 
 
-  const newCommentsVisible = queryClient.getQueryData(uiKeys.newCommentsVisible(PostHashHex)) ?? true;
+  // const newCommentsVisible = queryClient.getQueryData(uiKeys.newCommentsVisible(PostHashHex)) ?? true;
+
+const [newCommentsVisible, setNewCommentsVisible] = useState(true);
+
+useEffect(() => {
+  const cached = queryClient.getQueryData(uiKeys.newCommentsVisible(PostHashHex));
+  if (cached !== undefined) setNewCommentsVisible(cached);
+}, [PostHashHex]);  
 
   const injectedComments = newCommentsVisible
     ? data?.pages?.[0]?.comments?.filter(c => c.isLocal) || []
@@ -270,6 +280,11 @@ useEffect(() => {
       }
     }
   };
+
+  // 🔒 Safe render guard
+  if (!post || !isHydrated) {
+    return <div style={{ visibility: 'hidden', height: 0 }} />; // Or loading skeleton
+  }  
 
   return (
     <div 
