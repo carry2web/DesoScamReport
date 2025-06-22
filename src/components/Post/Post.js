@@ -3,7 +3,7 @@
 import { useDeSoApi } from '@/api/useDeSoApi';
 import { useQueryClient, useInfiniteQuery } from '@tanstack/react-query';
 import Link from 'next/link';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 import { MarkdownText } from '@/components/MarkdownText';
 import { Avatar } from '@/components/Avatar';
@@ -39,6 +39,11 @@ export const Post = ({ post, username, userProfile, isQuote, isComment, isInThre
     TimestampNanos
   } = post;
 
+  const [isHydrated, setIsHydrated] = useState(false);
+
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);  
 
   const { getSinglePost } = useDeSoApi();
   const queryClient = useQueryClient();
@@ -127,7 +132,7 @@ export const Post = ({ post, username, userProfile, isQuote, isComment, isInThre
   // ✅ NOW CHECK FOR THREAD RENDERING - AFTER ALL HOOKS
   const hasParentPosts = ParentPosts && Array.isArray(ParentPosts) && ParentPosts.length > 0;
   
-  if (hasParentPosts && !isInThread) {
+  if (hasParentPosts && !isInThread && isHydrated) {
     return (
       <PostThread 
         parentPosts={ParentPosts}
