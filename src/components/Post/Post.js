@@ -25,8 +25,8 @@ const COMMENT_LIMIT = 10;
 
 export const Post = ({ post, username, userProfile, isQuote, isComment, isInThread, isHighlighted, isStatsDisabled = false }) => {
 
-  // const [isHydrated, setIsHydrated] = useState(false);
-  // useEffect(() => setIsHydrated(true), []);
+  const [isHydrated, setIsHydrated] = useState(false);
+  useEffect(() => setIsHydrated(true), []);
 
   const {
     PostHashHex,
@@ -262,13 +262,13 @@ export const Post = ({ post, username, userProfile, isQuote, isComment, isInThre
   };
 
   // 🔒 Safe render guard
-  // if (!post || !isHydrated) {
-  //   return <div style={{ visibility: 'hidden', height: 0 }} />; // Or loading skeleton
-  // }  
-
-  if (!post) {
-    return null; // Or loading skeleton
+  if (!post || !isHydrated) {
+    return <div style={{ visibility: 'hidden', height: 0 }} />; // Or loading skeleton
   }  
+
+  // if (!post) {
+  //   return null; // Or loading skeleton
+  // }  
 
   // ✅ NOW CHECK FOR THREAD RENDERING - AFTER ALL HOOKS
   const hasParentPosts = ParentPosts && Array.isArray(ParentPosts) && ParentPosts.length > 0;
