@@ -25,6 +25,8 @@ const COMMENT_LIMIT = 10;
 
 export const Post = ({ post, username, userProfile, isQuote, isComment, isInThread, isHighlighted, isStatsDisabled = false }) => {
 
+  // Avoid hydration mismatch by skipping render until fully mounted.
+  // This prevents server-rendered HTML from differing from client-rendered DOM.  
   const [isHydrated, setIsHydrated] = useState(false);
   useEffect(() => setIsHydrated(true), []);
 
@@ -265,10 +267,6 @@ export const Post = ({ post, username, userProfile, isQuote, isComment, isInThre
   if (!post || !isHydrated) {
     return <div style={{ visibility: 'hidden', height: 0 }} />; // Or loading skeleton
   }  
-
-  // if (!post) {
-  //   return null; // Or loading skeleton
-  // }  
 
   // ✅ NOW CHECK FOR THREAD RENDERING - AFTER ALL HOOKS
   const hasParentPosts = ParentPosts && Array.isArray(ParentPosts) && ParentPosts.length > 0;
