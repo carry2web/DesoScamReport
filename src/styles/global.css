@@ -8,6 +8,7 @@
 html {
   color-scheme: dark light;
   /* This allows user agent styles (like scrollbars) to match the theme */
+  scroll-padding-top: var(--navbar-height);
 }
 
 body {

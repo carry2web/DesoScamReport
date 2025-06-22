@@ -1,0 +1,98 @@
+/* PostThread.module.css */
+.threadContainer {
+  position: relative;
+}
+
+.threadPostWrapper {
+  position: relative;
+}
+
+.targetPost {
+  scroll-margin-top: var(--spacing-lg) /* navbar height + extra padding */
+}
+
+.threadExpansion {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.showThreadButton {
+    background: none;
+    border: none;
+    color: var(--color-accent);
+    cursor: pointer;
+    padding: 0;
+    border: 1px solid var(--color-border);
+    background-color: var(--color-surface);
+    border-radius: var(--radius-sm);
+    text-align: center;
+
+    font-size: var(--font-size-sm);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;    
+
+    padding: var(--spacing-xs) var(--spacing-md);
+    gap: var(--spacing-xs);
+    height: 32px;
+    line-height: 32px;
+}
+
+.showThreadButton:hover {
+    background-color: var(--color-surface-alt);
+}
+
+.threadIndicator {
+    margin-bottom: 1px;
+}
+
+.threadConnector {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.threadContinuation {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.threadCollapse {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.collapseThreadButton {
+    background: none;
+    border: none;
+    color: var(--color-accent);
+    cursor: pointer;
+    padding: 0;
+    border: 1px solid var(--color-border);
+    background-color: var(--color-surface);
+    border-radius: var(--radius-sm);
+    text-align: center;
+
+    font-size: var(--font-size-sm);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;    
+
+    padding: var(--spacing-xs) var(--spacing-md);
+    gap: var(--spacing-xs);
+    height: 32px;
+    line-height: 32px;
+
+    margin-bottom: 15px
+}
+
+.threadDelimeter {
+    height: 15px;
+    width: 1px;
+    background-color: var(--color-border);
+}

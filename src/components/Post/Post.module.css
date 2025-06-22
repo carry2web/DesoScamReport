@@ -396,6 +396,31 @@
   animation: fadePulse 0.5s ease-in-out infinite;
 }
 
+
+.highlighted {
+  /* background: var(--color-accent-subtle); */
+  border-left: 3px solid var(--color-accent);
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+/* Enhanced border effect */
+.highlighted::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(
+    to bottom, 
+    var(--color-accent), 
+    var(--color-accent-hover)
+  );
+  border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+}
+
+
 @keyframes fadePulse {
   0%, 100% {
     opacity: 1;
@@ -424,6 +449,12 @@
     padding: var(--spacing-md);
     border-radius: var(--radius-sm);
   }
+
+  /* Enhanced border effect */
+  .highlighted::before {
+    width: 1px;
+    border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+  }  
 
   .comment{
     border-radius: 0;
