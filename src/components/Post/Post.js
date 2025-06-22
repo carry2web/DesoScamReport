@@ -3,7 +3,7 @@
 import { useDeSoApi } from '@/api/useDeSoApi';
 import { useQueryClient, useInfiniteQuery } from '@tanstack/react-query';
 import Link from 'next/link';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 import { MarkdownText } from '@/components/MarkdownText';
 import { Avatar } from '@/components/Avatar';
@@ -50,13 +50,31 @@ export const Post = ({ post, username, userProfile, isQuote, isComment, isInThre
 
   const shouldFetchFirstPage = useRef(false);
 
-  const [showRaw, setShowRaw] = useState(() => {
-    return queryClient.getQueryData(uiKeys.rawVisible(PostHashHex)) ?? false;
-  });  
+  // const [showRaw, setShowRaw] = useState(() => {
+  //   return queryClient.getQueryData(uiKeys.rawVisible(PostHashHex)) ?? false;
+  // });  
 
-  const [showReplies, setShowReplies] = useState(() => {
-    return queryClient.getQueryData(uiKeys.commentsVisible(PostHashHex)) ?? false;
-  });
+const [showRaw, setShowRaw] = useState(false);
+
+useEffect(() => {
+  const cached = queryClient.getQueryData(uiKeys.rawVisible(PostHashHex));
+  if (cached !== undefined) {
+    setShowRaw(cached);
+  }
+}, [PostHashHex]);  
+
+  // const [showReplies, setShowReplies] = useState(() => {
+  //   return queryClient.getQueryData(uiKeys.commentsVisible(PostHashHex)) ?? false;
+  // });
+
+const [showReplies, setShowReplies] = useState(false);
+
+useEffect(() => {
+  const cached = queryClient.getQueryData(uiKeys.commentsVisible(PostHashHex));
+  if (cached !== undefined) {
+    setShowReplies(cached);
+  }
+}, [PostHashHex]);  
 
   const {
     data,
