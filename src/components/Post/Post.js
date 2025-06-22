@@ -39,17 +39,6 @@ export const Post = ({ post, username, userProfile, isQuote, isComment, isInThre
     TimestampNanos
   } = post;
 
-  // Check if we should render as a thread
-  const hasParentPosts = ParentPosts && Array.isArray(ParentPosts) && ParentPosts.length > 0;
-  
-  if (hasParentPosts && !isInThread) {
-    return (
-      <PostThread 
-        parentPosts={ParentPosts}
-        currentPost={post}
-      />
-    );
-  }
 
   const { getSinglePost } = useDeSoApi();
   const queryClient = useQueryClient();
@@ -134,6 +123,20 @@ export const Post = ({ post, username, userProfile, isQuote, isComment, isInThre
     ? data?.pages?.[0]?.comments?.filter(c => c.isLocal) || []
     : [];  
 
+
+  // ✅ NOW CHECK FOR THREAD RENDERING - AFTER ALL HOOKS
+  const hasParentPosts = ParentPosts && Array.isArray(ParentPosts) && ParentPosts.length > 0;
+  
+  if (hasParentPosts && !isInThread) {
+    return (
+      <PostThread 
+        parentPosts={ParentPosts}
+        currentPost={post}
+        username={username}
+        userProfile={userProfile}
+      />
+    );
+  }
     
   const toggleReplies = () => {
     const newVisible = !showReplies;
