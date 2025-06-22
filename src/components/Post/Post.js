@@ -10,16 +10,20 @@ import { Avatar } from '@/components/Avatar';
 import { isMaybePublicKey } from '@/utils/profileUtils';
 import { formatTimestampNanos } from '@/utils/dateUtils';
 
+import { PostThread } from '@/components/PostThread';
+
 import { PostStats } from './PostStats';
 import { VideoGallery } from './VideoGallery';
 import { ImageGallery } from './ImageGallery';
 
 import { queryKeys, uiKeys } from '@/queries';
+
+import classNames from 'classnames';
 import styles from './Post.module.css';
 
 const COMMENT_LIMIT = 10;
 
-export const Post = ({ post, username, userProfile, isQuote, isComment, isStatsDisabled = false }) => {
+export const Post = ({ post, username, userProfile, isQuote, isComment, isInThread, isHighlighted, isStatsDisabled = false }) => {
   if (!post) return null;
 
   const {
@@ -28,11 +32,24 @@ export const Post = ({ post, username, userProfile, isQuote, isComment, isStatsD
     ImageURLs,
     VideoURLs,
     CommentCount,
+    ParentPosts,
     RepostedPostEntryResponse,
     PosterPublicKeyBase58Check,
     ProfileEntryResponse,
     TimestampNanos
   } = post;
+
+  // Check if we should render as a thread
+  const hasParentPosts = ParentPosts && Array.isArray(ParentPosts) && ParentPosts.length > 0;
+  
+  if (hasParentPosts && !isInThread) {
+    return (
+      <PostThread 
+        parentPosts={ParentPosts}
+        currentPost={post}
+      />
+    );
+  }
 
   const { getSinglePost } = useDeSoApi();
   const queryClient = useQueryClient();
@@ -229,7 +246,14 @@ export const Post = ({ post, username, userProfile, isQuote, isComment, isStatsD
   };
 
   return (
-    <div className={`${styles.post} ${isQuote ? styles.quote : ''} ${isComment ? styles.comment : ''}`}>
+    <div 
+      className={classNames(styles.post, {
+        [styles.quote]: isQuote,
+        [styles.comment]: isComment,
+        [styles.highlighted]: isHighlighted
+      })}    
+      // className={`${styles.post} ${isQuote ? styles.quote : ''} ${isComment ? styles.comment : ''}`}
+    >
 
       {!isComment && (
         <div className={styles.avatarContainer}>
@@ -296,7 +320,7 @@ export const Post = ({ post, username, userProfile, isQuote, isComment, isStatsD
 
         {RepostedPostEntryResponse && (
           <div className={styles.repost}>
-            <Post post={RepostedPostEntryResponse} isQuote isStatsDisabled={isStatsDisabled}/>
+            <Post post={RepostedPostEntryResponse} isQuote isStatsDisabled={isStatsDisabled} isInThread={isInThread}/>
           </div>
         )}
 
@@ -359,7 +383,7 @@ export const Post = ({ post, username, userProfile, isQuote, isComment, isStatsD
               <div className={styles.repliesContainer}>
                 <div className={styles.replies}>
                   {injectedComments.map((comment) => (
-                    <Post key={comment.PostHashHex} post={comment} isComment />
+                    <Post key={comment.PostHashHex} post={comment} isComment isInThread={isInThread}/>
                   ))}
                 </div>
               </div>
@@ -369,7 +393,7 @@ export const Post = ({ post, username, userProfile, isQuote, isComment, isStatsD
               <div className={styles.repliesContainer}>
                 <div className={styles.replies}>
                   {comments.map((comment) => (
-                    <Post key={comment.PostHashHex} post={comment} isComment />
+                    <Post key={comment.PostHashHex} post={comment} isComment isInThread={isInThread}/>
                   ))}
                 </div>
                 {hasNextPage && (
