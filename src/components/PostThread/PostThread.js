@@ -127,8 +127,8 @@ export const PostThread = ({ parentPosts, currentPost, username, userProfile }) 
             
             <Post 
               post={parentPost} 
-            //   isComment={true}
-              isStatsDisabled={true}
+              // isComment={true}
+              // isStatsDisabled={true}
               isInThread={true}
             />
             
