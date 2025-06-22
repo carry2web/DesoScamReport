@@ -3,14 +3,14 @@
 import { useDeSoApi } from '@/api/useDeSoApi';
 import { useQueryClient, useInfiniteQuery } from '@tanstack/react-query';
 import Link from 'next/link';
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 
 import { MarkdownText } from '@/components/MarkdownText';
 import { Avatar } from '@/components/Avatar';
 import { isMaybePublicKey } from '@/utils/profileUtils';
 import { formatTimestampNanos } from '@/utils/dateUtils';
 
-import { PostThread } from '@/components/PostThread';
+//import { PostThread } from '@/components/PostThread';
 
 import { PostStats } from './PostStats';
 import { VideoGallery } from './VideoGallery';
@@ -32,18 +32,18 @@ export const Post = ({ post, username, userProfile, isQuote, isComment, isInThre
     ImageURLs,
     VideoURLs,
     CommentCount,
-    ParentPosts,
+    //ParentPosts,
     RepostedPostEntryResponse,
     PosterPublicKeyBase58Check,
     ProfileEntryResponse,
     TimestampNanos
   } = post;
 
-  const [isHydrated, setIsHydrated] = useState(false);
+  // const [isHydrated, setIsHydrated] = useState(false);
 
-  useEffect(() => {
-    setIsHydrated(true);
-  }, []);  
+  // useEffect(() => {
+  //   setIsHydrated(true);
+  // }, []);  
 
   const { getSinglePost } = useDeSoApi();
   const queryClient = useQueryClient();
@@ -130,18 +130,18 @@ export const Post = ({ post, username, userProfile, isQuote, isComment, isInThre
 
 
   // ✅ NOW CHECK FOR THREAD RENDERING - AFTER ALL HOOKS
-  const hasParentPosts = ParentPosts && Array.isArray(ParentPosts) && ParentPosts.length > 0;
+  // const hasParentPosts = ParentPosts && Array.isArray(ParentPosts) && ParentPosts.length > 0;
   
-  if (hasParentPosts && !isInThread && isHydrated) {
-    return (
-      <PostThread 
-        parentPosts={ParentPosts}
-        currentPost={post}
-        username={username}
-        userProfile={userProfile}
-      />
-    );
-  }
+  // if (hasParentPosts && !isInThread && isHydrated) {
+  //   return (
+  //     <PostThread 
+  //       parentPosts={ParentPosts}
+  //       currentPost={post}
+  //       username={username}
+  //       userProfile={userProfile}
+  //     />
+  //   );
+  // }
     
   const toggleReplies = () => {
     const newVisible = !showReplies;
