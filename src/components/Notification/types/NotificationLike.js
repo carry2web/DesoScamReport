@@ -1,4 +1,4 @@
-// components/Notification/types/NotificationDiamond.js
+// components/Notification/types/NotificationLike.js
 "use client";
 
 import Link from 'next/link';
@@ -6,7 +6,8 @@ import { Avatar } from '@/components/Avatar';
 import { isMaybePublicKey } from '@/utils/profileUtils';
 import styles from '../Notification.module.css';
 
-export const NotificationDiamond = ({ profile, publicKey, post, diamondLevel, isFocusTip }) => {
+// IsUnlike is always false since IsUnlike: true is not added to notifications
+export const NotificationLike = ({ profile, publicKey, post }) => {
     const username = profile?.Username || publicKey;
 
     const isPublicKey = isMaybePublicKey(username);
@@ -20,17 +21,7 @@ export const NotificationDiamond = ({ profile, publicKey, post, diamondLevel, is
     return (
         <div className={styles.notification}>
 
-            {
-                isFocusTip 
-                ? <div role="img" aria-label="info" className={styles.infoIcon}>ℹ️</div>
-                :
-                <div role="img" aria-label="diamond" className={styles.diamondsIcon}>
-                    {Array.from({ length: diamondLevel }, (_, i) => (
-                        <div key={i}>💎</div>
-                    ))}
-                </div>                
-            }
-
+            <div role="img" aria-label="like" className={styles.likeIcon}>❤️</div>
 
             <div className={styles.notificationContent}>
 
@@ -42,11 +33,7 @@ export const NotificationDiamond = ({ profile, publicKey, post, diamondLevel, is
 
                     <div className={styles.notificationSummary}>
 
-                        {
-                            isFocusTip
-                            ? <div className={styles.focusTipText}>Your post tipped via <Link href={`/${username}`}>{lookupKey}</Link></div>
-                            : <div><Link href={`/${username}`}>{lookupKey}</Link> diamonded your post</div> 
-                        }                        
+                        <div><Link href={`/${username}`}>{lookupKey}</Link> liked your post</div>                    
 
                         {hasPostLink && (
                             <div className={styles.postLinkWrapper}>
@@ -55,7 +42,7 @@ export const NotificationDiamond = ({ profile, publicKey, post, diamondLevel, is
                                     className={styles.postLink}
                                     prefetch={false}
                                 >
-                                    {postHash}
+                                  {postHash}
                                 </Link>
                             </div>
                         )}
@@ -72,3 +59,4 @@ export const NotificationDiamond = ({ profile, publicKey, post, diamondLevel, is
         </div>
     );
 };
+

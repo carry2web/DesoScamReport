@@ -7,3 +7,4 @@ export { NotificationTransfer } from "./NotificationTransfer";
 export { NotificationDaoCoinTransfer } from "./NotificationDaoCoinTransfer";
 export { NotificationUserAssociation } from "./NotificationUserAssociation";
 export { NotificationDaoCoinLimitOrder } from './NotificationDaoCoinLimitOrder';
+export { NotificationLike } from './NotificationLike';

@@ -9,6 +9,7 @@ import {
   NotificationDaoCoinTransfer,
   NotificationUserAssociation,
   NotificationDaoCoinLimitOrder,
+  NotificationLike
 } from './types';
 
 export function renderNotificationComponent({ notification, postsByHash, profilesByPublicKey, key, parentIndex }) {
@@ -32,6 +33,18 @@ export function renderNotificationComponent({ notification, postsByHash, profile
           key={key}
         />
       );
+    case 'LIKE': {
+      const { LikeTxindexMetadata: transferMeta } = Metadata || {};
+      const post = postsByHash?.[transferMeta.PostHashHex];
+      return (
+        <NotificationLike
+          profile={profile}
+          publicKey={publicKey}
+          post={post}
+          key={key}
+        />
+      );         
+    }     
     case 'SUBMIT_POST':
       return (
         <NotificationSubmitPost

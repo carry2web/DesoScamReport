@@ -85,7 +85,7 @@
     top: -5px;  
 }
 
-.diamondsIcon, .followIcon, .reactionIcon, .transferIcon, .infoIcon, .associationIcon {
+.diamondsIcon, .followIcon, .reactionIcon, .transferIcon, .infoIcon, .associationIcon, .likeIcon {
     display: flex;
     flex-direction: column;
     font-size: var(--font-size-lg);
