@@ -17,6 +17,10 @@
     position: relative;
   }
 
+  .post pre{
+    margin: 0;
+  }
+
   .postBody{
     overflow-wrap: anywhere;
     word-break: normal;
@@ -353,6 +357,12 @@
   display: flex;
   flex-wrap: wrap;
   gap: var(--spacing-md);
+  overflow-wrap: anywhere;
+  word-break: normal;
+  width: 100%;  
+}
+
+.embedMediaRaw{
   overflow-wrap: anywhere;
   word-break: normal;
   width: 100%;  
