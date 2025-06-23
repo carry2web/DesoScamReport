@@ -15,6 +15,7 @@ import { PostThread } from '@/components/PostThread';
 import { PostStats } from './PostStats';
 import { VideoGallery } from './VideoGallery';
 import { ImageGallery } from './ImageGallery';
+import { EmbedMedia } from './EmbedMedia';
 
 import { queryKeys, uiKeys } from '@/queries';
 
@@ -40,7 +41,8 @@ export const Post = ({ post, username, userProfile, isQuote, isComment, isInThre
     RepostedPostEntryResponse,
     PosterPublicKeyBase58Check,
     ProfileEntryResponse,
-    TimestampNanos
+    TimestampNanos,
+    PostExtraData
   } = post;
 
 
@@ -357,6 +359,17 @@ export const Post = ({ post, username, userProfile, isQuote, isComment, isInThre
 
         <VideoGallery Body={Body} VideoURLs={VideoURLs} showRaw={showRaw} />
 
+        {PostExtraData?.EmbedVideoURL && (
+          showRaw ? (
+            <div className={styles.embedMediaRaw}>
+              <pre>{PostExtraData.EmbedVideoURL}</pre>
+            </div>
+          ) : (
+            <EmbedMedia
+              url={PostExtraData.EmbedVideoURL}
+            />
+          )
+        )}
 
         {RepostedPostEntryResponse && (
           <div className={styles.repost}>
