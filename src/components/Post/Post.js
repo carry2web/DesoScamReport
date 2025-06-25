@@ -28,8 +28,8 @@ export const Post = ({ post, username, userProfile, isQuote, isComment, isInThre
 
   // Avoid hydration mismatch by skipping render until fully mounted.
   // This prevents server-rendered HTML from differing from client-rendered DOM.  
-  const [isHydrated, setIsHydrated] = useState(false);
-  useEffect(() => setIsHydrated(true), []);
+  // const [isHydrated, setIsHydrated] = useState(false);
+  // useEffect(() => setIsHydrated(true), []);
 
   const {
     PostHashHex,
@@ -269,9 +269,14 @@ export const Post = ({ post, username, userProfile, isQuote, isComment, isInThre
   };
 
   // 🔒 Safe render guard
-  if (!post || !isHydrated) {
-    return <div style={{ visibility: 'hidden', height: 0 }} />; // Or loading skeleton
-  }  
+  // if (!post || !isHydrated) {
+  //   return <div style={{ visibility: 'hidden', height: 0 }} />; // Or loading skeleton
+  // }  
+
+  // If post is not defined, return null to avoid rendering issues
+  if (!post) {
+    return null
+  }    
 
   // ✅ NOW CHECK FOR THREAD RENDERING - AFTER ALL HOOKS
   const hasParentPosts = ParentPosts && Array.isArray(ParentPosts) && ParentPosts.length > 0;
