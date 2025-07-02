@@ -3,8 +3,7 @@
 import { useDeSoApi } from '@/api/useDeSoApi';
 import { useQuery } from '@tanstack/react-query';
 import { queryKeys } from '@/queries';
-import { Page } from "@/components/Page";
-import { Post } from "@/components/Post";
+import { Post, PostPlaceholder } from "@/components/Post";
 
 export const SinglePostPageClient = ({ postHash, rawParam }) => {
   const { getSinglePost } = useDeSoApi();
@@ -24,9 +23,15 @@ export const SinglePostPageClient = ({ postHash, rawParam }) => {
     // refetchOnReconnect: false (fixes wake-from-sleep), etc.
   });
 
-  if (isLoading) return <Page><p>Loading post...</p></Page>;
-  if (isError) return <Page><p style={{ color: 'red' }}>{error.message}</p></Page>;
-  if (!data) return <Page><p>Post not found.</p></Page>;
+  // if (isLoading) return <p>Loading post...</p>;
+  // we actually never get loading state here since loading is on server side
+  if (isLoading) {
+    return (
+      <PostPlaceholder />
+    );
+  }  
+  if (isError) return <p style={{ color: 'red' }}>{error.message}</p>;
+  if (!data) return <p>Post not found.</p>;
 
   return (
     <Post post={data} username={rawParam} />

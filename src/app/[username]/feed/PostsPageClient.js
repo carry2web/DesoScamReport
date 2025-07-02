@@ -4,7 +4,7 @@ import { useDeSoApi } from '@/api/useDeSoApi';
 import { isMaybePublicKey } from '@/utils/profileUtils';
 import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
 import { useRef, useEffect } from 'react';
-import { Post } from '@/components/Post';
+import { Post, PostPlaceholder } from '@/components/Post';
 import { queryKeys } from '@/queries';
 
 import { UserQuickLinks } from '@/components/UserQuickLinks';
@@ -109,7 +109,19 @@ export const PostsPageClient = ({ rawParam }) => {
     };
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
-  if (isLoading) return <p>Loading posts...</p>;
+  // if (isLoading) return <p>Loading posts...</p>;
+  if (isLoading) {
+    return (
+      <>
+        <UserQuickLinks profile={userProfile} rawParam={rawParam} />
+        <div className={styles.postsContainer}>
+          {Array.from({ length: POSTS_PER_PAGE }).map((_, index) => (
+            <PostPlaceholder key={index} />
+          ))}
+        </div>
+      </>
+    );
+  }  
   if (error) return <p style={{ color: 'red' }}>{error.message}</p>;
 
   const posts = data?.pages.flatMap((page) => page.PostsFound || []) || [];
@@ -129,10 +141,18 @@ export const PostsPageClient = ({ rawParam }) => {
             />
           </div>
         ))}
+
+        {isFetchingNextPage && (
+          <>
+            {Array.from({ length: POSTS_PER_PAGE }).map((_, index) => (
+              <PostPlaceholder key={`loading-more-${index}`} />
+            ))}
+          </>
+        )}            
       </div>
 
       <div ref={loadMoreRef} style={{ height: '1px' }} />
-      {isFetchingNextPage && <p>Loading more...</p>}
+      {/* {isFetchingNextPage && <p>Loading more...</p>} */}
     </>
   );
 };
