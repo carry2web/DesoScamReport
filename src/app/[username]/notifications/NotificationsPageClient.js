@@ -4,7 +4,7 @@ import { useDeSoApi } from '@/api/useDeSoApi';
 import { isMaybePublicKey } from '@/utils/profileUtils';
 import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
 import { useRef, useEffect } from 'react';
-import { Notification } from '@/components/Notification';
+import { Notification, NotificationPlaceholder } from '@/components/Notification';
 import { queryKeys } from '@/queries';
 
 import { UserQuickLinks } from '@/components/UserQuickLinks'; 
@@ -115,7 +115,19 @@ export const NotificationsPageClient = ({ rawParam }) => {
 
   if (isProfileLoading) return <p>Loading profile...</p>;
   if (isProfileError) return <p style={{ color: 'red' }}>{profileError.message}</p>;
-  if (isLoading) return <p>Loading notifications...</p>;
+  // if (isLoading) return <p>Loading notifications...</p>;
+  if (isLoading) {
+    return (
+      <>
+        <UserQuickLinks profile={userProfile} rawParam={rawParam} />
+        <div className={styles.notificationsContainer}>
+          {Array.from({ length: NOTIFICATIONS_PER_PAGE }).map((_, index) => (
+            <NotificationPlaceholder key={index} />
+          ))}
+        </div>
+      </>
+    );
+  }    
   if (error) return <p style={{ color: 'red' }}>{error.message}</p>;
 
   const notifications = data?.pages.flatMap((page) => page.Notifications || []) || [];
@@ -149,10 +161,18 @@ export const NotificationsPageClient = ({ rawParam }) => {
             />
           </div>
         ))}
+
+        {isFetchingNextPage && (
+          <>
+            {Array.from({ length: NOTIFICATIONS_PER_PAGE }).map((_, index) => (
+              <NotificationPlaceholder key={`loading-more-${index}`} />
+            ))}
+          </>
+        )}         
       </div>
 
       <div ref={loadMoreRef} style={{ height: '1px' }} />
-      {isFetchingNextPage && <p>Loading more notifications...</p>}
+      {/* {isFetchingNextPage && <p>Loading more notifications...</p>} */}
     </>
   );
 };

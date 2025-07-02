@@ -16,10 +16,6 @@ a.button,
     line-height: var(--line-height-base);
     box-sizing: border-box;
   }
-
-  a.button:hover {
-    color: initial; /* Reset link color on hover */
-  }
   
   /* Variants */
   a.primary,
