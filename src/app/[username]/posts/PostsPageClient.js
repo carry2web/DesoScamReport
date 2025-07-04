@@ -11,9 +11,9 @@ import { UserQuickLinks } from '@/components/UserQuickLinks';
 
 import styles from './page.module.css';
 
-const POSTS_PER_PAGE = 10;
+export const PostsPageClient = ({ rawParam, POSTS_PER_PAGE = 10 }) => {
 
-export const PostsPageClient = ({ rawParam }) => {
+  
   const isPublicKey = isMaybePublicKey(rawParam);
   const lookupKey = isPublicKey
     ? rawParam
@@ -78,6 +78,7 @@ export const PostsPageClient = ({ rawParam }) => {
     // Using global defaults - much cleaner!
     // Optional: Only override if you need different behavior for posts
     staleTime: 1000 * 60, // Optional: 1 minute for posts (vs 2min global default)    
+    suspense: true, // Optional: Enable suspense for this query
   });
 
   const loadMoreRef = useRef(null);
@@ -102,21 +103,6 @@ export const PostsPageClient = ({ rawParam }) => {
     };
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
-  // if (isLoading) return <p>Loading posts...</p>;
-  if (isLoading) {
-    return (
-      <>
-        <UserQuickLinks profile={userProfile} rawParam={rawParam} />
-        <div className={styles.postsContainer}>
-          {Array.from({ length: POSTS_PER_PAGE }).map((_, index) => (
-            <PostPlaceholder key={index} />
-          ))}
-        </div>
-      </>
-    );
-  }
-
-  if (error) return <p style={{ color: 'red' }}>{error.message}</p>;
 
   const posts = data?.pages.flatMap((page) => page.Posts || []) || [];
 

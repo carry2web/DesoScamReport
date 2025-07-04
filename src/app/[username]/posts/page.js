@@ -1,11 +1,21 @@
 export const runtime = 'edge';
 
+// this is added for Suspense
+import { Suspense } from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
+import { ErrorFallback } from '@/components/ErrorFallback';
+import { PostPlaceholder } from '@/components/Post';
+import { getPostsForPublicKey } from '@/api/server/getPostsForPublicKey';
+import styles from './page.module.css';
+
 import { Page } from '@/components/Page';
 import { HydrationBoundary, dehydrate } from '@tanstack/react-query';
 import { PostsPageClient } from './PostsPageClient';
 import { isMaybePublicKey, avatarUrl } from '@/utils/profileUtils';
 import { getSingleProfile } from '@/api/server/getSingleProfile';
 import { queryKeys, createServerQueryClient } from '@/queries';
+
+const POSTS_PER_PAGE = 10;
 
 export async function generateMetadata({ params }) {
   const { username } = await params;
@@ -72,10 +82,43 @@ export default async function PostsPage({ params }) {
     },
   });
 
+  await queryClient.prefetchInfiniteQuery({
+    queryKey: queryKeys.userPosts(lookupKey),
+    queryFn: async ({ pageParam = '' }) => {
+      const response = await getPostsForPublicKey({
+        PublicKeyBase58Check: isPublicKey ? lookupKey : undefined,
+        Username: isPublicKey ? undefined : lookupKey,
+        LastPostHashHex: pageParam,
+        NumToFetch: POSTS_PER_PAGE,
+      });
+
+      if (!response.success) {
+        throw new Error(response.error || 'Failed to fetch posts');
+      }
+
+      return response.data;
+    },
+    getNextPageParam: (lastPage) => {
+      const posts = lastPage?.Posts || [];
+      return posts.length < POSTS_PER_PAGE ? undefined : posts.at(-1)?.PostHashHex;
+    },
+  });
+
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
       <Page>
-        <PostsPageClient rawParam={rawParam} />
+        <ErrorBoundary FallbackComponent={ErrorFallback}>
+          <Suspense fallback={
+            <div className={styles.postsContainer}>
+              {Array.from({ length: POSTS_PER_PAGE }).map((_, i) => (
+                <PostPlaceholder key={i} />
+              ))}
+            </div>
+          }>
+            <PostsPageClient rawParam={rawParam} POSTS_PER_PAGE={POSTS_PER_PAGE} />
+          </Suspense>
+        </ErrorBoundary>        
+        {/* <PostsPageClient rawParam={rawParam} /> */}
       </Page>
     </HydrationBoundary>
   );
