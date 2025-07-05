@@ -31,6 +31,8 @@ export const Post = ({ post, username, userProfile, isQuote, isComment, isInThre
   // const [isHydrated, setIsHydrated] = useState(false);
   // useEffect(() => setIsHydrated(true), []);
 
+  if (!post) return null;
+
   const {
     PostHashHex,
     Body,
@@ -274,9 +276,9 @@ export const Post = ({ post, username, userProfile, isQuote, isComment, isInThre
   // }  
 
   // If post is not defined, return null to avoid rendering issues
-  if (!post) {
-    return null
-  }    
+  // if (!post) {
+  //   return null
+  // }    
 
   // ✅ NOW CHECK FOR THREAD RENDERING - AFTER ALL HOOKS
   const hasParentPosts = ParentPosts && Array.isArray(ParentPosts) && ParentPosts.length > 0;
