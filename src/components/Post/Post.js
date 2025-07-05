@@ -28,10 +28,10 @@ export const Post = ({ post, username, userProfile, isQuote, isComment, isInThre
 
   // Avoid hydration mismatch by skipping render until fully mounted.
   // This prevents server-rendered HTML from differing from client-rendered DOM.  
-  // const [isHydrated, setIsHydrated] = useState(false);
-  // useEffect(() => setIsHydrated(true), []);
+  const [isHydrated, setIsHydrated] = useState(false);
+  useEffect(() => setIsHydrated(true), []);
 
-  if (!post) return null;
+  //if (!post) return null;
 
   const {
     PostHashHex,
@@ -123,7 +123,8 @@ export const Post = ({ post, username, userProfile, isQuote, isComment, isInThre
       const totalLoaded = pages.flatMap(p => p.comments).length - localAndPromotedCount;
       return lastPage.hasMore ? totalLoaded : undefined;
     },    
-    enabled: showReplies,
+    //enabled: showReplies,
+    enabled: showReplies && isHydrated, // Only fetch comments when replies are shown and post is hydrated
 
     // Comment-specific cache behavior (different from global defaults):
     staleTime: Infinity, // Comments never become stale - keep cached indefinitely
@@ -276,9 +277,9 @@ export const Post = ({ post, username, userProfile, isQuote, isComment, isInThre
   // }  
 
   // If post is not defined, return null to avoid rendering issues
-  // if (!post) {
-  //   return null
-  // }    
+  if (!post) {
+    return null
+  }    
 
   // ✅ NOW CHECK FOR THREAD RENDERING - AFTER ALL HOOKS
   const hasParentPosts = ParentPosts && Array.isArray(ParentPosts) && ParentPosts.length > 0;
