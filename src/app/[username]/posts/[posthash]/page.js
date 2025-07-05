@@ -1,5 +1,10 @@
 export const runtime = 'edge';
 
+import { Suspense } from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
+import { ErrorFallback } from '@/components/ErrorFallback';
+import { PostPlaceholder } from '@/components/Post';
+
 import { Page } from '@/components/Page';
 import { HydrationBoundary, dehydrate } from '@tanstack/react-query';
 import { SinglePostPageClient } from './SinglePostPageClient';
@@ -56,7 +61,12 @@ export default async function SinglePostPage({ params }) {
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
       <Page>
-        <SinglePostPageClient postHash={PostHashHex} rawParam={rawParam} />
+        {/* <SinglePostPageClient postHash={PostHashHex} rawParam={rawParam} /> */}
+        <ErrorBoundary FallbackComponent={ErrorFallback}>
+          <Suspense fallback={<PostPlaceholder />}>
+            <SinglePostPageClient postHash={PostHashHex} rawParam={rawParam} />
+          </Suspense>
+        </ErrorBoundary>        
       </Page>
     </HydrationBoundary>
   );
