@@ -2,10 +2,10 @@
 
 import { useDeSoApi } from '@/api/useDeSoApi';
 import { isMaybePublicKey } from '@/utils/profileUtils';
-import { useQuery, useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
 import { useRef, useEffect } from 'react';
 import { Post, PostPlaceholder } from '@/components/Post';
-import { queryKeys, uiKeys } from '@/queries';
+import { queryKeys } from '@/queries';
 
 import { useAuth } from '@/context/AuthContext';
 
@@ -25,7 +25,6 @@ export const PostsPageClient = ({ rawParam }) => {
 
   const { getSingleProfile, getPostsForPublicKey } = useDeSoApi();
 
-  const queryClient = useQueryClient();
   const { userPublicKey } = useAuth();
 
   // Hydrated profile query
@@ -74,14 +73,7 @@ export const PostsPageClient = ({ rawParam }) => {
 
       if (!response.success) {
         throw new Error(response.error || 'Failed to fetch posts');
-      }
-
-      response.data?.Posts?.forEach((post) => {
-        queryClient.setQueryData(
-          uiKeys.postLiked(post.PostHashHex),
-          post.PostEntryReaderState?.LikedByReader === true
-        );
-      });      
+      }   
 
       return response.data;
     },

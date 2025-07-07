@@ -49,7 +49,7 @@ export const PostStats = ({ post, username, ProfileEntryResponse, isStatsDisable
   const [localQuoteCount, setLocalQuoteCount] = useState(QuoteRepostCount);
 
   // Local like and liked state
-  const [localLikeCount, setLocalLikeCount] = useState(LikeCount);
+  //const [localLikeCount, setLocalLikeCount] = useState(LikeCount);
 
   // sync local counts with initial post data
   // This ensures that if the post data changes (e.g. via props update),
@@ -57,8 +57,8 @@ export const PostStats = ({ post, username, ProfileEntryResponse, isStatsDisable
     setLocalCommentCount(CommentCount);
     setLocalRepostCount(RepostCount);
     setLocalQuoteCount(QuoteRepostCount);
-    setLocalLikeCount(LikeCount);
-  }, [CommentCount, RepostCount, QuoteRepostCount, LikeCount]);  
+    //setLocalLikeCount(LikeCount);
+  }, [CommentCount, RepostCount, QuoteRepostCount]);  
 
   const { userPublicKey, signAndSubmitTransaction, ensureTransactionPermission } = useAuth();
   const { userProfile } = useUser();
@@ -67,7 +67,25 @@ export const PostStats = ({ post, username, ProfileEntryResponse, isStatsDisable
   const { showErrorToast, showSuccessToast } = useToast();  
   const queryClient = useQueryClient();
 
+  //const likedByReader = queryClient.getQueryData(uiKeys.postLiked(PostHashHex)) ?? false;
+
   const likedByReader = queryClient.getQueryData(uiKeys.postLiked(PostHashHex)) ?? false;
+
+  const likeCount = queryClient.getQueryData(uiKeys.postLikeCount(PostHashHex)) ?? LikeCount;
+
+  useEffect(() => {
+    const cached = queryClient.getQueryData(uiKeys.postLiked(PostHashHex));
+    if (cached === undefined && post?.PostEntryReaderState?.LikedByReader !== undefined) {
+      queryClient.setQueryData(uiKeys.postLiked(PostHashHex), post.PostEntryReaderState.LikedByReader === true);
+    }
+  }, [PostHashHex, post?.PostEntryReaderState?.LikedByReader, queryClient]);
+
+  useEffect(() => {
+    const cached = queryClient.getQueryData(uiKeys.postLikeCount(PostHashHex));
+    if (cached === undefined && typeof LikeCount === 'number') {
+      queryClient.setQueryData(uiKeys.postLikeCount(PostHashHex), LikeCount);
+    }
+  }, [LikeCount, PostHashHex, queryClient]);  
 
   const {
     refs,
@@ -186,10 +204,15 @@ export const PostStats = ({ post, username, ProfileEntryResponse, isStatsDisable
       const tx = await signAndSubmitTransaction(result.data.TransactionHex);
 
       if (tx) {
-        setLocalLikeCount((prev) => likedByReader ? prev - 1 : prev + 1);
+        //setLocalLikeCount((prev) => likedByReader ? prev - 1 : prev + 1);
         
         // update the UI cache
         queryClient.setQueryData(uiKeys.postLiked(PostHashHex), !likedByReader);
+
+        queryClient.setQueryData(uiKeys.postLikeCount(PostHashHex), (prev) => {
+          const current = typeof prev === 'number' ? prev : LikeCount;
+          return likedByReader ? Math.max(0, current - 1) : current + 1;
+        });        
     
       } else {
         showErrorToast(`Error submitting ${likedByReader ? 'unlike' : 'like'}.`);
@@ -269,7 +292,8 @@ export const PostStats = ({ post, username, ProfileEntryResponse, isStatsDisable
           >
             {likedByReader ? '❤️' : '🤍'}
           </span>
-          {localLikeCount}
+          {/* {localLikeCount} */}
+          {likeCount}
         </span>         
         
         <span className={styles.iconWrapper}>

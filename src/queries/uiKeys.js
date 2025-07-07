@@ -6,4 +6,5 @@ export const uiKeys = {
 
     // 🔥 NEW: Like state UI cache per postHash
     postLiked: (postHash) => ['ui', 'post-liked', postHash],    
+    postLikeCount: (postHash) => ['ui', 'post-like-count', postHash],
 };
