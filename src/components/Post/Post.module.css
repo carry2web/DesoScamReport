@@ -406,6 +406,17 @@
   animation: fadePulse 0.5s ease-in-out infinite;
 }
 
+.likeIcon {
+  cursor: pointer;
+}
+
+.likeIcon.disabled {
+  cursor: default;
+}
+
+.liking {
+  animation: fadePulse 0.5s ease-in-out infinite;
+}
 
 .highlighted {
   /* background: var(--color-accent-subtle); */

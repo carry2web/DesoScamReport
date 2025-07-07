@@ -9,7 +9,7 @@ import { useEditorPost } from "@/context/EditorPostContext";
 import { useDeSoApi } from "@/api/useDeSoApi";
 import { useToast } from "@/hooks/useToast";
 import { useQueryClient } from "@tanstack/react-query";
-import { queryKeys } from "@/queries";
+import { queryKeys, uiKeys } from "@/queries";
 
 import { useFloating, offset, flip, shift, size as applySize, autoUpdate, FloatingPortal } from "@floating-ui/react";
 import { useClickOutside } from "@/hooks/useClickOutside";
@@ -39,11 +39,17 @@ export const PostStats = ({ post, username, ProfileEntryResponse, isStatsDisable
   const [showReplyBox, setShowReplyBox] = useState(false);
   const [showRepostDropdown, setShowRepostDropdown] = useState(false);
   const [isReposting, setIsReposting] = useState(false);
+
+  // handle like
+  const [isLiking, setIsLiking] = useState(false);
   
   // ✅ Local state to track comment, repost, and quote counts for optimistic updates
   const [localCommentCount, setLocalCommentCount] = useState(CommentCount);
   const [localRepostCount, setLocalRepostCount] = useState(RepostCount);
   const [localQuoteCount, setLocalQuoteCount] = useState(QuoteRepostCount);
+
+  // Local like and liked state
+  const [localLikeCount, setLocalLikeCount] = useState(LikeCount);
 
   // sync local counts with initial post data
   // This ensures that if the post data changes (e.g. via props update),
@@ -51,14 +57,17 @@ export const PostStats = ({ post, username, ProfileEntryResponse, isStatsDisable
     setLocalCommentCount(CommentCount);
     setLocalRepostCount(RepostCount);
     setLocalQuoteCount(QuoteRepostCount);
-  }, [CommentCount, RepostCount, QuoteRepostCount]);  
+    setLocalLikeCount(LikeCount);
+  }, [CommentCount, RepostCount, QuoteRepostCount, LikeCount]);  
 
-  const { userPublicKey, signAndSubmitTransaction } = useAuth();
+  const { userPublicKey, signAndSubmitTransaction, ensureTransactionPermission } = useAuth();
   const { userProfile } = useUser();
   const { setQuotedPost } = useEditorPost();
-  const { submitPost } = useDeSoApi();
+  const { submitPost, createLike } = useDeSoApi();
   const { showErrorToast, showSuccessToast } = useToast();  
   const queryClient = useQueryClient();
+
+  const likedByReader = queryClient.getQueryData(uiKeys.postLiked(PostHashHex)) ?? false;
 
   const {
     refs,
@@ -152,6 +161,48 @@ export const PostStats = ({ post, username, ProfileEntryResponse, isStatsDisable
     return "Repost options";
   };
 
+  const handleLike = async () => {
+    if (!userPublicKey || isLiking) return;
+
+    setIsLiking(true);
+
+    try {
+      // 🔥 Ensure LIKE permission is granted
+      await ensureTransactionPermission('LIKE');
+
+      const params = {
+        ReaderPublicKeyBase58Check: userPublicKey,
+        LikedPostHashHex: PostHashHex,
+        IsUnlike: likedByReader,
+        MinFeeRateNanosPerKB: 1000,
+      };    
+
+      const result = await createLike(params);
+
+      if (result?.error || !result?.data?.TransactionHex) {
+        throw new Error(result?.error || "Missing transaction hex");
+      }
+
+      const tx = await signAndSubmitTransaction(result.data.TransactionHex);
+
+      if (tx) {
+        setLocalLikeCount((prev) => likedByReader ? prev - 1 : prev + 1);
+        
+        // update the UI cache
+        queryClient.setQueryData(uiKeys.postLiked(PostHashHex), !likedByReader);
+    
+      } else {
+        showErrorToast(`Error submitting ${likedByReader ? 'unlike' : 'like'}.`);
+      }
+
+    } catch (error) {
+      const msg = error?.message || 'Error';
+      showErrorToast(`Failed to ${likedByReader ? 'unlike' : 'like'} post. ${msg}`);
+    } finally {
+      setIsLiking(false);
+    }
+  };  
+
   return (
     <>
       <div className={styles.stats}>
@@ -199,10 +250,27 @@ export const PostStats = ({ post, username, ProfileEntryResponse, isStatsDisable
           </FloatingPortal>
         )}
 
-        <span className={styles.iconWrapper}>
-          <span>❤️</span>  
+        {/* <span className={styles.iconWrapper}>
+          <span>{likedByReader ? '❤️' : '🤍'}</span>
           {LikeCount}
-        </span>
+        </span> */}
+
+        <span
+          className={styles.iconWrapper}
+          onClick={!isStatsDisabled && !isLiking ? handleLike : undefined}
+          style={{ cursor: userPublicKey && !isStatsDisabled && !isLiking ? 'pointer' : 'default' }}
+          title={userPublicKey ? (likedByReader ? "Unlike" : "Like") : "Login to like"}
+        >
+          <span
+            className={classNames(styles.likeIcon, {
+              [styles.liking]: isLiking,
+              [styles.disabled]: isStatsDisabled || !userPublicKey,
+            })}
+          >
+            {likedByReader ? '❤️' : '🤍'}
+          </span>
+          {localLikeCount}
+        </span>         
         
         <span className={styles.iconWrapper}>
           <span>💎</span>  
