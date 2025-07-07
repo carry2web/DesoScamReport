@@ -2,10 +2,12 @@
 
 import { useDeSoApi } from '@/api/useDeSoApi';
 import { isMaybePublicKey } from '@/utils/profileUtils';
-import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
+import { useQuery, useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import { useRef, useEffect } from 'react';
 import { Post, PostPlaceholder } from '@/components/Post';
-import { queryKeys } from '@/queries';
+import { queryKeys, uiKeys } from '@/queries';
+
+import { useAuth } from '@/context/AuthContext';
 
 import { UserQuickLinks } from '@/components/UserQuickLinks';
 
@@ -22,6 +24,9 @@ export const PostsPageClient = ({ rawParam }) => {
     : rawParam;
 
   const { getSingleProfile, getPostsForPublicKey } = useDeSoApi();
+
+  const queryClient = useQueryClient();
+  const { userPublicKey } = useAuth();
 
   // Hydrated profile query
   const {
@@ -56,18 +61,27 @@ export const PostsPageClient = ({ rawParam }) => {
     isLoading,
     error,
   } = useInfiniteQuery({
-    queryKey: queryKeys.userPosts(lookupKey),
+    //queryKey: queryKeys.userPosts(lookupKey),
+    queryKey: [ ...queryKeys.userPosts(lookupKey), userPublicKey ],
     queryFn: async ({ pageParam = '' }) => {
       const response = await getPostsForPublicKey({
         PublicKeyBase58Check: isPublicKey ? lookupKey : undefined,
         Username: isPublicKey ? undefined : lookupKey,
         LastPostHashHex: pageParam,
         NumToFetch: POSTS_PER_PAGE,
+        ReaderPublicKeyBase58Check: userPublicKey, // Include reader's public key for likedByReader
       });
 
       if (!response.success) {
         throw new Error(response.error || 'Failed to fetch posts');
       }
+
+      response.data?.Posts?.forEach((post) => {
+        queryClient.setQueryData(
+          uiKeys.postLiked(post.PostHashHex),
+          post.PostEntryReaderState?.LikedByReader === true
+        );
+      });      
 
       return response.data;
     },

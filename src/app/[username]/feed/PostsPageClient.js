@@ -5,7 +5,8 @@ import { isMaybePublicKey } from '@/utils/profileUtils';
 import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
 import { useRef, useEffect } from 'react';
 import { Post, PostPlaceholder } from '@/components/Post';
-import { queryKeys } from '@/queries';
+import { useQueryClient } from '@tanstack/react-query';
+import { queryKeys, uiKeys } from '@/queries';
 
 import { UserQuickLinks } from '@/components/UserQuickLinks';
 
@@ -23,6 +24,8 @@ export const PostsPageClient = ({ rawParam }) => {
 
   // const { getSingleProfile, getPostsForPublicKey } = useDeSoApi();
   const { getSingleProfile, getPostsStateless } = useDeSoApi();
+
+  const queryClient = useQueryClient();
 
   // Hydrated profile query
   const {
@@ -70,6 +73,14 @@ export const PostsPageClient = ({ rawParam }) => {
       if (!response.success) {
         throw new Error(response.error || 'Failed to fetch posts');
       }
+
+      // ✅ Set likedByReader in UI cache for each post
+      response.data?.PostsFound?.forEach((post) => {
+        queryClient.setQueryData(
+          uiKeys.postLiked(post.PostHashHex),
+          post.PostEntryReaderState?.LikedByReader === true
+        );
+      });      
 
       return response.data;
     },

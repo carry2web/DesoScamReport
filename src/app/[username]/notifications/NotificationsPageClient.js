@@ -2,10 +2,10 @@
 
 import { useDeSoApi } from '@/api/useDeSoApi';
 import { isMaybePublicKey } from '@/utils/profileUtils';
-import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
+import { useQuery, useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import { useRef, useEffect } from 'react';
 import { Notification, NotificationPlaceholder } from '@/components/Notification';
-import { queryKeys } from '@/queries';
+import { queryKeys, uiKeys } from '@/queries';
 
 import { UserQuickLinks } from '@/components/UserQuickLinks'; 
 
@@ -22,6 +22,8 @@ export const NotificationsPageClient = ({ rawParam }) => {
     : rawParam;
 
   const { getSingleProfile, getNotifications } = useDeSoApi();
+
+  const queryClient = useQueryClient();
 
   // Hydrated profile query
   const {
@@ -138,12 +140,19 @@ export const NotificationsPageClient = ({ rawParam }) => {
   
   data?.pages.forEach(page => {
     if (page.PostsByHash) {
-      Object.assign(postsByHash, page.PostsByHash);
+      Object.assign(postsByHash, page.PostsByHash);    
     }
     if (page.ProfilesByPublicKey) {
       Object.assign(profilesByPublicKey, page.ProfilesByPublicKey);
     }
   });
+
+  Object.values(postsByHash).forEach(post => {
+    if (post?.PostHashHex) {
+      const liked = post.PostEntryReaderState?.LikedByReader === true;
+      queryClient.setQueryData(uiKeys.postLiked(post.PostHashHex), liked);
+    }
+  });  
 
   return (
     <>

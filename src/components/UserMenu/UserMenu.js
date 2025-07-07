@@ -2,6 +2,10 @@
 
 import { useState, useRef } from "react";
 
+import { useQueryClient } from '@tanstack/react-query';
+
+import { usePathname, useRouter } from 'next/navigation';
+
 import Link from 'next/link';
 
 import { useAuth } from "@/context/AuthContext";
@@ -21,6 +25,10 @@ import styles from "./UserMenu.module.css";
 export const UserMenu = () => {
     const { userPublicKey, altUsers, login, logout, setActiveUser, isAuthChecking  } = useAuth();
     const { altUserProfiles, isAltUserProfileSLoading, userProfile } = useUser();
+    
+    const queryClient = useQueryClient();
+    const router = useRouter();
+    const pathname = usePathname();    
 
     const [isOpen, setIsOpen] = useState(false);
     const containerRef = useRef(null);
@@ -30,8 +38,21 @@ export const UserMenu = () => {
     const closeDropdown = () => setIsOpen(false);
 
     const handleUserSelect = (publicKey) => {
+
+        queryClient.clear(); // ✅ Clears all cached queries and UI keys
+
         setActiveUser(publicKey);
         closeDropdown();
+
+        // when switching logged users, redirect to their feed or notifications
+        const profile = altUserProfiles?.find(p => p.PublicKeyBase58Check === publicKey);
+        const username = profile?.ProfileEntryResponse?.Username || publicKey;
+
+        if (pathname.endsWith('/feed')) {
+            router.push(`/${username}/feed`);
+        } else if (pathname.endsWith('/notifications')) {
+            router.push(`/${username}/notifications`);
+        }    
     };
 
     const handleLogin = () => {
@@ -41,6 +62,7 @@ export const UserMenu = () => {
 
     const handleLogout = () => {
         logout();
+        queryClient.clear(); // ✅ Clear all cached data on logout
         closeDropdown();
     };
 
