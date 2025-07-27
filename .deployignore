@@ -1,0 +1,54 @@
+# Azure Deployment Ignore File
+# Exclude these files/folders from deployment to reduce size and time
+
+# Development files
+.git/
+.github/
+.vscode/
+.next/
+node_modules/
+
+# Build artifacts (will be rebuilt on Azure)
+out/
+dist/
+build/
+
+# Development dependencies
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment files (use Azure App Settings instead)
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+
+# Documentation
+README.md
+DEPLOY_GUIDE.md
+AZURE_DEPLOYMENT.md
+PROFILE_ASSETS_GUIDE.md
+*.md
+
+# Test files
+__tests__/
+*.test.js
+*.spec.js
+coverage/
+
+# IDE files
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Storybook
+.storybook/
+storybook-static/

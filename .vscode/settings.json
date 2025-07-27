@@ -1,0 +1,11 @@
+{
+  "mcp.servers": [
+    {
+      "name": "deso",
+      "transport": "https",
+      "url": "https://mcp.deso.com"
+    }
+],
+"appService.defaultWebAppToDeploy": "/subscriptions/ffa217ab-adc2-440b-b34e-85cd674a7500/resourceGroups/appsvc_linux_westeurope/providers/Microsoft.Web/sites/DesoScamReport",
+"appService.deploySubpath": "."
+}

@@ -5,6 +5,7 @@ import { AuthProvider } from '@/context/AuthContext';
 import { UserProvider } from '@/context/UserContext';
 import { QueryProvider } from '@/context/QueryProvider';
 import { EditorPostProvider } from '@/context/EditorPostContext';
+import { PermissionProvider } from '@/context/PermissionContext';
 
 export function Providers({ children }) {
   return (
@@ -15,11 +16,13 @@ export function Providers({ children }) {
     > 
       <QueryProvider>
         <AuthProvider>
-          <UserProvider>
-            <EditorPostProvider>
-              {children}         
-            </EditorPostProvider>   
-          </UserProvider>
+          <PermissionProvider>
+            <UserProvider>
+              <EditorPostProvider>
+                {children}         
+              </EditorPostProvider>   
+            </UserProvider>
+          </PermissionProvider>
         </AuthProvider>
       </QueryProvider>
     </ThemeProvider>   

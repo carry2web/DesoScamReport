@@ -6,11 +6,12 @@ import { MainLayout } from '@/layouts/MainLayout';
 import { ToastUI } from '@/components/ToastUI';
 
 export const metadata = {
-  title: 'DeSo NextJS Starter App',
-  description: 'DeSo App designed by @brootle',
+  title: 'DeSo Scam Report - Community Shield Protocol',
+  description: 'Protecting the DeSo ecosystem from scammers through human-verified investigations and decentralized reporting.',
   icons: {
     icon: [
       { url: '/icon.svg', sizes: 'any' },
+      { url: '/logo.svg', sizes: 'any' },
       { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
       { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
       { url: '/android-chrome-192x192.png', sizes: '192x192', type: 'image/png' },
@@ -21,7 +22,7 @@ export const metadata = {
 }
 
 export const viewport = {
-  themeColor: '#181A20',
+  themeColor: '#1f2937',
   colorScheme: 'dark',
 }
 

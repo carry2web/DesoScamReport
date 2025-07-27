@@ -1,0 +1,78 @@
+<svg width="300" height="300" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#dc2626;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#ea580c;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#d97706;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="shieldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#f3f4f6;stop-opacity:1" />
+    </linearGradient>
+    <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="2" dy="4" stdDeviation="4" flood-color="#000000" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="300" height="300" fill="url(#bgGradient)" rx="30"/>
+  
+  <!-- DeSo Scam Report Text at Top -->
+  <text x="150" y="25" 
+        font-family="Arial, sans-serif" 
+        font-size="14" 
+        font-weight="bold" 
+        fill="#ffffff" 
+        text-anchor="middle">
+    DeSo Scam Report
+  </text>
+  
+  <!-- Shield Background Circle -->
+  <circle cx="150" cy="130" r="100" fill="#1f2937" opacity="0.1"/>
+  
+  <!-- Main Shield (Wider) -->
+  <path d="M150 50 L210 75 L210 130 Q210 170 150 200 Q90 170 90 130 L90 75 Z" 
+        fill="url(#shieldGradient)" 
+        stroke="#1f2937" 
+        stroke-width="3" 
+        filter="url(#shadow)"/>
+  
+  <!-- Shield Inner Design (Wider) -->
+  <path d="M150 70 L190 90 L190 130 Q190 160 150 180 Q110 160 110 130 L110 90 Z" 
+        fill="#dc2626" 
+        opacity="0.8"/>
+  
+  <!-- Warning Symbol (Larger) -->
+  <path d="M150 90 L175 125 L125 125 Z" 
+        fill="#ffffff" 
+        stroke="#1f2937" 
+        stroke-width="1"/>
+  
+  <!-- Exclamation Point -->
+  <rect x="146" y="105" width="8" height="15" fill="#1f2937" rx="1"/>
+  <circle cx="150" cy="124" r="3" fill="#1f2937"/>
+  
+  <!-- Security Dots Pattern (Updated positions) -->
+  <circle cx="120" cy="100" r="2" fill="#ffffff" opacity="0.6"/>
+  <circle cx="180" cy="100" r="2" fill="#ffffff" opacity="0.6"/>
+  <circle cx="130" cy="150" r="2" fill="#ffffff" opacity="0.6"/>
+  <circle cx="170" cy="150" r="2" fill="#ffffff" opacity="0.6"/>
+  
+  <!-- Community Shield Text Below -->
+  <text x="150" y="230" 
+        font-family="Arial, sans-serif" 
+        font-size="16" 
+        font-weight="bold" 
+        fill="#ffffff" 
+        text-anchor="middle">
+    COMMUNITY
+  </text>
+  <text x="150" y="250" 
+        font-family="Arial, sans-serif" 
+        font-size="16" 
+        font-weight="bold" 
+        fill="#ffffff" 
+        text-anchor="middle">
+    SHIELD
+  </text>
+</svg>

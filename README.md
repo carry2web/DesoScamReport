@@ -1,35 +1,65 @@
-# DeSo Frontend Starter
+# DeSo Scam Report - Community Scammer Reporting System
 
-A modern frontend web application built using **Next.js App Router** and designed to integrate with the [**DeSo Protocol**](https://github.com/deso-protocol) — a decentralized social blockchain platform.
+A **decentralized scammer reporting and investigation platform** built for the DeSo ecosystem. This application empowers the community to identify and report suspicious accounts while maintaining a human-driven investigation process that respects node operator autonomy.
 
-📦 **Repository**: [brootle/deso-starter-nextjs-plus](https://github.com/brootle/deso-starter-nextjs-plus)
+�️ **Built on**: [deso-starter-nextjs-plus](https://github.com/brootle/deso-starter-nextjs-plus) framework
 
-This starter includes:
+## 🚨 **Core Features**
 
-* DeSo authentication via Identity service
-* Profile selector and alternate identity switching
-* Advanced commenting system with optimistic updates
-* Network-resilient data fetching and caching
-* Clean UI component system (Buttons, Inputs, Dropdowns, Select, etc.)
-* Support for Floating UI dropdowns and portals
-* Dark/light theming via CSS variables
-* Storybook for component exploration
+* 📝 **Community Reporting**: Easy interface for reporting suspicious accounts
+* 🔍 **Human Investigation**: Moderator dashboard requiring human approval for all actions
+* 🌐 **Node Blocking Tracker**: Monitor which DeSo nodes have blocked reported accounts
+* 🏛️ **Decentralized Approach**: Respect individual node operator decisions
+* 📊 **Evidence Collection**: Automated capture of profiles, posts, and suspicious activity
+* 🔒 **Investigation Workflow**: Multi-step verification before any community alerts
+* 📈 **Transparency**: Public audit trail of all investigations and decisions
+* ⚡ **Real-time Updates**: Live tracking of report status and node responses
 
 ---
 
-## 🔥 Features
+## 🎯 **How It Works**
 
-* 🔐 **DeSo Auth**: Log in using DeSo Identity
-* 👥 **Alt Profile Switcher**: Switch between multiple public keys
-* 🔎 **Search Profiles**: Find users by public key or username
-* 📝 **Post Support**: Read and create posts on the DeSo blockchain
-* 💬 **Advanced Comments**: Inline replies with optimistic updates and smart caching
-* 🌐 **Network Resilient**: Handles offline/online transitions gracefully
-* 👻 **Profileless Accounts**: Fully functional even without a user profile
-* 🎨 **Component Library**: Custom Select, MenuItem, Avatar, and Dropdown components
-* 🌐 **Responsive UI**: Built with modular CSS and theme tokens
-* 📦 **Floating UI**: Precise positioning via `@floating-ui/react`
-* 🧱 **Scalable Structure**: Clean folder structure for extending easily
+### **1. Community Detection & Reporting**
+- Users spot suspicious accounts (fake team members, seed phrase thieves, etc.)
+- Submit reports through intuitive web interface
+- Automatic evidence collection (screenshots, profile data, post history)
+- Smart categorization by threat level (Critical, High, Medium, Low)
+
+### **2. Human Investigation Process**
+- **No Automated Actions**: All reports require human moderator review
+- Evidence presentation dashboard for thorough investigation
+- Multi-step verification process before any community alerts
+- Appeal system for false positive protection
+
+### **3. Decentralized Node Response**
+- Track which DeSo nodes choose to block reported accounts
+- Respect node operator autonomy - no forced blocking
+- Real-time monitoring of node blocking status
+- Transparency about node-level moderation decisions
+
+### **4. Community Protection**
+- Public alerts only after human verification
+- Educational content about scammer tactics
+- Community voting on report validity
+- Protection for legitimate users through appeals process
+
+---
+
+## 🔥 **Technical Features**
+
+* 🔐 **DeSo Auth**: Secure login using DeSo Identity service
+* � **Report Submission**: Intuitive interface for community scammer reporting
+* � **Investigation Dashboard**: Comprehensive moderator tools for report review
+* 🌐 **Node Monitoring**: Real-time tracking of which nodes block reported accounts
+* � **Evidence Archive**: Automated collection and storage of suspicious activity
+* 🛡️ **Human Verification**: Mandatory human approval before any automated actions
+* 📈 **Audit Trail**: Complete transparency of investigation processes
+* � **Community Alerts**: Public warnings about verified scammer accounts
+* 👥 **Multi-Moderator**: Collaborative investigation with multiple reviewers
+* ⚖️ **Appeals System**: Protection mechanism for falsely reported accounts
+* 🎨 **Component Library**: Built on proven DeSo starter components
+* 🌐 **Responsive UI**: Full mobile and desktop compatibility
+* 📦 **Floating UI**: Precise positioning for investigation tooltips and modals
 
 ### 🧠 **State Management with React Query**
 

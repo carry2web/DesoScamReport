@@ -47,7 +47,7 @@ export default function HomePage() {
               WebkitTextFillColor: 'transparent',
               backgroundClip: 'text'
             }}>
-              DeSo SCAM Report
+              DeSo Scam Report
             </span>
           </h1>
           <p style={{
@@ -61,31 +61,6 @@ export default function HomePage() {
             <span style={{ color: '#ef4444', fontWeight: '600' }}>Community Shield Protocol</span> – 
             Protecting the DeSo ecosystem from scammers through human-verified investigations.
           </p>
-          
-          {/* Security Trust Indicator */}
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '12px',
-            padding: '12px 24px',
-            background: 'rgba(34, 197, 94, 0.1)',
-            border: '1px solid rgba(34, 197, 94, 0.2)',
-            borderRadius: '24px',
-            marginBottom: '32px',
-            maxWidth: '480px',
-            margin: '0 auto 32px'
-          }}>
-            <span style={{ fontSize: '1.5rem' }}>🔒</span>
-            <span style={{ 
-              color: '#22c55e', 
-              fontSize: '0.875rem', 
-              fontWeight: '500' 
-            }}>
-              Secure DeSo Identity • No Private Keys Required
-            </span>
-          </div>
-          
           <div style={{
             display: 'flex',
             flexDirection: 'column',
@@ -260,96 +235,6 @@ export default function HomePage() {
                 🛡️ REPORT THREAT NOW
               </Button>
             </Link>
-          </div>
-        </div>
-
-        {/* Security & Trust Section */}
-        <div style={{
-          background: 'linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(16, 185, 129, 0.1))',
-          border: '1px solid rgba(34, 197, 94, 0.2)',
-          borderRadius: '24px',
-          padding: '48px',
-          textAlign: 'center',
-          marginBottom: '80px'
-        }}>
-          <div style={{
-            width: '96px',
-            height: '96px',
-            background: 'linear-gradient(135deg, #22c55e, #16a34a)',
-            borderRadius: '50%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            margin: '0 auto 32px',
-            boxShadow: '0 25px 50px rgba(34, 197, 94, 0.3)'
-          }}>
-            <span style={{ fontSize: '3rem' }}>🔒</span>
-          </div>
-          <h2 style={{
-            fontSize: '2.5rem',
-            fontWeight: '700',
-            color: 'white',
-            marginBottom: '24px'
-          }}>
-            Your Security is Our Priority
-          </h2>
-          <p style={{
-            fontSize: '1.25rem',
-            color: '#a7f3d0',
-            marginBottom: '32px',
-            opacity: '0.9'
-          }}>
-            We use the same trusted DeSo Identity system as all official DeSo applications.
-          </p>
-          
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-            gap: '24px',
-            marginTop: '32px',
-            textAlign: 'left'
-          }}>
-            <div style={{
-              background: 'rgba(255, 255, 255, 0.05)',
-              borderRadius: '16px',
-              padding: '24px'
-            }}>
-              <div style={{ fontSize: '2rem', marginBottom: '12px' }}>🛡️</div>
-              <h3 style={{ color: 'white', fontWeight: '600', marginBottom: '8px' }}>
-                No Private Keys
-              </h3>
-              <p style={{ color: '#a7f3d0', fontSize: '0.875rem' }}>
-                We never access, store, or request your private keys or seed phrase. Login is handled entirely by DeSo Identity.
-              </p>
-            </div>
-            
-            <div style={{
-              background: 'rgba(255, 255, 255, 0.05)',
-              borderRadius: '16px',
-              padding: '24px'
-            }}>
-              <div style={{ fontSize: '2rem', marginBottom: '12px' }}>🔐</div>
-              <h3 style={{ color: 'white', fontWeight: '600', marginBottom: '8px' }}>
-                Standard DeSo Auth
-              </h3>
-              <p style={{ color: '#a7f3d0', fontSize: '0.875rem' }}>
-                Same secure authentication used by Diamond, Bitclout, and all legitimate DeSo applications.
-              </p>
-            </div>
-            
-            <div style={{
-              background: 'rgba(255, 255, 255, 0.05)',
-              borderRadius: '16px',
-              padding: '24px'
-            }}>
-              <div style={{ fontSize: '2rem', marginBottom: '12px' }}>👤</div>
-              <h3 style={{ color: 'white', fontWeight: '600', marginBottom: '8px' }}>
-                Identity Verification Only
-              </h3>
-              <p style={{ color: '#a7f3d0', fontSize: '0.875rem' }}>
-                We only verify your DeSo identity to prevent false reports. No financial access or wallet control.
-              </p>
-            </div>
           </div>
         </div>
 

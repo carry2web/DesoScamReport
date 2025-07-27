@@ -1,0 +1,124 @@
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  background: rgba(30, 41, 59, 0.5);
+  border-radius: 12px;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  padding: 40px;
+  text-align: center;
+}
+
+.spinner {
+  font-size: 2rem;
+  animation: pulse 2s infinite;
+  margin-bottom: 16px;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.denied {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(251, 146, 60, 0.1));
+  border: 2px solid rgba(239, 68, 68, 0.3);
+  border-radius: 16px;
+  padding: 48px;
+  text-align: center;
+  max-width: 600px;
+  margin: 40px auto;
+}
+
+.icon {
+  font-size: 4rem;
+  margin-bottom: 24px;
+  filter: drop-shadow(0 4px 8px rgba(239, 68, 68, 0.3));
+}
+
+.denied h2 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+  background: linear-gradient(135deg, #ef4444, #fb923c);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.denied p {
+  color: #cbd5e1;
+  font-size: 1.125rem;
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+.roleInfo {
+  background: rgba(15, 23, 42, 0.5);
+  border-radius: 12px;
+  padding: 24px;
+  margin: 24px 0;
+  text-align: left;
+  width: 100%;
+}
+
+.roleInfo h3 {
+  color: #f1f5f9;
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.roleInfo ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.roleInfo li {
+  color: #cbd5e1;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(239, 68, 68, 0.1);
+}
+
+.roleInfo li:last-child {
+  border-bottom: none;
+}
+
+.roleInfo strong {
+  color: #f1f5f9;
+  font-weight: 600;
+}
+
+.actions {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 24px;
+}
+
+@media (max-width: 768px) {
+  .denied {
+    margin: 20px;
+    padding: 32px 24px;
+  }
+  
+  .actions {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .actions button,
+  .actions a {
+    width: 100%;
+    max-width: 200px;
+  }
+}

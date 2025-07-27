@@ -1,11 +1,14 @@
 {
-  "name": "deso-starter-nextjs--app-router",
-  "version": "0.1.0",
+  "name": "deso-scam-report",
+  "version": "1.0.0",
+  "description": "DeSo Community Scammer Reporting and Investigation System",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "node server.js",
+    "start:next": "next start",
+    "clean": "rimraf .next && rimraf out",
     "lint": "next lint",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
@@ -41,6 +44,7 @@
     "eslint-config-next": "15.1.6",
     "eslint-plugin-storybook": "^0.12.0",
     "playwright": "^1.52.0",
+    "rimraf": "^6.0.1",
     "storybook": "^8.6.12",
     "vitest": "^3.1.2"
   },
