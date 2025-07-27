@@ -16,9 +16,9 @@ echo "Cleaning previous builds..."
 rm -rf .next
 rm -rf out
 
-# Install dependencies
+# Install dependencies (including dev dependencies for build)
 echo "Installing dependencies..."
-npm ci --only=production
+npm ci
 
 # Build the application
 echo "Building Next.js application..."
@@ -31,4 +31,4 @@ if [ ! -d ".next" ]; then
 fi
 
 echo "Deployment completed successfully!"
-echo "App should be available at: https://desoscamreport.azurewebsites.net"
+echo "App should be available at: https://desoscamreport-a2gwhugpd4fwbmct.westeurope-01.azurewebsites.net"

@@ -1,7 +1,7 @@
 # Copy these to Azure Portal → Configuration → Application Settings
 
 NODE_ENV=production
-WEBSITE_NODE_DEFAULT_VERSION=22
+WEBSITE_NODE_DEFAULT_VERSION=~20
 SCM_DO_BUILD_DURING_DEPLOYMENT=true
 NEXT_PUBLIC_DESO_NODE_URL=https://safetynet.social
 NEXT_PUBLIC_IDENTITY_URL=https://identity.deso.org
