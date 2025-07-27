@@ -55,6 +55,9 @@ cd /opt/desoscamreport
 # Clone the repository
 git clone https://github.com/carry2web/DesoScamReport.git .
 
+# Make shell scripts executable
+chmod +x *.sh
+
 # Verify we're in the right place
 pwd  # Should show: /opt/desoscamreport
 ls   # Should show: docker-compose.yml, nginx/, src/, etc.
@@ -94,8 +97,8 @@ netstat -tuln | grep -E ":(3000|8080|8443)"
 
 ### 4. Deploy with Docker
 ```bash
-# Make deployment script executable
-chmod +x deploy-docker-ssl.sh
+# Scripts should already be executable, but verify
+chmod +x deploy-docker-ssl.sh verify-server.sh test-deployment.sh
 
 # Run deployment (this handles SSL certificates automatically)
 ./deploy-docker-ssl.sh

@@ -17,8 +17,10 @@ cd /opt/desoscamreport
 # Clone repository
 git clone https://github.com/carry2web/DesoScamReport.git .
 
+# Make scripts executable
+chmod +x *.sh
+
 # Verify server readiness
-chmod +x verify-server.sh
 ./verify-server.sh
 
 # Configure environment
@@ -26,11 +28,9 @@ cp .env.example .env
 nano .env  # Add your DESO_SEED_HEX and other values
 
 # Deploy with SSL
-chmod +x deploy-docker-ssl.sh
 ./deploy-docker-ssl.sh
 
 # Test deployment
-chmod +x test-deployment.sh
 ./test-deployment.sh
 ```
 
