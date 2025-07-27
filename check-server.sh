@@ -65,7 +65,8 @@ if command -v netstat &> /dev/null; then
     echo "   Port 22 (SSH): $(netstat -tuln | grep :22 | wc -l) listeners"
     echo "   Port 80 (HTTP): $(netstat -tuln | grep :80 | wc -l) listeners"
     echo "   Port 443 (HTTPS): $(netstat -tuln | grep :443 | wc -l) listeners"
-    echo "   Port 3000 (App): $(netstat -tuln | grep :3000 | wc -l) listeners"
+    echo "   Port 3000 (DeSoScamReport): $(netstat -tuln | grep :3000 | wc -l) listeners"
+    echo "   DeSo Validator ports: $(netstat -tuln | grep -E ':(17000|17001|18000|18001)' | wc -l) listeners"
 else
     echo "   ⚠️  netstat not available"
 fi

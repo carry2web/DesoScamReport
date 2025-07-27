@@ -1,0 +1,39 @@
+# Docker Compose Override for Side-by-Side Deployment
+# This file allows DeSo Scam Report to run alongside existing DeSo validator services
+
+version: '3.8'
+
+services:
+  desoscamreport:
+    # Use different ports to avoid conflicts with existing services
+    ports:
+      - "3000:3000"  # Map to different port if 3000 is taken
+    networks:
+      - deso-scam-network
+      - existing-deso-network  # Connect to existing DeSo network if needed
+    environment:
+      # Override any environment variables for side-by-side deployment
+      - PORT=3000
+
+  nginx:
+    # Use different external ports if 80/443 are taken by existing nginx
+    ports:
+      - "8080:80"   # Use 8080 for HTTP if 80 is taken
+      - "8443:443"  # Use 8443 for HTTPS if 443 is taken
+    networks:
+      - deso-scam-network
+      - existing-deso-network
+
+  certbot:
+    networks:
+      - deso-scam-network
+
+networks:
+  deso-scam-network:
+    driver: bridge
+    name: deso-scam-network
+  
+  # Reference existing DeSo network if you want to share networking
+  existing-deso-network:
+    external: true
+    name: deso_default  # Adjust this to match your existing DeSo network name

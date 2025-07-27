@@ -4,41 +4,73 @@
 Deploy DeSo Scam Report to Hetzner dedicated server with custom domain and CloudFlare configuration.
 
 ## Prerequisites
-- Hetzner dedicated server with Ubuntu/Debian
+- Hetzner dedicated server with Ubuntu/Debian (hosting DeSo validator safetynet.social)
 - Domain: `desoscamreport.safetynet.social`
-- CloudFlare account managing `safetynet.social`
-- Node.js 20 LTS installed on server
+- CloudFlare account managing `safetynet.social` (already configured)
+- Node.js 20 LTS installed on server (may need installation)
+- Nginx already running (for DeSo validator and other subdomains)
+
+**Note**: This guide deploys DeSo Scam Report as a standalone application on your DeSo validator server. The application runs independently and integrates only through the existing nginx reverse proxy configuration.
 
 ## Server Setup
 
-### 1. Install Node.js 20 LTS
+### 1. Verify Existing Setup
 ```bash
-# Update system
-sudo apt update && sudo apt upgrade -y
+# Check if Node.js is installed (needed for standalone app)
+node --version  # Should show v20.x.x or may not exist
+npm --version
 
-# Install Node.js 20 LTS
+# Check if PM2 is installed (needed for process management)
+pm2 --version
+
+# Check current Docker processes (validator should be running)
+docker ps
+
+# Check nginx container status
+docker ps | grep nginx
+
+# Check available ports (avoid conflicts with Docker containers)
+netstat -tuln | grep -E ":(3000|3001|8080|17000|17001)"
+```
+
+### 2. Install Node.js and PM2 (Host System)
+```bash
+# Install Node.js 20 LTS on the host system (outside Docker)
 curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
 sudo apt-get install -y nodejs
 
 # Verify installation
 node --version  # Should show v20.x.x
 npm --version
-```
 
-### 2. Install PM2 for Process Management
-```bash
+# Install PM2 for process management on host
 sudo npm install -g pm2
+
+# Note: nginx runs in Docker, we'll update its configuration
+docker ps | grep nginx
 ```
 
-### 3. Setup Nginx Reverse Proxy
+### 3. Configure Nginx in Docker for DeSo Scam Report
+Since nginx runs in Docker for the DeSo validator, we need to update the Docker nginx configuration:
+
 ```bash
-sudo apt install nginx -y
+# First, check the nginx container and find configuration directory
+docker ps | grep nginx
+docker exec -it <nginx_container_name> ls -la /etc/nginx/conf.d/
 
-# Create Nginx configuration
-sudo nano /etc/nginx/sites-available/desoscamreport
+# Find the nginx configuration directory on host (mapped to container)
+# This is typically in the DeSo deployment directory
+# Check the docker-compose or docker run command for volume mounts
 ```
 
-### Nginx Configuration (`/etc/nginx/sites-available/desoscamreport`)
+Create nginx configuration file in the host directory that maps to the container:
+```bash
+# Create configuration for desoscamreport subdomain
+# File location depends on your Docker nginx volume mount
+sudo nano /path/to/nginx/conf.d/desoscamreport.conf
+```
+
+### Nginx Configuration (`desoscamreport.conf`)
 ```nginx
 server {
     listen 80;
@@ -52,7 +84,7 @@ server {
     listen 443 ssl http2;
     server_name desoscamreport.safetynet.social www.desoscamreport.safetynet.social;
 
-    # SSL configuration (CloudFlare origin certificates)
+    # SSL configuration (CloudFlare origin certificates - likely already exist)
     ssl_certificate /etc/ssl/certs/cloudflare-origin.pem;
     ssl_certificate_key /etc/ssl/private/cloudflare-origin.key;
     
@@ -63,9 +95,9 @@ server {
     add_header Referrer-Policy "no-referrer-when-downgrade" always;
     add_header Content-Security-Policy "default-src 'self' http: https: data: blob: 'unsafe-inline'" always;
 
-    # Reverse proxy to Next.js
+    # Reverse proxy to DeSo Scam Report running on host
     location / {
-        proxy_pass http://127.0.0.1:3000;
+        proxy_pass http://host.docker.internal:3000;  # Access host from container
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection 'upgrade';
@@ -92,11 +124,23 @@ server {
 }
 ```
 
-### 4. Enable Nginx Site
+**Note**: 
+- DeSo Scam Report runs on the host system on port `3000` (standalone Next.js app)
+- nginx runs in Docker container for the DeSo validator
+- Use `host.docker.internal:3000` to access host from Docker container
+- SSL certificates should already exist from validator setup for `*.safetynet.social`
+- If nginx doesn't support `host.docker.internal`, use the server's actual IP address
+
+### 4. Reload Nginx Configuration in Docker
 ```bash
-sudo ln -s /etc/nginx/sites-available/desoscamreport /etc/nginx/sites-enabled/
-sudo nginx -t
-sudo systemctl reload nginx
+# Test the nginx configuration
+docker exec <nginx_container_name> nginx -t
+
+# Reload nginx if configuration is valid
+docker exec <nginx_container_name> nginx -s reload
+
+# If you need to restart the entire nginx container
+docker restart <nginx_container_name>
 ```
 
 ## CloudFlare Configuration
@@ -186,7 +230,7 @@ module.exports = {
     exec_mode: 'cluster',
     env: {
       NODE_ENV: 'production',
-      PORT: 3000
+      PORT: 3000  // First Node.js frontend on this validator server
     },
     log_file: '/var/log/pm2/desoscamreport.log',
     error_file: '/var/log/pm2/desoscamreport-error.log',
