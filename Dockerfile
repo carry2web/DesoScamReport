@@ -1,17 +1,23 @@
-# Use Node.js 20 Alpine for smaller image size
-FROM node:20-alpine
+# Multi-stage build for optimized production image
+
+# Build stage
+FROM node:22-alpine AS builder
 
 # Set working directory
 WORKDIR /app
 
-# Install dependencies for native modules if needed
-RUN apk add --no-cache libc6-compat
+# Install dependencies for native modules and build tools
+RUN apk add --no-cache \
+    libc6-compat \
+    python3 \
+    make \
+    g++
 
-# Copy package files
+# Copy package files first for better caching
 COPY package*.json ./
 
-# Install dependencies
-RUN npm ci --only=production && npm cache clean --force
+# Install ALL dependencies (including devDependencies for build)
+RUN npm ci && npm cache clean --force
 
 # Copy application code
 COPY . .
@@ -19,12 +25,31 @@ COPY . .
 # Build the Next.js application
 RUN npm run build
 
+# Production stage
+FROM node:22-alpine AS runner
+
+# Set working directory
+WORKDIR /app
+
+# Install runtime dependencies only
+RUN apk add --no-cache libc6-compat
+
 # Create non-root user for security
 RUN addgroup -g 1001 -S nodejs && \
     adduser -S nextjs -u 1001
 
-# Change ownership of the app directory
-RUN chown -R nextjs:nodejs /app
+# Copy package files and install production dependencies only
+COPY package*.json ./
+RUN npm ci --only=production && npm cache clean --force
+
+# Copy built application from builder stage
+COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
+COPY --from=builder --chown=nextjs:nodejs /app/public ./public
+COPY --from=builder --chown=nextjs:nodejs /app/server.js ./server.js
+
+# Copy other necessary files
+COPY --chown=nextjs:nodejs next.config.mjs ./
+COPY --chown=nextjs:nodejs healthcheck.js ./
 
 # Switch to non-root user
 USER nextjs
