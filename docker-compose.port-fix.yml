@@ -1,12 +1,10 @@
 # Docker Compose Override for Port Conflicts
-# Use this when standard ports 8080/8443 are already in use
+# This completely replaces the nginx ports to avoid conflicts
 
 version: '3.8'
 
 services:
   nginx:
     ports:
-      - "8081:80"   # Use 8081 instead of 8080
-      - "8444:443"  # Use 8444 instead of 8443
-    
-  # All other services remain the same
+      - "8081:80"   # Replace 8080 with 8081
+      - "8444:443"  # Replace 8443 with 8444
