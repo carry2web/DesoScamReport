@@ -52,22 +52,9 @@ const nextConfig = {
     ]
   },
 
-  // Redirects for domain setup
+  // No custom domain redirects needed for Azure Web App
   async redirects() {
-    return [
-      // Redirect www to non-www
-      {
-        source: '/(.*)',
-        has: [
-          {
-            type: 'host',
-            value: 'www.desoscamreport.safetynet.social',
-          },
-        ],
-        destination: 'https://desoscamreport.safetynet.social/$1',
-        permanent: true,
-      },
-    ]
+    return []
   },
 };
 

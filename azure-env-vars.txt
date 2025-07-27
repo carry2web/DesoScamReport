@@ -6,7 +6,7 @@ SCM_DO_BUILD_DURING_DEPLOYMENT=true
 NEXT_PUBLIC_DESO_NODE_URL=https://safetynet.social
 NEXT_PUBLIC_IDENTITY_URL=https://identity.deso.org
 NEXT_PUBLIC_APP_NAME=DeSo Scam Report
-NEXT_PUBLIC_APP_DOMAIN=desoscamreport.safetynet.social
+NEXT_PUBLIC_APP_DOMAIN=desoscamreport-a2gwhugpd4fwbmct.westeurope-01.azurewebsites.net
 
 # Add your actual DeSo keys (keep these secret!)
 DESO_PUBLIC_KEY=BC1YLitoF835xNLJJriQpfCQBXQzJVsqpcU7KMGnuTQiNyASu4CoSAD
