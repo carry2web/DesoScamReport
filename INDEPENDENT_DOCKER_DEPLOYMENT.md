@@ -38,8 +38,8 @@ Windows (Development) → GitHub → Hetzner Linux Server
 
 ### Port Requirements
 - `3000`: DeSo Scam Report application
-- `8080`: HTTP proxy (if 80 is taken)
-- `8443`: HTTPS proxy (if 443 is taken)
+- `8081`: HTTP proxy (to avoid conflicts with 8080)
+- `8444`: HTTPS proxy (to avoid conflicts with 8443)
 
 ## Deployment Steps
 
@@ -88,8 +88,8 @@ NEXT_PUBLIC_APP_DOMAIN=desoscamreport.safetynet.social
 
 ### 3. Check Port Availability
 ```bash
-# Check if ports 3000, 8080, 8443 are available
-netstat -tuln | grep -E ":(3000|8080|8443)"
+# Check if ports 3000, 8081, 8444 are available
+netstat -tuln | grep -E ":(3000|8081|8444)"
 
 # If ports are free, you'll see no output
 # If ports are taken, adjust docker-compose.yml accordingly
@@ -112,14 +112,14 @@ docker-compose ps
 # Should show something like:
 #       Name                 Command               State                    Ports
 # desoscamreport         npm start                    Up      0.0.0.0:3000->3000/tcp
-# desoscamreport-nginx   nginx -g daemon off;         Up      0.0.0.0:8080->80/tcp, 0.0.0.0:8443->443/tcp
+# desoscamreport-nginx   nginx -g daemon off;         Up      0.0.0.0:8081->80/tcp, 0.0.0.0:8444->443/tcp
 # desoscamreport-certbot /bin/sh -c trap exit TERM;   Up
 
 # Test application directly
 curl http://localhost:3000/api/health
 
 # Test through nginx proxy
-curl http://localhost:8080/api/health
+curl http://localhost:8081/api/health
 ```
 
 ## Side-by-Side Verification
@@ -133,7 +133,7 @@ docker ps -a
 docker network ls
 
 # Check port usage
-netstat -tuln | grep -E ":(80|443|3000|17000|17001|8080|8443)"
+netstat -tuln | grep -E ":(80|443|3000|17000|17001|8081|8444)"
 ```
 
 ### Verify Independent Operation
@@ -331,5 +331,5 @@ This setup ensures:
 ✅ **Side-by-Side**: Doesn't interfere with existing DeSo validator  
 
 The application will be accessible at:
-- **Direct**: `http://server-ip:8080` or `https://server-ip:8443`
+- **Direct**: `http://server-ip:8081` or `https://server-ip:8444`
 - **CloudFlare**: `https://desoscamreport.safetynet.social`
